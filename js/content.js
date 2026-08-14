@@ -42,7 +42,6 @@ window.PORTFOLIO.CONTENT = {
       { label: "Download CV", href: "assets/cv/Deniz_Karakoyun_CV.pdf", kind: "download", download: true },
       { label: "GitHub", href: "https://github.com/karakoyundenizz", kind: "github" },
       { label: "LinkedIn", href: "https://www.linkedin.com/in/deniz-karakoyun-2235b922a/", kind: "linkedin" },
-      { label: "karakoyundenizz@loncateam.com", href: "mailto:karakoyundenizz@loncateam.com", kind: "email" },
       { label: "karakoyun.deniz@metu.edu.tr", href: "mailto:karakoyun.deniz@metu.edu.tr", kind: "email" },
     ],
     note: "root node = me. everything else grew from here.",

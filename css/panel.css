@@ -354,7 +354,7 @@
 /* ground scene at the end of the page */
 .vine-ground {
   position: relative;
-  height: 150px;
+  height: 208px; /* tall enough that the speech bubbles never get clipped */
   overflow: hidden;
   margin-top: 4px;
 }

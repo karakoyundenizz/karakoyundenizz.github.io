@@ -143,6 +143,18 @@ window.PORTFOLIO = window.PORTFOLIO || {};
       dog.classList.add("barking");
     });
 
+    var bike = el("button", "game-launch", ground);
+    bike.type = "button";
+    bike.setAttribute("aria-label", "Play Deniz's bike ride — a tiny jumping game");
+    bike.innerHTML =
+      (SPRITES.bike || "") +
+      '<span class="game-launch-label" aria-hidden="true">play!</span>';
+    bike.style.left = "44%";
+    bike.style.bottom = "30px";
+    bike.addEventListener("click", function () {
+      if (window.PORTFOLIO.GAME) window.PORTFOLIO.GAME.open(bike);
+    });
+
     var robot = el("button", "robot vine-robot", ground);
     robot.type = "button";
     robot.setAttribute("aria-label", "a little robot friend");

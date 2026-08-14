@@ -1,0 +1,203 @@
+/* ════════════════════════════════════════════════════════════
+   game.css — "Deniz's Bike Ride" overlay + the little launch stickers
+   ════════════════════════════════════════════════════════════ */
+
+/* ── launch stickers (desktop hill + mobile ground) ── */
+.game-launch {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  z-index: 6;
+  animation: bike-bob 3.2s ease-in-out infinite;
+}
+.game-launch svg { width: 74px; height: auto; overflow: visible; }
+.game-launch-label {
+  font-family: var(--font-hand);
+  font-size: 1rem;
+  color: var(--ink);
+  background: var(--white);
+  border: 2.5px solid var(--ink);
+  border-radius: 14px 16px 15px 13px / 13px 15px 14px 16px;
+  padding: 2px 10px;
+  margin-top: 2px;
+  box-shadow: 2.5px 2.5px 0 rgba(43, 33, 25, 0.16);
+  transition: transform 0.2s var(--pop);
+}
+.game-launch:hover .game-launch-label,
+.game-launch:focus-visible .game-launch-label { transform: scale(1.1) rotate(-2deg); }
+@keyframes bike-bob {
+  0%, 100% { transform: translate(-50%, -100%) rotate(-1.5deg); }
+  50% { transform: translate(-50%, -100%) translateY(-5px) rotate(1.5deg); }
+}
+.vine-ground .game-launch {
+  transform: none;
+  animation: bike-bob-flat 3.2s ease-in-out infinite;
+}
+@keyframes bike-bob-flat {
+  0%, 100% { transform: rotate(-1.5deg); }
+  50% { transform: translateY(-5px) rotate(1.5deg); }
+}
+
+/* ── overlay ── */
+.game-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(43, 33, 25, 0.32);
+  opacity: 0;
+  transition: opacity 0.22s ease;
+}
+.game-overlay.show { opacity: 1; }
+
+.game-frame {
+  width: min(680px, 100%);
+  background: var(--white);
+  border: var(--outline);
+  border-radius: 22px 26px 24px 28px / 26px 22px 28px 24px;
+  box-shadow: 6px 6px 0 rgba(43, 33, 25, 0.22);
+  overflow: hidden;
+}
+.game-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px 8px 18px;
+  border-bottom: var(--outline);
+  background: var(--paper-deep);
+}
+.game-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+.game-close { position: static; }
+
+/* ── scene ── */
+.game-scene {
+  position: relative;
+  height: 250px;
+  overflow: hidden;
+  background: linear-gradient(#FFF7E6, var(--paper) 70%);
+  touch-action: manipulation;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.game-ground {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 46px;
+  background: #99C97E;
+  border-top: 3px solid var(--ink);
+}
+.game-ground::after {
+  content: "";
+  position: absolute;
+  top: 8px; left: 0; right: 0;
+  height: 3px;
+  background: repeating-linear-gradient(90deg, rgba(43,33,25,0.25) 0 26px, transparent 26px 60px);
+}
+.game-sun { position: absolute; top: 10px; right: 14px; width: 54px; opacity: 0.95; }
+.game-sun svg { width: 100%; height: auto; }
+.game-sun .sun-rays { transform-origin: 60px 60px; animation: sun-spin 60s linear infinite; }
+
+.game-cloud {
+  position: absolute;
+  width: 90px; height: 30px;
+  background: var(--white);
+  border: 2.5px solid var(--ink);
+  border-radius: 40px;
+  opacity: 0.85;
+}
+.game-cloud::before {
+  content: "";
+  position: absolute;
+  width: 34px; height: 34px;
+  top: -16px; left: 18px;
+  background: inherit;
+  border: inherit;
+  border-radius: 50%;
+}
+.gc1 { top: 34px; left: -100px; animation: game-cloud-drift 26s linear infinite; }
+.gc2 { top: 78px; left: -100px; animation: game-cloud-drift 37s linear infinite; animation-delay: -18s; transform: scale(0.7); }
+@keyframes game-cloud-drift {
+  from { translate: 0 0; }
+  to { translate: 900px 0; }
+}
+
+/* ── rider ── */
+.game-rider {
+  position: absolute;
+  left: 16%;
+  bottom: 42px;
+  width: 96px;
+  margin-left: -48px;
+  will-change: transform;
+}
+.game-rider svg { width: 100%; height: auto; }
+.wheel { transform-box: fill-box; transform-origin: center; }
+.running .wheel { animation: wheel-spin 0.45s linear infinite; }
+@keyframes wheel-spin { to { transform: rotate(360deg); } }
+.dead .game-rider { filter: grayscale(0.4); rotate: -8deg; }
+
+/* ── obstacles ── */
+.game-obstacle {
+  position: absolute;
+  left: 0;
+  bottom: 44px;
+  will-change: transform;
+}
+.game-obstacle svg { width: 100%; height: 100%; display: block; }
+
+/* ── HUD ── */
+.game-score {
+  position: absolute;
+  top: 10px;
+  left: 14px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.9rem;
+  background: var(--white);
+  border: 2.5px solid var(--ink);
+  border-radius: 999px;
+  padding: 3px 12px;
+  box-shadow: 2.5px 2.5px 0 rgba(43, 33, 25, 0.14);
+}
+.game-msg {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  translate: -50% -50%;
+  font-family: var(--font-hand);
+  font-size: 1.25rem;
+  color: var(--ink);
+  background: var(--white);
+  border: 2.5px solid var(--ink);
+  border-radius: 18px 22px 20px 24px / 22px 18px 24px 20px;
+  padding: 8px 18px;
+  box-shadow: 3px 3px 0 rgba(43, 33, 25, 0.16);
+  white-space: nowrap;
+  pointer-events: none;
+}
+.game-msg[hidden] { display: none; }
+
+@media (max-width: 767px) {
+  .game-scene { height: 210px; }
+  .game-msg { font-size: 1.05rem; white-space: normal; text-align: center; max-width: 84%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-launch, .vine-ground .game-launch { animation: none; }
+  .gc1, .gc2 { animation: none; left: 20%; }
+  .gc2 { left: 60%; }
+  .game-sun .sun-rays { animation: none; }
+}

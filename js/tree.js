@@ -40,6 +40,14 @@ window.PORTFOLIO.SPRITES = {
     '<circle cx="83" cy="100" r="2.8" fill="#F6D5DE" stroke="#2B2119" stroke-width="1.8"/>' +
     "</g>" +
     "</svg>",
+  bike:
+    '<svg viewBox="0 0 90 64" aria-hidden="true">' +
+    '<circle cx="22" cy="46" r="14" fill="#FFFDF8" stroke="#2B2119" stroke-width="3.4"/>' +
+    '<circle cx="68" cy="46" r="14" fill="#FFFDF8" stroke="#2B2119" stroke-width="3.4"/>' +
+    '<path d="M22 46 L38 26 L58 26 L68 46 M38 26 L46 44 L58 26 M46 44 L22 46" fill="none" stroke="#12907E" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/>' +
+    '<path d="M62 20 L58 26 M60 16 L66 22" stroke="#2B2119" stroke-width="3.4" stroke-linecap="round"/>' +
+    '<path d="M34 22 L38 26" stroke="#2B2119" stroke-width="3.4" stroke-linecap="round"/>' +
+    "</svg>",
   sun:
     '<svg viewBox="0 0 120 120" aria-hidden="true">' +
     '<g class="sun-rays" fill="none" stroke="#E9A820" stroke-width="5" stroke-linecap="round">' +
@@ -170,6 +178,21 @@ window.PORTFOLIO.SPRITES = {
       robot.classList.remove("cheering");
       void robot.offsetWidth;
       robot.classList.add("cheering");
+    });
+  }
+
+  /* the little bike sticker that opens the mini game */
+  function buildBikeButton(parent, layout) {
+    var btn = el("button", "game-launch", parent);
+    btn.type = "button";
+    btn.setAttribute("aria-label", "Play Deniz's bike ride — a tiny jumping game");
+    btn.style.left = "440px";
+    btn.style.top = layout.stageH - 52 + "px";
+    btn.innerHTML =
+      window.PORTFOLIO.SPRITES.bike +
+      '<span class="game-launch-label" aria-hidden="true">play!</span>';
+    btn.addEventListener("click", function () {
+      if (window.PORTFOLIO.GAME) window.PORTFOLIO.GAME.open(btn);
     });
   }
 
@@ -411,6 +434,7 @@ window.PORTFOLIO.SPRITES = {
     buildBee(stage, layoutResult);
     buildDog(stage, layoutResult);
     buildRobot(stage, layoutResult);
+    buildBikeButton(stage, layoutResult);
 
     /* ── events (delegated) ── */
     stage.addEventListener("mouseover", function (e) {

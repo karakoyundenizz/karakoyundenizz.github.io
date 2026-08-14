@@ -62,6 +62,11 @@
     if (item) P.PANEL.open(item, section, null);
   }
 
+  function applyGameLink() {
+    var params = new URLSearchParams(window.location.search);
+    if (params.get("game") && P.GAME) P.GAME.open(null);
+  }
+
   function render() {
     var isPhone = phoneMq.matches;
     if (isPhone) {
@@ -73,6 +78,8 @@
     updateHint(isPhone);
     applyDeepLink(isPhone);
   }
+
+  var gameLinkDone = false;
 
   function openProducts() {
     if (phoneMq.matches) {
@@ -91,6 +98,10 @@
   function boot() {
     P.PANEL.init();
     render();
+    if (!gameLinkDone) {
+      gameLinkDone = true;
+      applyGameLink();
+    }
 
     var productsChip = document.getElementById("chip-products");
     if (productsChip) productsChip.addEventListener("click", openProducts);
