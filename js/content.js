@@ -1,0 +1,499 @@
+/* ════════════════════════════════════════════════════════════════════
+   content.js — the ONLY file you need to edit to change what the site says.
+   Every node of the tree lives here. Renderers contain zero copy.
+
+   Item fields:
+     id        unique slug
+     title     card + node heading
+     node      short label shown on the tree leaf (defaults to title)
+     subtitle  org · dates line
+     icon      id of an <symbol> in index.html (without "i-")
+     summary   one-liner under the subtitle
+     bullets   [] of strings (plain text, keep them punchy)
+     tags      [] of tech chips
+     links     [] of {label, href, kind: web|github|appstore|playstore|email|linkedin}
+     media     [] of {src, alt} — screenshot/photo strip; files that don't
+               exist yet are skipped silently, so you can pre-wire photo slots
+     flagship  true → bigger "golden fruit" leaf + richer card
+     theme     "dark" → card header gets the near-black Phera band
+     note      handwritten footnote at the bottom of the card
+     hidden    true → item disappears from the site (easy pruning)
+     dx, dy    optional fine-tune offset of the leaf, in stage pixels
+   ════════════════════════════════════════════════════════════════════ */
+
+window.PORTFOLIO = window.PORTFOLIO || {};
+
+window.PORTFOLIO.CONTENT = {
+
+  /* card that opens when someone clicks the root node (me!) */
+  about: {
+    id: "about",
+    title: "Deniz Karakoyun",
+    subtitle: "Computer Engineering @ METU · Ankara, Türkiye",
+    icon: "tree",
+    summary: "Happiest a few layers below the surface — Assembly, OS internals, and making code faster cycle by cycle.",
+    bullets: [
+      "How I work: understand the problem, design the algorithm, write it efficiently, test it well.",
+      "Built two live products — Guild (co-founded with Emirhan Güler) and Phera Labs — but my compass points at OS and low-level systems, with algorithm design a close second.",
+      "Outside code: time with friends and anything physical — tennis, volleyball, basketball, camping, cycling, fitness.",
+    ],
+    tags: [],
+    links: [
+      { label: "Download CV", href: "assets/cv/Deniz_Karakoyun_CV.pdf", kind: "download", download: true },
+      { label: "GitHub", href: "https://github.com/karakoyundenizz", kind: "github" },
+      { label: "LinkedIn", href: "https://www.linkedin.com/in/deniz-karakoyun-2235b922a/", kind: "linkedin" },
+      { label: "karakoyundenizz@loncateam.com", href: "mailto:karakoyundenizz@loncateam.com", kind: "email" },
+      { label: "karakoyun.deniz@metu.edu.tr", href: "mailto:karakoyun.deniz@metu.edu.tr", kind: "email" },
+    ],
+    note: "root node = me. everything else grew from here.",
+  },
+
+  sections: [
+
+    /* ─────────────── EDUCATION ─────────────── */
+    {
+      id: "education",
+      label: "Education",
+      icon: "gradcap",
+      accent: "gold",
+      items: [
+        {
+          id: "metu",
+          title: "Middle East Technical University",
+          node: "METU · CENG",
+          subtitle: "B.Sc. Computer Engineering · 2021 – 2027 (expected) · Ankara",
+          icon: "gradcap",
+          summary: "CGPA 3.61 / 4.00",
+          bullets: [
+            "Focus: operating systems, computer organization, low-level programming, algorithms.",
+          ],
+          tags: ["Operating Systems", "Computer Organization", "Algorithms", "Embedded Systems"],
+          links: [],
+          logo: "assets/img/metu-logo.jpg",
+          note: "seed of this tree: ranked 799 out of ~3,000,000 in the national university exam",
+        },
+        {
+          id: "highschool",
+          title: "Süleyman Demirel Anatolian High School",
+          node: "High School",
+          subtitle: "2017 – 2021",
+          icon: "star",
+          summary: "Graduated with 94.41 / 100.",
+          bullets: [],
+          tags: [],
+          links: [],
+        },
+      ],
+    },
+
+    /* ─────────────── EXPERIENCE ─────────────── */
+    {
+      id: "experience",
+      label: "Experience",
+      icon: "briefcase",
+      accent: "honey",
+      items: [
+        {
+          id: "kuartis",
+          title: "KUARTIS — Software Engineering Intern",
+          node: "KUARTIS · now",
+          subtitle: "2026 – present · Ankara",
+          icon: "gps",
+          summary: "ROS 2 GNSS signal-health monitoring on an autonomous platform.",
+          bullets: [
+            "C++17 lifecycle node on NVIDIA Jetson — turns a raw GPS stream into a clear \"can we trust this fix?\" verdict.",
+            "Caught a case where a silent GPS looked healthy: wrote the failing test first, then the fix.",
+            "Fixed a data race in the multi-threaded test harness.",
+          ],
+          tags: ["ROS 2", "C++17", "GNSS", "TDD", "GTest", "Jetson"],
+          links: [],
+          logo: "assets/img/kuartis-logo.jpg",
+        },
+        {
+          id: "aselsan-ce",
+          title: "ASELSAN — Candidate Engineer",
+          node: "ASELSAN",
+          subtitle: "Jul 2026 – present · Ankara",
+          icon: "chip",
+          summary: "High-volume data pipelines for system evaluation.",
+          bullets: [
+            "Pipelines that process millions of data points for evaluation and offline experiments.",
+            "Multithreading and synchronization to keep the streams race-free.",
+          ],
+          tags: ["C++", "Multithreading", "Data Pipelines"],
+          links: [],
+          logo: "assets/img/aselsan-logo.jpg",
+        },
+        {
+          id: "romer",
+          title: "ROMER — Undergraduate Researcher",
+          node: "ROMER 🐝",
+          subtitle: "Jan 2026 – present · METU Robotics & AI Center",
+          icon: "bee",
+          summary: "Teaching computers to tell which way a honey bee is facing.",
+          bullets: [
+            "CNN and ResNet models for bee orientation detection.",
+            "Full model lifecycle: dataset, training, tuning.",
+          ],
+          tags: ["Python", "CNN", "ResNet", "Computer Vision"],
+          links: [],
+          media: [
+            { src: "assets/img/romer-bee.jpg", alt: "A honey bee from the ROMER orientation-detection dataset" },
+          ],
+          logo: "assets/img/romer-logo.jpg",
+          note: "yes, the bee flying around this tree is a colleague",
+        },
+        {
+          id: "bites",
+          title: "BİTES — Software Engineering Intern",
+          node: "BİTES",
+          subtitle: "Aug – Sep 2025 · Ankara",
+          icon: "window",
+          summary: "A team & project management desktop app.",
+          bullets: [
+            "C# / WPF features for users, teams, projects and tasks — MVVM, data binding, validation.",
+            "xUnit tests with mocks; iterated on user feedback.",
+          ],
+          tags: ["C#", "WPF", "MVVM", "xUnit"],
+          links: [],
+          logo: "assets/img/bites-logo.jpg",
+        },
+        {
+          id: "aselsan-intern",
+          title: "ASELSAN — Intern",
+          node: "ASELSAN '25",
+          subtitle: "Jul – Aug 2025 · Ankara",
+          icon: "chip",
+          summary: "Testing embedded systems, automating the boring parts.",
+          bullets: [
+            "C++ unit tests with Google Test for embedded systems.",
+            "Automated GUI workflows with Python and Pywinauto.",
+          ],
+          tags: ["C++", "Google Test", "Python", "Pywinauto"],
+          links: [],
+          logo: "assets/img/aselsan-logo.jpg",
+        },
+        {
+          id: "exa4mind",
+          title: "EXA4MIND — Data Mining Intern",
+          node: "EXA4MIND",
+          subtitle: "Aug – Sep 2024 · EU Horizon research project",
+          icon: "flow",
+          summary: "Low-latency streaming pipelines for scientific data.",
+          bullets: [
+            "Streaming pipelines with Kafka, Flink and ZeroMQ.",
+            "Benchmarked ZeroMQ against Kafka for speed and accuracy.",
+          ],
+          tags: ["Kafka", "Flink", "ZeroMQ"],
+          links: [],
+          logo: "assets/img/exa4mind-logo.jpg",
+        },
+      ],
+    },
+
+    /* ─────────────── PRODUCTS (shipped, in the wild) ─────────────── */
+    {
+      id: "products",
+      label: "Products",
+      icon: "star",
+      accent: "maroon",
+      items: [
+        {
+          id: "guild",
+          title: "Guild",
+          node: "Guild ★",
+          subtitle: "Co-founder & developer · live on the App Store and Google Play",
+          icon: "star",
+          summary: "A student community app for Turkey — verify with your university email, get your whole campus in one feed.",
+          bullets: [
+            "Co-founded with my close friend Emirhan Güler at METU; I built and shipped the code — iOS, Android, web, backend, admin.",
+            "Forum with anonymous posts and polls, events with seat reservations and door check-in, student societies, and a nationwide opportunities board.",
+            "Live at METU, Hacettepe and Ankara University.",
+          ],
+          tags: [],
+          links: [
+            { label: "getguild.app", href: "https://getguild.app", kind: "web" },
+            { label: "App Store", href: "https://apps.apple.com/app/id6761904539", kind: "appstore" },
+            { label: "Google Play", href: "https://play.google.com/store/apps/details?id=com.metustars.guild", kind: "playstore" },
+          ],
+          media: [
+            { src: "assets/img/guild-shot-feed.jpg", alt: "Guild home feed screen with ranked posts" },
+            { src: "assets/img/guild-shot-events.jpg", alt: "Guild discover screen listing campus events" },
+            { src: "assets/img/guild-shot-forum.jpg", alt: "Guild forum thread with anonymous posts and a poll" },
+            { src: "assets/img/guild-shot-unimnet.jpg", alt: "Guild Ünimnet screen with featured nationwide opportunities" },
+          ],
+          logo: "assets/img/guild-icon.png",
+          flagship: true,
+          live: true,
+        },
+        {
+          id: "phera",
+          title: "Phera Labs",
+          node: "Phera Labs ★",
+          subtitle: "Sole developer · pheralabs.com",
+          icon: "star",
+          summary: "An art-tech startup's platform — students exhibit digital art, and the best of it joins an international NFT collection.",
+          bullets: [
+            "\"Phera-Land\": a 360° drag-to-spin gallery you can wander through.",
+            "The whole commerce side too: limited prints, QR-ticketed events, referral rewards.",
+            "Solo build, from first commit to production.",
+          ],
+          tags: [],
+          links: [
+            { label: "pheralabs.com", href: "https://pheralabs.com", kind: "web" },
+          ],
+          logo: "assets/img/phera-mark.jpg",
+          flagship: true,
+          live: true,
+          theme: "dark",
+        },
+      ],
+    },
+
+    /* ─────────────── PROJECTS (systems & coursework) ─────────────── */
+    {
+      id: "projects",
+      label: "Projects",
+      icon: "rocket",
+      accent: "plum",
+      items: [
+        {
+          id: "orchestrator",
+          title: "Concurrent Data Pipeline Orchestrator",
+          node: "Orchestrator",
+          subtitle: "C · Unix system programming",
+          icon: "tree",
+          summary: "A process controller running multi-stage CSV pipelines with fork, exec and pipes.",
+          bullets: [
+            "Like a shell pipeline, but shaped like a tree: every stage runs as its own process, and streams merge upward through sub-merger nodes.",
+            "The tricky part was the plumbing — deadlock-free IPC over Unix domain sockets, so no stage ever blocks another.",
+          ],
+          tags: ["C", "fork/exec", "IPC", "Unix sockets"],
+          links: [],
+          note: "this project is also a tree — of processes. trees all the way down.",
+        },
+        {
+          id: "y86",
+          title: "Pipelined Processor Optimization",
+          node: "Y86-64",
+          subtitle: "Assembly · HCL · Y86-64",
+          icon: "chip",
+          summary: "Extended a pipelined processor simulator, then made programs measurably faster on it.",
+          bullets: [
+            "Y86-64 is a teaching version of x86-64 — I worked on the processor itself, adding instructions and resolving data and control hazards in its control logic.",
+            "Then tuned programs to run fast on it: loop unrolling, instruction reordering, custom functions — every saved cycle counts.",
+          ],
+          tags: ["Y86-64", "HCL", "Assembly", "CPE"],
+          links: [],
+        },
+        {
+          id: "bomblab",
+          title: "Bomb & Attack Labs",
+          node: "Bomb Lab",
+          subtitle: "x86-64 · GDB · reverse engineering",
+          icon: "bomb",
+          summary: "Defused a multi-stage binary bomb with GDB and a disassembler.",
+          bullets: [
+            "Each stage hides a password inside a stripped binary — you read the assembly, watch the registers, and figure it out. Guess wrong and the bomb \"explodes\".",
+            "Then switched sides: crafted code-injection and return-oriented-programming exploits against vulnerable binaries, in a sandboxed course lab.",
+          ],
+          tags: ["x86-64", "GDB", "Reverse Engineering", "ROP"],
+          links: [],
+          note: "my favourite kind of puzzle",
+        },
+        {
+          id: "pic18",
+          title: "Embedded Control Simulator",
+          node: "PIC18",
+          subtitle: "Assembly (PIC18F8722) · MPLAB X",
+          icon: "chip",
+          summary: "Three concurrent state machines on a microcontroller — no timers, no interrupts.",
+          bullets: [
+            "With no hardware clock to lean on, all timing comes from counting instructions — round-robin scheduling under strict constraints.",
+            "Drives LED arrays directly on PORTB, PORTC and PORTD, keeping every output pin in a known state.",
+          ],
+          tags: ["PIC18", "Assembly", "Embedded"],
+          links: [],
+          dx: 14, dy: -10,
+        },
+        {
+          id: "flightfinder",
+          title: "Flight Finder",
+          node: "Flight Finder",
+          subtitle: "C++ · graph theory",
+          icon: "plane",
+          summary: "A flight search engine on a directional multigraph.",
+          bullets: [
+            "Airports are nodes, flights are edges — and since two cities can be connected by many flights, it's a multigraph, backed by a hash table for fast lookups.",
+            "Dijkstra with heuristics that blend ticket cost and travel time, plus airline filtering.",
+          ],
+          tags: ["C++", "Dijkstra", "Hash Table"],
+          links: [],
+        },
+        {
+          id: "modelhub",
+          title: "AI Model Hub Database",
+          node: "Model Hub DB",
+          subtitle: "Java · SQL · H2",
+          icon: "db",
+          summary: "A normalized database for models, datasets and training runs.",
+          bullets: [
+            "Schema design first: normalized tables that track which model trained on which dataset, and how each run went.",
+            "SQL analytics on top — user reputation scores and model performance metrics.",
+          ],
+          tags: ["Java", "SQL", "Database Design"],
+          links: [],
+        },
+        {
+          id: "afetbilgi",
+          title: "Afetbilgi — Software Design",
+          node: "Afetbilgi",
+          subtitle: "Team project · Software Engineering (CENG350)",
+          icon: "heart",
+          summary: "Requirements and architecture design for a disaster-information platform.",
+          bullets: [
+            "Designed against a real scenario: getting verified, life-saving information to people right after an earthquake.",
+            "Co-wrote the SRS and architecture docs — UML class, sequence and state diagrams.",
+            "A real team project: scope, interfaces, people.",
+          ],
+          tags: ["UML", "SRS / SAD", "Software Architecture"],
+          links: [],
+        },
+      ],
+    },
+
+    /* ─────────────── SKILLS ─────────────── */
+    {
+      id: "skills",
+      label: "Skills",
+      icon: "wrench",
+      accent: "teal",
+      items: [
+        {
+          id: "sk-languages",
+          title: "Languages",
+          node: "Languages",
+          icon: "chip",
+          summary: "The ones I think in.",
+          bullets: [],
+          tags: ["C", "C++", "C#", "x86-64 Assembly", "Java", "Python", "SQL", "Haskell", "TypeScript", "JavaScript", "Verilog"],
+          links: [],
+        },
+        {
+          id: "sk-systems",
+          title: "Systems & Low-level",
+          node: "Systems ♥",
+          icon: "chip",
+          summary: "Home turf.",
+          bullets: [],
+          tags: ["OS internals", "Memory management", "Multithreading & sync", "Unix system programming", "Computer organization", "Performance tuning", "ROS 2", "Embedded (PIC18, Jetson)"],
+          links: [],
+          note: "this is the branch I want to grow the most",
+        },
+        {
+          id: "sk-people",
+          title: "People & Process",
+          node: "Teamwork",
+          icon: "heart",
+          summary: "The parts that aren't code.",
+          bullets: [],
+          tags: ["Teamwork", "Clear communication", "Ownership", "Planning & prioritizing", "Working with feedback", "Teaching & mentoring"],
+          links: [],
+        },
+        {
+          id: "sk-data",
+          title: "Data & ML",
+          node: "Data & ML",
+          icon: "flow",
+          summary: "Streams and neural nets.",
+          bullets: [],
+          tags: ["CNN / ResNet", "Kafka", "Flink", "ZeroMQ", "MySQL / PostgreSQL"],
+          links: [],
+        },
+        {
+          id: "sk-tools",
+          title: "Tools & Practice",
+          node: "Tools",
+          icon: "wrench",
+          summary: "Sharp tools, tested code.",
+          bullets: [],
+          tags: ["Git", "GDB", "GoogleTest / GMock", "xUnit", "Jest / Maestro", "Valgrind", "clang-tidy", "Docker", "CI (GitHub Actions / GitLab)", "MATLAB"],
+          links: [],
+        },
+      ],
+    },
+
+    /* ─────────────── BEYOND CODE ─────────────── */
+    {
+      id: "beyond",
+      label: "Beyond Code",
+      icon: "sprout",
+      accent: "sky",
+      items: [
+        {
+          id: "karate",
+          title: "Karate",
+          node: "Karate",
+          icon: "karate",
+          summary: "Competed through middle and high school.",
+          bullets: [
+            "First place in inter-school and inter-regional competitions.",
+          ],
+          tags: [],
+          links: [],
+          media: [
+            { src: "assets/img/karate.jpg", alt: "Deniz at a karate competition" },
+          ],
+          hidden: false,
+        },
+        {
+          id: "volunteering",
+          title: "Volunteering",
+          node: "Volunteering",
+          icon: "heart",
+          summary: "Showing up when it matters.",
+          bullets: [
+            "Earthquake relief in Hatay (certified).",
+            "Educational volunteering with primary-school kids.",
+          ],
+          tags: [],
+          links: [],
+          hidden: false,
+        },
+        {
+          id: "sports",
+          title: "Sports & Outdoors",
+          node: "Sports",
+          icon: "bike",
+          summary: "If it's physical, I'm in.",
+          bullets: [
+            "Tennis, volleyball, basketball, camping, cycling, fitness — usually with friends.",
+          ],
+          tags: [],
+          links: [],
+          media: [
+            { src: "assets/img/sports.jpg", alt: "Deniz doing sports with friends" },
+            { src: "assets/img/cycling.jpg", alt: "Deniz's road bike on a ride" },
+          ],
+          hidden: false,
+        },
+        {
+          id: "ates",
+          title: "Ateş",
+          node: "Ateş 🐕",
+          icon: "paw",
+          summary: "My dog of 7+ years — walked twice a day, every day.",
+          bullets: [
+            "Chief Morale Officer. Sits at the base of this tree.",
+          ],
+          tags: [],
+          links: [],
+          media: [
+            { src: "assets/img/ates.jpg", alt: "Ateş the dog" },
+          ],
+          hidden: false,
+        },
+      ],
+    },
+  ],
+};

@@ -1,0 +1,485 @@
+/* ════════════════════════════════════════════════════════════
+   panel.css — detail cards (side panel / bottom sheet) + the
+   mobile "growing vine" accordion
+   ════════════════════════════════════════════════════════════ */
+
+/* ── backdrop ── */
+#backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(43, 33, 25, 0.28);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  z-index: 40;
+}
+#backdrop.show { opacity: 1; pointer-events: auto; }
+
+/* ── panel shell ── */
+#panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: min(460px, 94vw);
+  z-index: 50;
+  transform: translateX(108%);
+  transition: transform 0.3s var(--smooth);
+  display: flex;
+}
+#panel.show { transform: translateX(0); }
+
+#panel-card { width: 100%; display: flex; }
+
+.card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--white);
+  border-left: var(--outline);
+  box-shadow: -10px 0 0 rgba(43, 33, 25, 0.08);
+  overflow: hidden;
+}
+
+/* ── card header ── */
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px 20px 16px;
+  background: var(--accent-soft, var(--paper-deep));
+  border-bottom: var(--outline);
+  position: relative;
+  flex: none;
+}
+.card-logo {
+  width: 56px;
+  height: 56px;
+  border: 2.5px solid var(--ink);
+  border-radius: 15px;
+  background: var(--white);
+  flex: none;
+  object-fit: contain; /* wordmark-shaped logos must not get cropped */
+  padding: 4px;
+}
+.card-icon {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  background: var(--white);
+  border: 2.5px solid var(--ink);
+  border-radius: 46% 54% 50% 50% / 55% 45% 58% 42%;
+  flex: none;
+}
+.card-icon .ic-lg { width: 30px; height: 30px; color: var(--accent, var(--ink)); }
+.card-head-text { flex: 1; min-width: 0; padding-right: 36px; }
+.card-title-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.card-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.4rem;
+  line-height: 1.1;
+}
+.card-subtitle {
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  margin-top: 4px;
+}
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  color: var(--white);
+  background: var(--leaf-deep);
+  border: 2.5px solid var(--ink);
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+.live-badge::before {
+  content: "";
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--white);
+  animation: live-pulse 1.6s ease-in-out infinite;
+}
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.72); }
+}
+
+.panel-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  font-size: 1.5rem;
+  line-height: 1;
+  font-family: var(--font-display);
+  background: var(--white);
+  border: 2.5px solid var(--ink);
+  border-radius: 47% 53% 50% 50% / 52% 48% 55% 45%;
+  box-shadow: 2.5px 2.5px 0 rgba(43, 33, 25, 0.18);
+  transition: transform 0.2s var(--pop);
+}
+.panel-close:hover { transform: rotate(90deg) scale(1.06); }
+
+/* dark (Phera) header variant */
+.card-dark .card-header {
+  background: #0c0b0a;
+  border-bottom-color: var(--ink);
+}
+.card-dark .card-title { color: #f6f5f1; }
+.card-dark .card-subtitle { color: rgba(246, 245, 241, 0.72); }
+.card-dark .live-badge { background: #14B8A0; }
+.card-dark .card-logo { border-color: #f6f5f1; }
+.card-dark .panel-close { background: #f6f5f1; }
+
+/* ── card body ── */
+.card-body {
+  padding: 18px 20px 30px;
+  overflow-y: auto;
+  flex: 1;
+  overscroll-behavior: contain;
+}
+.card-summary {
+  font-size: 1rem;
+  line-height: 1.5;
+  font-weight: 700;
+}
+
+.media-strip {
+  display: flex;
+  gap: 12px;
+  margin: 16px 0 4px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 10px;
+  border-radius: 8px;
+}
+.media-frame {
+  flex: none;
+  width: 158px;
+  scroll-snap-align: start;
+  transform: rotate(-1deg);
+}
+.media-frame:nth-child(even) { transform: rotate(1.2deg); }
+.media-img {
+  width: 100%;
+  border: 3px solid var(--ink);
+  border-radius: 20px;
+  box-shadow: 3px 3px 0 rgba(43, 33, 25, 0.16);
+  background: var(--white);
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin: 16px 0 4px;
+}
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 9px 8px;
+  background: var(--paper);
+  border: 2.5px solid var(--ink);
+  border-radius: 44% 56% 48% 52% / 40% 44% 56% 60%;
+  box-shadow: 2.5px 2.5px 0 rgba(43, 33, 25, 0.14);
+  text-align: center;
+}
+.stat:nth-child(even) { border-radius: 56% 44% 52% 48% / 52% 60% 40% 48%; }
+.stat-value {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.12rem;
+  color: var(--accent, var(--ink));
+}
+.stat-label { font-size: 0.74rem; color: var(--ink-soft); font-weight: 700; }
+
+.card-bullets { margin-top: 14px; }
+.card-bullets li {
+  position: relative;
+  padding-left: 26px;
+  margin: 9px 0;
+  font-size: 0.94rem;
+  line-height: 1.5;
+}
+.card-bullets li::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 8px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent, var(--leaf-deep));
+  border: 2px solid var(--ink);
+}
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 16px;
+}
+.tag {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.78rem;
+  padding: 3px 11px;
+  background: var(--paper-deep);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.links-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+.card-link { font-size: 0.9rem; padding: 8px 15px; }
+.link-appstore, .link-playstore {
+  background: var(--ink);
+  color: var(--paper);
+}
+.link-web { background: var(--accent-soft, var(--white)); }
+
+.card-note {
+  margin-top: 20px;
+  padding-top: 12px;
+  border-top: 2.5px dashed rgba(43, 33, 25, 0.3);
+  font-family: var(--font-hand);
+  font-size: 1.02rem;
+  color: var(--ink-soft);
+  transform: rotate(-0.6deg);
+}
+
+/* ── phone: panel becomes a bottom sheet ── */
+@media (max-width: 767px) {
+  #panel {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: min(88dvh, 88vh);
+    transform: translateY(108%);
+  }
+  #panel.show { transform: translateY(0); }
+  .card {
+    border-left: none;
+    border-top: var(--outline);
+    border-radius: 26px 26px 0 0;
+    box-shadow: 0 -8px 0 rgba(43, 33, 25, 0.08);
+  }
+  .card-header { border-radius: 23px 23px 0 0; padding-top: 26px; touch-action: pan-y; }
+  .card-body { padding-bottom: calc(30px + env(safe-area-inset-bottom, 0px)); }
+  .media-frame { width: 44vw; max-width: 220px; }
+  .card-header::before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    translate: -50% 0;
+    width: 52px;
+    height: 6px;
+    border-radius: 999px;
+    background: rgba(43, 33, 25, 0.35);
+  }
+  body.panel-open { overflow: hidden; }
+}
+
+/* ════════════════════════════════════════
+   mobile "growing vine" accordion
+   ════════════════════════════════════════ */
+.vine {
+  position: relative;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 10px 18px 30px;
+}
+
+/* little sky above the vine */
+.vine-deco { position: relative; height: 46px; pointer-events: none; }
+.vine-sun { position: absolute; top: -4px; right: 4px; width: 62px; }
+.vine-sun svg { width: 100%; height: auto; }
+.vine-sun .sun-rays { transform-origin: 60px 60px; animation: sun-spin 60s linear infinite; }
+.vine-cloud { top: 6px; left: 6px; transform: scale(0.5); transform-origin: left top; }
+
+/* "me!" root card */
+.vine-me {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 14px;
+  margin: 2px 0 14px;
+  text-align: left;
+  background: var(--white);
+  border: var(--outline);
+  border-radius: 22px 26px 24px 28px / 26px 22px 28px 24px;
+  box-shadow: var(--sticker-shadow);
+  z-index: 1;
+}
+.vine-me:active { transform: scale(0.98); }
+.vine-me-avatar { position: relative; width: 58px; height: 58px; flex: none; }
+.vine-me-avatar svg { width: 100%; height: 100%; }
+.vine-me-avatar img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid var(--ink);
+  background: var(--white);
+}
+.vine-me-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.vine-me-text strong { font-family: var(--font-display); font-weight: 800; font-size: 1.06rem; }
+.vine-me-text small { font-family: var(--font-hand); font-size: 0.95rem; color: var(--ink-soft); }
+
+/* ground scene at the end of the page */
+.vine-ground {
+  position: relative;
+  height: 150px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+.vine-hill {
+  position: absolute;
+  left: -22%;
+  right: -22%;
+  bottom: -96px;
+  height: 176px;
+  background: #99C97E;
+  border: var(--outline);
+  border-radius: 50%;
+}
+.vine-ground .dog,
+.vine-ground .robot { position: absolute; transform: none; }
+.vine-ground .dog { bottom: 30px; left: 20%; width: 82px; }
+.vine-ground .robot { bottom: 22px; right: 12%; width: 94px; }
+.vine::before {
+  content: "";
+  position: absolute;
+  top: 64px; /* start below the sun/cloud sky strip */
+  bottom: 20px;
+  left: 40px;
+  border-left: 3.5px dashed var(--trunk);
+  opacity: 0.55;
+}
+.vine-sec { position: relative; margin: 16px 0; }
+
+.vine-head {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 13px 16px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.08rem;
+  text-align: left;
+  background: var(--accent-soft, var(--white));
+  border: var(--outline);
+  border-radius: 26px 32px 24px 34px / 30px 24px 34px 26px;
+  box-shadow: var(--sticker-shadow);
+  z-index: 1;
+}
+.vine-icon { width: 24px; height: 24px; flex: none; color: var(--accent, var(--ink)); }
+.vine-label { flex: 1; }
+.vine-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 24px;
+  height: 24px;
+  font-size: 0.78rem;
+  color: var(--paper);
+  background: var(--ink);
+  border-radius: 50%;
+  padding: 0 4px;
+}
+.vine-caret {
+  font-size: 1rem;
+  transition: transform 0.25s var(--pop);
+}
+.vine-sec.open .vine-caret { transform: rotate(180deg); }
+
+.vine-list {
+  overflow: hidden;
+  max-height: 0;
+  visibility: hidden; /* keeps collapsed items out of tab order & AT */
+  transition: max-height 0.35s var(--smooth), visibility 0s linear 0.35s;
+}
+.vine-sec.open .vine-list {
+  max-height: 1400px;
+  visibility: visible;
+  transition: max-height 0.35s var(--smooth), visibility 0s linear 0s;
+}
+
+/* items pop in one by one as a section unfolds */
+.vine-list li {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.22s ease, transform 0.28s var(--pop);
+}
+.vine-sec.open .vine-list li {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: calc(var(--i, 0) * 0.05s);
+}
+
+.vine-item {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  width: calc(100% - 26px);
+  margin: 10px 0 10px 26px;
+  padding: 11px 14px;
+  text-align: left;
+  background: var(--white);
+  border: 2.5px solid var(--ink);
+  border-radius: 18px 22px 20px 24px / 22px 18px 24px 20px;
+  box-shadow: 3px 3px 0 rgba(43, 33, 25, 0.14);
+  transition: transform 0.15s var(--pop);
+}
+.vine-item:active { transform: scale(0.98); }
+.vine-item.flagship {
+  background: #FDE7B8;
+  border-width: 3px;
+}
+.vine-item .leaf-star { position: absolute; top: -12px; right: -6px; font-size: 1.1rem; color: var(--gold); text-shadow: 1.5px 1.5px 0 var(--ink); }
+.vine-item-icon { width: 21px; height: 21px; flex: none; margin-top: 2px; color: var(--accent, var(--ink)); }
+.vine-item-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.vine-item-title { font-family: var(--font-display); font-weight: 700; font-size: 0.98rem; }
+.vine-item-sub {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .live-badge::before { animation: none; }
+  .vine-sun .sun-rays { animation: none; }
+  #panel, #backdrop, .vine-list, .vine-caret, .vine-list li { transition-duration: 0.01ms !important; transition-delay: 0s !important; }
+}
