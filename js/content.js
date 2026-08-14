@@ -269,6 +269,9 @@ window.PORTFOLIO.CONTENT = {
           ],
           tags: ["C", "fork/exec", "IPC", "Unix sockets"],
           links: [],
+          media: [
+            { src: "assets/img/diagram-orchestrator.svg", alt: "Diagram: a controller process forks mergers and workers into an N-ary tree, streams merge upward", wide: true },
+          ],
           note: "this project is also a tree — of processes. trees all the way down.",
         },
         {
@@ -284,6 +287,9 @@ window.PORTFOLIO.CONTENT = {
           ],
           tags: ["Y86-64", "HCL", "Assembly", "CPE"],
           links: [],
+          media: [
+            { src: "assets/img/diagram-y86.svg", alt: "Diagram: five pipeline stages with instructions in flight, a forwarded data hazard, and a shrinking CPE meter", wide: true },
+          ],
         },
         {
           id: "bomblab",
@@ -298,6 +304,9 @@ window.PORTFOLIO.CONTENT = {
           ],
           tags: ["x86-64", "GDB", "Reverse Engineering", "ROP"],
           links: [],
+          media: [
+            { src: "assets/img/diagram-bomblab.svg", alt: "Illustration: a GDB session defusing bomb phases next to a friendly bomb with its fuse cut", wide: true },
+          ],
           note: "my favourite kind of puzzle",
         },
         {
@@ -313,6 +322,9 @@ window.PORTFOLIO.CONTENT = {
           ],
           tags: ["PIC18", "Assembly", "Embedded"],
           links: [],
+          media: [
+            { src: "assets/img/diagram-pic18.svg", alt: "Diagram: a PIC18 chip running three state machines round-robin, driving LED rows on PORTB, PORTC and PORTD", wide: true },
+          ],
           dx: 14, dy: -10,
         },
         {
@@ -328,6 +340,9 @@ window.PORTFOLIO.CONTENT = {
           ],
           tags: ["C++", "Dijkstra", "Hash Table"],
           links: [],
+          media: [
+            { src: "assets/img/diagram-flightfinder.svg", alt: "Diagram: airports as graph nodes with parallel flight edges, Dijkstra's chosen route highlighted", wide: true },
+          ],
         },
         {
           id: "modelhub",
@@ -342,6 +357,9 @@ window.PORTFOLIO.CONTENT = {
           ],
           tags: ["Java", "SQL", "Database Design"],
           links: [],
+          media: [
+            { src: "assets/img/diagram-modelhub.svg", alt: "Diagram: normalized Models, Datasets and Runs tables with one-to-many relations and a SQL snippet", wide: true },
+          ],
         },
         {
           id: "kso",

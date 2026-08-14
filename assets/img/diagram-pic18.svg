@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 400" font-family="'Trebuchet MS','Arial Rounded MT Bold',sans-serif">
+  <rect width="700" height="400" fill="#FFFDF8"/>
+  <text x="350" y="34" text-anchor="middle" font-size="19" font-weight="bold" fill="#2B2119">three state machines, one chip, no timers</text>
+
+  <!-- chip -->
+  <rect x="80" y="90" width="220" height="220" rx="16" fill="#4A4238" stroke="#2B2119" stroke-width="4"/>
+  <text x="190" y="188" text-anchor="middle" font-size="20" font-weight="bold" fill="#F6F5F1">PIC18</text>
+  <text x="190" y="212" text-anchor="middle" font-size="14" fill="#AEB6BD">F8722</text>
+  <!-- pins -->
+  <g stroke="#8E979F" stroke-width="6" stroke-linecap="round">
+    <path d="M80 120 L58 120"/><path d="M80 156 L58 156"/><path d="M80 192 L58 192"/><path d="M80 228 L58 228"/><path d="M80 264 L58 264"/>
+    <path d="M300 120 L322 120"/><path d="M300 156 L322 156"/><path d="M300 192 L322 192"/><path d="M300 228 L322 228"/><path d="M300 264 L322 264"/>
+  </g>
+
+  <!-- round-robin ring of state machines -->
+  <circle cx="480" cy="150" r="70" fill="none" stroke="#8C5A3C" stroke-width="4" stroke-dasharray="10 8"/>
+  <g font-size="13" font-weight="bold">
+    <circle cx="480" cy="86" r="26" fill="#FDE7B8" stroke="#2B2119" stroke-width="3"/>
+    <text x="480" y="92" text-anchor="middle" fill="#2B2119">SM1</text>
+    <circle cx="424" cy="184" r="26" fill="#C9F0E5" stroke="#2B2119" stroke-width="3"/>
+    <text x="424" y="190" text-anchor="middle" fill="#2B2119">SM2</text>
+    <circle cx="536" cy="184" r="26" fill="#D9EBF6" stroke="#2B2119" stroke-width="3"/>
+    <text x="536" y="190" text-anchor="middle" fill="#2B2119">SM3</text>
+  </g>
+  <path d="M540 120 C 552 130, 554 140, 552 152" fill="none" stroke="#7A4988" stroke-width="4" stroke-linecap="round"/>
+  <path d="M545 146 L553 156 L558 144" fill="none" stroke="#7A4988" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="608" y="130" font-size="13" font-weight="bold" fill="#7A4988">round</text>
+  <text x="608" y="147" font-size="13" font-weight="bold" fill="#7A4988">robin</text>
+
+  <!-- LED port rows -->
+  <g font-size="14" font-weight="bold">
+    <text x="382" y="262" fill="#2B2119">PORTB</text>
+    <g>
+      <circle cx="470" cy="257" r="10" fill="#F8717A" stroke="#2B2119" stroke-width="2.6"/>
+      <circle cx="500" cy="257" r="10" fill="#FBF3E4" stroke="#2B2119" stroke-width="2.6"/>
+      <circle cx="530" cy="257" r="10" fill="#F8717A" stroke="#2B2119" stroke-width="2.6"/>
+      <circle cx="560" cy="257" r="10" fill="#FBF3E4" stroke="#2B2119" stroke-width="2.6"/>
+      <circle cx="590" cy="257" r="10" fill="#F8717A" stroke="#2B2119" stroke-width="2.6"/>
+    </g>
+    <text x="382" y="304" fill="#2B2119">PORTC</text>
+    <g>
+      <circle cx="470" cy="299" r="10" fill="#7BB661" stroke="#2B2119" stroke-width="2.6"/>
+      <circle cx="500" cy="299" r="10" fill="#7BB661" stroke="#2B2119" stroke-width="2.6"/>
+      <circle cx="530" cy="299" r="10" fill="#FBF3E4" stroke="#2B2119" stroke-width="2.6"/>
+      <circle cx="560" cy="299" r="10" fill="#7BB661" stroke="#2B2119" stroke-width="2.6"/>
+      <circle cx="590" cy="299" r="10" fill="#FBF3E4" stroke="#2B2119" stroke-width="2.6"/>
+    </g>
+    <text x="382" y="346" fill="#2B2119">PORTD</text>
+    <g>
+      <circle cx="470" cy="341" r="10" fill="#FBF3E4" stroke="#2B2119" stroke-width="2.6"/>
+      <circle cx="500" cy="341" r="10" fill="#F4B942" stroke="#2B2119" stroke-width="2.6"/>
+      <circle cx="530" cy="341" r="10" fill="#F4B942" stroke="#2B2119" stroke-width="2.6"/>
+      <circle cx="560" cy="341" r="10" fill="#FBF3E4" stroke="#2B2119" stroke-width="2.6"/>
+      <circle cx="590" cy="341" r="10" fill="#F4B942" stroke="#2B2119" stroke-width="2.6"/>
+    </g>
+  </g>
+
+  <!-- timing note -->
+  <rect x="80" y="332" width="240" height="42" rx="14" fill="#FCE9C0" stroke="#2B2119" stroke-width="3"/>
+  <text x="200" y="350" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#2B2119">timing = counting instructions</text>
+  <text x="200" y="366" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#8B1E3F">no timers, no interrupts</text>
+</svg>

@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 400" font-family="'Trebuchet MS','Arial Rounded MT Bold',sans-serif">
+  <rect width="700" height="400" fill="#FFFDF8"/>
+  <text x="350" y="34" text-anchor="middle" font-size="19" font-weight="bold" fill="#2B2119">read the assembly, cut the right wire</text>
+
+  <!-- terminal window -->
+  <rect x="46" y="56" width="430" height="290" rx="16" fill="#2B2119" stroke="#2B2119" stroke-width="3"/>
+  <rect x="46" y="56" width="430" height="34" rx="16" fill="#5C4B3B"/>
+  <rect x="46" y="74" width="430" height="16" fill="#5C4B3B"/>
+  <circle cx="68" cy="73" r="6" fill="#F8717A" stroke="#2B2119" stroke-width="2"/>
+  <circle cx="88" cy="73" r="6" fill="#F4B942" stroke="#2B2119" stroke-width="2"/>
+  <circle cx="108" cy="73" r="6" fill="#7BB661" stroke="#2B2119" stroke-width="2"/>
+  <g font-family="Menlo, Courier, monospace" font-size="13.5">
+    <text x="64" y="116" fill="#7BB661">(gdb) break explode_bomb</text>
+    <text x="64" y="140" fill="#F6F5F1">Breakpoint 1: never gonna ring</text>
+    <text x="64" y="164" fill="#7BB661">(gdb) disas phase_3</text>
+    <text x="64" y="188" fill="#F6F5F1">cmp  $0x7,%eax   ← aha.</text>
+    <text x="64" y="212" fill="#F6F5F1">jg   0x400f71   ← gotcha.</text>
+    <text x="64" y="236" fill="#7BB661">(gdb) x/s $rsi</text>
+    <text x="64" y="260" fill="#5eead4">Phase 3 defused ✓</text>
+    <text x="64" y="284" fill="#5eead4">Phase 4 defused ✓</text>
+    <text x="64" y="308" fill="#F4B942">Phase 5... watching registers</text>
+    <text x="64" y="330" fill="#F6F5F1">▮</text>
+  </g>
+
+  <!-- cartoon bomb, fuse cut -->
+  <circle cx="580" cy="230" r="62" fill="#4A4238" stroke="#2B2119" stroke-width="4"/>
+  <circle cx="560" cy="210" r="14" fill="#6B6157" opacity="0.8"/>
+  <rect x="562" y="152" width="36" height="24" rx="7" fill="#8E979F" stroke="#2B2119" stroke-width="3"/>
+  <path d="M580 152 C 580 130, 600 128, 606 118" fill="none" stroke="#8C5A3C" stroke-width="5" stroke-linecap="round"/>
+  <path d="M616 96 C 622 90, 630 92, 634 86" fill="none" stroke="#8C5A3C" stroke-width="5" stroke-linecap="round" opacity="0.5"/>
+  <g stroke="#2B2119" stroke-width="2.6" stroke-linecap="round">
+    <path d="M600 108 L622 100"/>
+    <path d="M604 118 L618 112"/>
+  </g>
+  <text x="648" y="106" font-size="20">✂️</text>
+  <!-- happy face on bomb -->
+  <circle cx="562" cy="228" r="4.4" fill="#F6F5F1"/>
+  <circle cx="598" cy="228" r="4.4" fill="#F6F5F1"/>
+  <path d="M560 252 C 570 262, 590 262, 600 252" fill="none" stroke="#F6F5F1" stroke-width="3.6" stroke-linecap="round"/>
+  <text x="580" y="330" text-anchor="middle" font-size="14" font-weight="bold" fill="#4E9F3D">mostly harmless now</text>
+
+  <!-- chips -->
+  <g font-size="12.5" font-weight="bold">
+    <rect x="60" y="356" width="70 " height="28" rx="14" fill="#FFFDF8" stroke="#2B2119" stroke-width="2.6"/>
+    <text x="95" y="375" text-anchor="middle" fill="#7A4988">GDB</text>
+    <rect x="140" y="356" width="150" height="28" rx="14" fill="#FFFDF8" stroke="#2B2119" stroke-width="2.6"/>
+    <text x="215" y="375" text-anchor="middle" fill="#7A4988">x86-64 disassembly</text>
+    <rect x="300" y="356" width="150" height="28" rx="14" fill="#FFFDF8" stroke="#2B2119" stroke-width="2.6"/>
+    <text x="375" y="375" text-anchor="middle" fill="#7A4988">ROP (attack half)</text>
+  </g>
+</svg>
