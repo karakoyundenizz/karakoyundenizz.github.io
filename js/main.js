@@ -111,7 +111,7 @@
     }
 
     var chipTargets = [
-      ["chip-gpa", "education", null],
+      ["chip-gpa", "education", "metu"],
       ["chip-products", "products", null],
       ["chip-now", "experience", "kuartis"],
     ];
