@@ -270,7 +270,7 @@ window.PORTFOLIO.CONTENT = {
           tags: ["C", "fork/exec", "IPC", "Unix sockets"],
           links: [],
           media: [
-            { src: "assets/img/diagram-orchestrator.svg", alt: "Diagram: a controller process forks mergers and workers into an N-ary tree, streams merge upward", wide: true },
+            { src: "assets/img/orchestrator-figs.png", alt: "The assignment's structure figures: an operator chain pipeline (sort, filter, unique) and the N-ary merger tree", wide: true },
           ],
           note: "this project is also a tree — of processes. trees all the way down.",
         },
@@ -288,8 +288,9 @@ window.PORTFOLIO.CONTENT = {
           tags: ["Y86-64", "HCL", "Assembly", "CPE"],
           links: [],
           media: [
-            { src: "assets/img/diagram-y86.svg", alt: "Diagram: five pipeline stages with instructions in flight, a forwarded data hazard, and a shrinking CPE meter", wide: true },
+            { src: "assets/img/perf-results.png", alt: "My actual benchmark run on the course server: bilateral filter down from 1442 to 688 CPE — a 2.1x speedup", wide: true },
           ],
+          note: "real output from my run: 1442 → 688 cycles per element",
         },
         {
           id: "bomblab",
@@ -323,7 +324,7 @@ window.PORTFOLIO.CONTENT = {
           tags: ["PIC18", "Assembly", "Embedded"],
           links: [],
           media: [
-            { src: "assets/img/diagram-pic18.svg", alt: "Diagram: a PIC18 chip running three state machines round-robin, driving LED rows on PORTB, PORTC and PORTD", wide: true },
+            { src: "assets/img/pic18-board.png", alt: "The actual PIC18 development board with the LED game area marked, next to the LED grid layout", wide: true },
           ],
           dx: 14, dy: -10,
         },
@@ -341,7 +342,7 @@ window.PORTFOLIO.CONTENT = {
           tags: ["C++", "Dijkstra", "Hash Table"],
           links: [],
           media: [
-            { src: "assets/img/diagram-flightfinder.svg", alt: "Diagram: airports as graph nodes with parallel flight edges, Dijkstra's chosen route highlighted", wide: true },
+            { src: "assets/img/flight-listing.png", alt: "The MultiGraph data layout: GraphEdge and GraphVertex structs with adjacency lists in C++", wide: true },
           ],
         },
         {
@@ -358,7 +359,7 @@ window.PORTFOLIO.CONTENT = {
           tags: ["Java", "SQL", "Database Design"],
           links: [],
           media: [
-            { src: "assets/img/diagram-modelhub.svg", alt: "Diagram: normalized Models, Datasets and Runs tables with one-to-many relations and a SQL snippet", wide: true },
+            { src: "assets/img/modelhub-schema.png", alt: "The platform's relational schema: Users, Organizations, Models, ModelVersions, Datasets, Runs, Results and their references" },
           ],
         },
         {
