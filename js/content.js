@@ -34,7 +34,7 @@ window.PORTFOLIO.CONTENT = {
     summary: "Happiest a few layers below the surface — Assembly, OS internals, and making code faster cycle by cycle.",
     bullets: [
       "How I work: understand the problem, design the algorithm, write it efficiently, test it well.",
-      "Built two live products — Guild (co-founded with Emirhan Güler) and Phera Labs — but my compass points at OS and low-level systems, with algorithm design a close second.",
+      "Built two live products — Guild and Phera Labs, each co-founded with a friend — but my compass points at OS and low-level systems, with algorithm design a close second.",
       "Outside code: time with friends and anything physical — tennis, volleyball, basketball, camping, cycling, fitness.",
     ],
     tags: [],
@@ -229,13 +229,13 @@ window.PORTFOLIO.CONTENT = {
           id: "phera",
           title: "Phera Labs",
           node: "Phera Labs ★",
-          subtitle: "Sole developer · pheralabs.com",
+          subtitle: "Co-founder & developer · pheralabs.com",
           icon: "star",
           summary: "An art-tech startup's platform — students exhibit digital art, and the best of it joins an international NFT collection.",
           bullets: [
+            "Co-founded and grew it with my high school friend Sabri Ilgaz; I built the platform — design, frontend, backend, database, admin.",
             "\"Phera-Land\": a 360° drag-to-spin gallery you can wander through.",
             "The whole commerce side too: limited prints, QR-ticketed events, referral rewards.",
-            "Solo build, from first commit to production.",
           ],
           tags: [],
           links: [

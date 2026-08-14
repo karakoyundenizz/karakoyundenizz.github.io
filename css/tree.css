@@ -214,6 +214,11 @@
   right: -7px;
 }
 .node.branch:hover, .node.branch.open { --sc: 1.1; }
+/* instant press feedback */
+.node.branch:active, .node.leaf:active, .node.root:active {
+  transition-duration: 0.06s;
+  --sc: 1.0;
+}
 .node.branch.open {
   box-shadow: 6px 6px 0 rgba(43, 33, 25, 0.22);
 }

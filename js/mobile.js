@@ -114,8 +114,8 @@ window.PORTFOLIO = window.PORTFOLIO || {};
         openSec = isOpen ? null : sec;
       });
 
-      /* one section starts open so the page doesn't look empty */
-      var startOpen = openSectionId ? section.id === openSectionId : si === 0;
+      /* sections start closed unless a deep link asks for one */
+      var startOpen = openSectionId ? section.id === openSectionId : false;
       if (startOpen) {
         sec.classList.add("open");
         head.setAttribute("aria-expanded", "true");

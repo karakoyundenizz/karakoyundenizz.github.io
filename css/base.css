@@ -88,6 +88,11 @@ body {
 img { max-width: 100%; display: block; }
 button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
 a { color: var(--ink); }
+/* snappy taps: no 350ms double-tap wait, no gray flash — we draw our own feedback */
+button, a {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
 ul { list-style: none; }
 strong { font-weight: 800; }
 
