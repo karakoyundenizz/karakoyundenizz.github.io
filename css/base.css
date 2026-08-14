@@ -194,7 +194,8 @@ strong { font-weight: 800; }
   transform: rotate(-1deg);
   white-space: nowrap;
 }
-.chip:nth-child(even) { transform: rotate(1.2deg); border-radius: 52% 48% 55% 45% / 44% 58% 42% 56%; }
+.chip:nth-child(even),
+.hero-stats li:nth-child(even) .chip { transform: rotate(1.2deg); border-radius: 52% 48% 55% 45% / 44% 58% 42% 56%; }
 .chip-btn {
   cursor: pointer;
   transition: transform 0.15s var(--pop), box-shadow 0.15s ease;

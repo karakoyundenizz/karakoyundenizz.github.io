@@ -81,11 +81,18 @@
 
   var gameLinkDone = false;
 
-  function openProducts() {
+  /* hero chips jump into the tree: expand a branch, optionally open a card */
+  function openTreeSection(sectionId, itemId) {
+    var section = findSection(sectionId);
+    if (!section) return;
     if (phoneMq.matches) {
-      P.MOBILE.render(stageRoot, "products");
+      P.MOBILE.render(stageRoot, sectionId);
     } else {
-      P.TREE.expand("products", true);
+      P.TREE.expand(sectionId, true);
+    }
+    if (itemId) {
+      var item = findItem(section, itemId);
+      if (item) P.PANEL.open(item, section, null);
     }
     stageRoot.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
@@ -103,8 +110,15 @@
       applyGameLink();
     }
 
-    var productsChip = document.getElementById("chip-products");
-    if (productsChip) productsChip.addEventListener("click", openProducts);
+    var chipTargets = [
+      ["chip-gpa", "education", null],
+      ["chip-products", "products", null],
+      ["chip-now", "experience", "kuartis"],
+    ];
+    chipTargets.forEach(function (t) {
+      var chip = document.getElementById(t[0]);
+      if (chip) chip.addEventListener("click", function () { openTreeSection(t[1], t[2]); });
+    });
 
     if (phoneMq.addEventListener) {
       phoneMq.addEventListener("change", render);
