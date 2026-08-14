@@ -97,7 +97,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
       strip.setAttribute("role", "region");
       strip.setAttribute("aria-label", item.title + " screenshots — scroll sideways");
       item.media.forEach(function (m) {
-        var frame = el("div", "media-frame", strip);
+        var frame = el("div", "media-frame" + (m.wide ? " wide" : ""), strip);
         var img = el("img", "media-img", frame);
         /* photo slots may not be filled yet — vanish instead of showing a broken image */
         img.onerror = function () {

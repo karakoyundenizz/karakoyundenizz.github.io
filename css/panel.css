@@ -170,6 +170,7 @@
   scroll-snap-align: start;
   transform: rotate(-1deg);
 }
+.media-frame.wide { width: 320px; } /* landscape shots: diagrams, screenshots */
 .media-frame:nth-child(even) { transform: rotate(1.2deg); }
 .media-img {
   width: 100%;
