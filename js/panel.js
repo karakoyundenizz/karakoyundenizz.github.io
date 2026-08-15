@@ -107,6 +107,8 @@ window.PORTFOLIO = window.PORTFOLIO || {};
         img.src = m.src;
         img.alt = m.alt || "";
         img.loading = "lazy";
+        /* intrinsic size = zero layout shift while the photo loads */
+        if (m.w && m.h) { img.width = m.w; img.height = m.h; }
       });
     }
 
@@ -158,7 +160,56 @@ window.PORTFOLIO = window.PORTFOLIO || {};
       note.textContent = item.note;
     }
 
+    /* stagger index for the rise-in of each body block (panel.css) */
+    for (var ci = 0; ci < body.children.length; ci++) {
+      body.children[ci].style.setProperty("--ci", ci);
+    }
+
     return closeBtn;
+  }
+
+  /* a colored "seed" flies from the clicked leaf to where the card
+     lands — hand-rolled FLIP, ~340ms, WAAPI. Skipped for deep links
+     (no opener), reduced motion, and browsers without .animate(). */
+  function flySeed(opener) {
+    if (!opener || !opener.getBoundingClientRect) return false;
+    if (!("animate" in Element.prototype)) return false;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
+    var from = opener.getBoundingClientRect();
+    if (!from.width || !from.height) return false;
+
+    /* the panel's final box, without reading its (transformed) rect.
+       clientWidth/Height, not innerWidth: fixed positioning excludes
+       any classic scrollbar, and the two differ on Windows */
+    var vw = document.documentElement.clientWidth;
+    var vh = document.documentElement.clientHeight;
+    var w = panel.offsetWidth;
+    var h = panel.offsetHeight;
+    var isPhone = window.matchMedia("(max-width: 767px)").matches;
+    var toLeft = isPhone ? (vw - w) / 2 : vw - w;
+    var toTop = isPhone ? vh - h : 0;
+
+    var seed = document.createElement("div");
+    seed.className = "panel-seed";
+    var bg = window.getComputedStyle(opener).backgroundColor;
+    if (bg && bg !== "rgba(0, 0, 0, 0)" && bg !== "transparent") seed.style.background = bg;
+    seed.style.left = from.left + "px";
+    seed.style.top = from.top + "px";
+    seed.style.width = from.width + "px";
+    seed.style.height = from.height + "px";
+    document.body.appendChild(seed);
+
+    var anim = seed.animate([
+      { transform: "translate(0, 0) scale(1, 1)", opacity: 0.95 },
+      {
+        transform: "translate(" + (toLeft - from.left) + "px, " + (toTop - from.top) + "px)" +
+          " scale(" + (w / from.width).toFixed(4) + ", " + (h / from.height).toFixed(4) + ")",
+        opacity: 0,
+      },
+    ], { duration: 340, easing: "cubic-bezier(0.22, 1, 0.36, 1)" });
+    function cleanup() { seed.remove(); }
+    anim.finished.then(cleanup, cleanup);
+    return true;
   }
 
   function open(item, section, opener) {
@@ -168,6 +219,10 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     backdrop.hidden = false;
     panel.hidden = false;
     document.body.classList.add("panel-open");
+    if (window.PORTFOLIO.ATMOSPHERE) window.PORTFOLIO.ATMOSPHERE.pause();
+    /* the seed leads, the panel follows a beat behind it */
+    var seeded = flySeed(openerEl);
+    panel.style.transitionDelay = seeded ? "0.06s" : "";
     /* let display kick in before transitioning */
     requestAnimationFrame(function () {
       backdrop.classList.add("show");
@@ -186,9 +241,11 @@ window.PORTFOLIO = window.PORTFOLIO || {};
   function close() {
     if (!isOpen) return;
     isOpen = false;
+    panel.style.transitionDelay = "";
     panel.classList.remove("show");
     backdrop.classList.remove("show");
     document.body.classList.remove("panel-open");
+    if (window.PORTFOLIO.ATMOSPHERE) window.PORTFOLIO.ATMOSPHERE.resume();
     document.removeEventListener("keydown", onKeydown, true);
     window.setTimeout(function () {
       if (!isOpen) { panel.hidden = true; backdrop.hidden = true; }

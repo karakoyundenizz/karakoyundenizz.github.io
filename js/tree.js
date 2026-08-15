@@ -23,11 +23,11 @@ window.PORTFOLIO.SPRITES = {
     '<svg viewBox="0 0 110 120" aria-hidden="true">' +
     '<g class="robot-figure">' +
     '<path d="M55 6 L55 18" stroke="#2B2119" stroke-width="3.4" stroke-linecap="round"/>' +
-    '<circle cx="55" cy="5" r="4.5" fill="#F4B942" stroke="#2B2119" stroke-width="2.6"/>' +
+    '<circle class="robot-antenna" cx="55" cy="5" r="4.5" fill="#F4B942" stroke="#2B2119" stroke-width="2.6"/>' +
     '<rect x="30" y="18" width="50" height="46" rx="14" fill="#AEB6BD" stroke="#2B2119" stroke-width="3.4"/>' +
     '<rect x="36" y="28" width="38" height="17" rx="8.5" fill="#E8EDF0" stroke="#2B2119" stroke-width="2.8"/>' +
-    '<circle cx="47" cy="36.5" r="4" fill="#2B2119"/>' +
-    '<circle cx="63" cy="36.5" r="4" fill="#2B2119"/>' +
+    '<circle class="robot-eye" cx="47" cy="36.5" r="4" fill="#2B2119"/>' +
+    '<circle class="robot-eye" cx="63" cy="36.5" r="4" fill="#2B2119"/>' +
     '<circle cx="48.4" cy="35.2" r="1.3" fill="#fff"/>' +
     '<circle cx="64.4" cy="35.2" r="1.3" fill="#fff"/>' +
     '<path d="M44 52 H66 M49 52 V57 M55 52 V57 M61 52 V57" stroke="#2B2119" stroke-width="2.6" stroke-linecap="round"/>' +
@@ -57,7 +57,54 @@ window.PORTFOLIO.SPRITES = {
     '<circle cx="52" cy="56" r="2.6" fill="#2B2119"/><circle cx="68" cy="56" r="2.6" fill="#2B2119"/>' +
     '<path d="M52 66 C 56 70, 64 70, 68 66" fill="none" stroke="#2B2119" stroke-width="3" stroke-linecap="round"/>' +
     "</svg>",
+  moon:
+    '<svg viewBox="0 0 120 120" aria-hidden="true">' +
+    '<path d="M72 16 A46 46 0 1 0 104 64 A36 36 0 0 1 72 16 Z" fill="#F6E7B8" stroke="#2B2119" stroke-width="4" stroke-linejoin="round"/>' +
+    /* one closed eye; the mouth is a long, slanted profile smile that
+       sweeps down from the face and flows into the bite's lower tip */
+    '<path d="M52 50 C 56 55, 63 55, 67 50" fill="none" stroke="#2B2119" stroke-width="3" stroke-linecap="round"/>' +
+    '<path d="M76 84 C 86 92, 99 85, 104 67" fill="none" stroke="#2B2119" stroke-width="2.8" stroke-linecap="round"/>' +
+    /* craters tucked away from the face */
+    '<circle cx="46" cy="30" r="4" fill="#EBD79F" stroke="#2B2119" stroke-width="1.8" opacity="0.85"/>' +
+    '<circle cx="36" cy="86" r="3" fill="#EBD79F" stroke="#2B2119" stroke-width="1.6" opacity="0.7"/>' +
+    "</svg>",
+  stars:
+    '<svg viewBox="0 0 1600 480" preserveAspectRatio="none" aria-hidden="true" fill="#FFE9A3">' +
+    '<path class="star-tw1" d="M180 90 L184 102 L196 106 L184 110 L180 122 L176 110 L164 106 L176 102 Z"/>' +
+    '<path class="star-tw2" d="M420 50 L423 59 L432 62 L423 65 L420 74 L417 65 L408 62 L417 59 Z"/>' +
+    '<path class="star-tw1" d="M1150 70 L1153 79 L1162 82 L1153 85 L1150 94 L1147 85 L1138 82 L1147 79 Z"/>' +
+    '<path class="star-tw2" d="M1340 150 L1344 162 L1356 166 L1344 170 L1340 182 L1336 170 L1324 166 L1336 162 Z"/>' +
+    '<circle class="star-tw2" cx="300" cy="170" r="4"/>' +
+    '<circle class="star-tw1" cx="560" cy="90" r="3.4"/>' +
+    '<circle class="star-tw2" cx="760" cy="140" r="4.4"/>' +
+    '<circle class="star-tw1" cx="950" cy="60" r="3"/>' +
+    '<circle class="star-tw2" cx="1060" cy="190" r="3.6"/>' +
+    '<circle class="star-tw1" cx="1470" cy="215" r="4"/>' +
+    '<circle class="star-tw1" cx="90" cy="210" r="3.2"/>' +
+    '<circle class="star-tw2" cx="1250" cy="240" r="3"/>' +
+    "</svg>",
+  leaf:
+    '<svg viewBox="0 0 32 32" aria-hidden="true">' +
+    '<path d="M16 3 C 26 8, 28 20, 16 29 C 4 20, 6 8, 16 3 Z" fill="#7BB661" stroke="#2B2119" stroke-width="2.4" stroke-linejoin="round"/>' +
+    '<path d="M16 8 V 24" stroke="#2B2119" stroke-width="1.8" stroke-linecap="round"/>' +
+    "</svg>",
 };
+
+/* the shower that hangs under a clicked cloud (html.raining shows it):
+   it rains BITS — 0s and 1s. Inline delays/durations survive the CSS
+   animation shorthand. */
+window.PORTFOLIO.RAIN_HTML =
+  '<span class="rain" aria-hidden="true">' +
+  '<b class="puddle"></b>' +
+  '<i class="drop" style="left:4%;animation-delay:0s;animation-duration:1.45s">0</i>' +
+  '<i class="drop" style="left:17%;animation-delay:0.55s;animation-duration:1.75s">1</i>' +
+  '<i class="drop" style="left:30%;animation-delay:0.2s;animation-duration:1.5s">1</i>' +
+  '<i class="drop" style="left:43%;animation-delay:0.8s;animation-duration:1.8s">0</i>' +
+  '<i class="drop" style="left:56%;animation-delay:0.4s;animation-duration:1.55s">1</i>' +
+  '<i class="drop" style="left:69%;animation-delay:1s;animation-duration:1.65s">0</i>' +
+  '<i class="drop" style="left:82%;animation-delay:0.1s;animation-duration:1.4s">0</i>' +
+  '<i class="drop" style="left:94%;animation-delay:0.65s;animation-duration:1.7s">1</i>' +
+  "</span>";
 
 (function () {
   var SVG_NS = "http://www.w3.org/2000/svg";
@@ -105,23 +152,52 @@ window.PORTFOLIO.SPRITES = {
 
   /* ── decorations ── */
 
+  function buildCloud(cls, parent) {
+    var c = el("button", cls, parent);
+    c.type = "button";
+    c.setAttribute("aria-label", "Rain");
+    c.setAttribute("aria-pressed",
+      document.documentElement.classList.contains("raining") ? "true" : "false");
+    c.title = "tap a cloud for rain";
+    c.innerHTML = window.PORTFOLIO.RAIN_HTML;
+    return c;
+  }
+
+  /* three depth layers so atmosphere.js can parallax the world
+     around the (deliberately still) tree. The sun is a real button:
+     it toggles day/night, so its layer is NOT aria-hidden. */
   function buildDecorations(parent, layout) {
-    var deco = el("div", "deco", parent);
-    deco.setAttribute("aria-hidden", "true");
+    var S = window.PORTFOLIO.SPRITES;
 
-    var sun = el("div", "sun", deco);
-    sun.innerHTML = window.PORTFOLIO.SPRITES.sun;
+    var sky = el("div", "deco deco-sky", parent);
 
-    el("div", "cloud cloud-1", deco);
-    el("div", "cloud cloud-2", deco);
+    var toggle = el("button", "sun-toggle", sky);
+    toggle.type = "button";
+    toggle.innerHTML =
+      '<span class="sun" aria-hidden="true">' + S.sun + "</span>" +
+      '<span class="moon" aria-hidden="true">' + S.moon + "</span>";
 
-    el("div", "hill hill-back", deco);
-    el("div", "hill hill-front", deco);
+    var stars = el("div", "stars", sky);
+    stars.setAttribute("aria-hidden", "true");
+    stars.innerHTML = S.stars;
 
+    /* clouds are buttons too: tap one and it starts to rain */
+    buildCloud("cloud cloud-1", sky);
+    buildCloud("cloud cloud-2", sky);
+
+    var hills = el("div", "deco deco-hills", parent);
+    hills.setAttribute("aria-hidden", "true");
+    el("div", "hill hill-back", hills);
+    el("div", "hill hill-front", hills);
+
+    var motes = el("div", "deco deco-motes", parent);
+    motes.setAttribute("aria-hidden", "true");
     for (var i = 0; i < 6; i++) {
-      var p = el("div", "pollen pollen-" + (i + 1), deco);
+      var p = el("div", "pollen pollen-" + (i + 1), motes);
       p.style.left = 12 + i * 15 + "%";
     }
+
+    if (window.PORTFOLIO.THEME) window.PORTFOLIO.THEME.syncUi();
   }
 
   function buildBee(parent, layout) {

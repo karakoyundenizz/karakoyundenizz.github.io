@@ -12,8 +12,10 @@
      bullets   [] of strings (plain text, keep them punchy)
      tags      [] of tech chips
      links     [] of {label, href, kind: web|github|appstore|playstore|email|linkedin}
-     media     [] of {src, alt} — screenshot/photo strip; files that don't
-               exist yet are skipped silently, so you can pre-wire photo slots
+     media     [] of {src, alt, w, h, wide} — screenshot/photo strip; files that
+               don't exist yet are skipped silently, so you can pre-wire photo
+               slots. w/h = intrinsic pixel size (prevents layout shift);
+               wide: true → landscape frame
      flagship  true → bigger "golden fruit" leaf + richer card
      theme     "dark" → card header gets the near-black Phera band
      note      handwritten footnote at the bottom of the card
@@ -68,7 +70,9 @@ window.PORTFOLIO.CONTENT = {
           ],
           tags: ["Operating Systems", "Computer Organization", "Algorithms", "Embedded Systems"],
           links: [],
-          logo: "assets/img/metu-logo.jpg",
+          media: [
+            { src: "assets/img/metu-ceng.webp", alt: "The METU Department of Computer Engineering entrance", w: 1000, h: 667, wide: true },
+          ],
           note: "seed of this tree: ranked 799 out of ~3,000,000 in the national university exam",
         },
         {
@@ -106,7 +110,7 @@ window.PORTFOLIO.CONTENT = {
           ],
           tags: ["ROS 2", "C++17", "GNSS", "TDD", "GTest", "Jetson"],
           links: [],
-          logo: "assets/img/kuartis-logo.jpg",
+          logo: "assets/img/kuartis.png",
         },
         {
           id: "aselsan-ce",
@@ -137,7 +141,7 @@ window.PORTFOLIO.CONTENT = {
           tags: ["Python", "CNN", "ResNet", "Computer Vision"],
           links: [],
           media: [
-            { src: "assets/img/romer-bee.jpg", alt: "A honey bee from the ROMER orientation-detection dataset" },
+            { src: "assets/img/romer-bee.webp", alt: "A honey bee from the ROMER orientation-detection dataset", w: 900, h: 506 },
           ],
           logo: "assets/img/romer-logo.jpg",
           note: "yes, the bee flying around this tree is a colleague",
@@ -216,10 +220,10 @@ window.PORTFOLIO.CONTENT = {
             { label: "Google Play", href: "https://play.google.com/store/apps/details?id=com.metustars.guild", kind: "playstore" },
           ],
           media: [
-            { src: "assets/img/guild-shot-feed.jpg", alt: "Guild home feed screen with ranked posts" },
-            { src: "assets/img/guild-shot-events.jpg", alt: "Guild discover screen listing campus events" },
-            { src: "assets/img/guild-shot-forum.jpg", alt: "Guild forum thread with anonymous posts and a poll" },
-            { src: "assets/img/guild-shot-unimnet.jpg", alt: "Guild Ünimnet screen with featured nationwide opportunities" },
+            { src: "assets/img/guild-shot-feed.webp", alt: "Guild home feed screen with ranked posts", w: 640, h: 1384 },
+            { src: "assets/img/guild-shot-events.webp", alt: "Guild discover screen listing campus events", w: 640, h: 1384 },
+            { src: "assets/img/guild-shot-forum.webp", alt: "Guild forum thread with anonymous posts and a poll", w: 640, h: 1384 },
+            { src: "assets/img/guild-shot-unimnet.webp", alt: "Guild Ünimnet screen with featured nationwide opportunities", w: 640, h: 1384 },
           ],
           logo: "assets/img/guild-icon.png",
           flagship: true,
@@ -270,7 +274,7 @@ window.PORTFOLIO.CONTENT = {
           tags: ["C", "fork/exec", "IPC", "Unix sockets"],
           links: [],
           media: [
-            { src: "assets/img/orchestrator-figs.png", alt: "The assignment's structure figures: an operator chain pipeline (sort, filter, unique) and the N-ary merger tree", wide: true },
+            { src: "assets/img/orchestrator-figs.png", alt: "The assignment's structure figures: an operator chain pipeline (sort, filter, unique) and the N-ary merger tree", w: 830, h: 600, wide: true },
           ],
           note: "this project is also a tree — of processes. trees all the way down.",
         },
@@ -288,7 +292,7 @@ window.PORTFOLIO.CONTENT = {
           tags: ["Y86-64", "HCL", "Assembly", "CPE"],
           links: [],
           media: [
-            { src: "assets/img/perf-results.png", alt: "My actual benchmark run on the course server: bilateral filter down from 1442 to 688 CPE — a 2.1x speedup", wide: true },
+            { src: "assets/img/perf-results.webp", alt: "My actual benchmark run on the course server: bilateral filter down from 1442 to 688 CPE — a 2.1x speedup", w: 1100, h: 612, wide: true },
           ],
           note: "real output from my run: 1442 → 688 cycles per element",
         },
@@ -306,8 +310,8 @@ window.PORTFOLIO.CONTENT = {
           tags: ["x86-64", "GDB", "Reverse Engineering", "ROP"],
           links: [],
           media: [
-            { src: "assets/img/bomb-asm.png", alt: "GDB disassembly of phase_2 from my bomb, with the explode_bomb branch at the bottom", wide: true },
-            { src: "assets/img/bomb-defused.png", alt: "Terminal output: all six phases defused — Congratulations! You've defused the bomb!", wide: true },
+            { src: "assets/img/bomb-asm.webp", alt: "GDB disassembly of phase_2 from my bomb, with the explode_bomb branch at the bottom", w: 1000, h: 717, wide: true },
+            { src: "assets/img/bomb-defused.webp", alt: "Terminal output: all six phases defused — Congratulations! You've defused the bomb!", w: 1000, h: 551, wide: true },
           ],
           note: "all six phases defused. my favourite kind of puzzle.",
         },
@@ -326,7 +330,7 @@ window.PORTFOLIO.CONTENT = {
           tags: ["PIC18", "Assembly", "C", "Interrupts", "Embedded"],
           links: [],
           media: [
-            { src: "assets/img/pic18-board.png", alt: "The actual PIC18 development board with the Flappy Bird LED game area marked, next to its LED grid layout", wide: true },
+            { src: "assets/img/pic18-board.webp", alt: "The actual PIC18 development board with the Flappy Bird LED game area marked, next to its LED grid layout", w: 950, h: 320, wide: true },
           ],
           note: "the board photo is my Flappy Bird — bird on the left, pipes scrolling in",
           dx: 14, dy: -10,
@@ -345,7 +349,7 @@ window.PORTFOLIO.CONTENT = {
           tags: ["C++", "Dijkstra", "Hash Table"],
           links: [],
           media: [
-            { src: "assets/img/flight-listing.png", alt: "The MultiGraph data layout: GraphEdge and GraphVertex structs with adjacency lists in C++", wide: true },
+            { src: "assets/img/flight-listing.png", alt: "The MultiGraph data layout: GraphEdge and GraphVertex structs with adjacency lists in C++", w: 1000, h: 640, wide: true },
           ],
         },
         {
@@ -362,7 +366,7 @@ window.PORTFOLIO.CONTENT = {
           tags: ["Java", "SQL", "Database Design"],
           links: [],
           media: [
-            { src: "assets/img/modelhub-schema.png", alt: "The platform's relational schema: Users, Organizations, Models, ModelVersions, Datasets, Runs, Results and their references" },
+            { src: "assets/img/modelhub-schema.webp", alt: "The platform's relational schema: Users, Organizations, Models, ModelVersions, Datasets, Runs, Results and their references", w: 1000, h: 1160 },
           ],
         },
         {
@@ -380,8 +384,8 @@ window.PORTFOLIO.CONTENT = {
           tags: ["Software Architecture", "UML", "SRS / SAD", "ML System Design"],
           links: [],
           media: [
-            { src: "assets/img/kso-components.png", alt: "KSO component diagram: researcher, data management, citizen science, model API and ML/HPC subsystems", wide: true },
-            { src: "assets/img/kso-classes.png", alt: "KSO internal interfaces class diagram" },
+            { src: "assets/img/kso-components.png", alt: "KSO component diagram: researcher, data management, citizen science, model API and ML/HPC subsystems", w: 1120, h: 560, wide: true },
+            { src: "assets/img/kso-classes.webp", alt: "KSO internal interfaces class diagram", w: 1000, h: 1230 },
           ],
           note: "diagrams straight from our SAD — drawn box by box in StarUML",
         },
@@ -468,7 +472,7 @@ window.PORTFOLIO.CONTENT = {
           tags: [],
           links: [],
           media: [
-            { src: "assets/img/karate.jpg", alt: "Deniz at a karate competition" },
+            { src: "assets/img/karate.webp", alt: "Deniz at a karate competition", w: 900, h: 520 },
           ],
           hidden: false,
         },
@@ -497,10 +501,6 @@ window.PORTFOLIO.CONTENT = {
           ],
           tags: [],
           links: [],
-          media: [
-            { src: "assets/img/sports.jpg", alt: "Deniz doing sports with friends" },
-            { src: "assets/img/cycling.jpg", alt: "Deniz's road bike on a ride" },
-          ],
           hidden: false,
         },
         {
@@ -515,7 +515,7 @@ window.PORTFOLIO.CONTENT = {
           tags: [],
           links: [],
           media: [
-            { src: "assets/img/ates.jpg", alt: "Ateş the dog" },
+            { src: "assets/img/ates.webp", alt: "Ateş the dog", w: 900, h: 675 },
           ],
           hidden: false,
         },

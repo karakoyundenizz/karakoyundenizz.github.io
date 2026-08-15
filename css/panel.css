@@ -11,7 +11,7 @@
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s ease;
-  z-index: 40;
+  z-index: var(--z-backdrop);
 }
 #backdrop.show { opacity: 1; pointer-events: auto; }
 
@@ -22,7 +22,7 @@
   right: 0;
   height: 100%;
   width: min(460px, 94vw);
-  z-index: 50;
+  z-index: var(--z-panel);
   transform: translateX(108%);
   transition: transform 0.3s var(--smooth);
   display: flex;
@@ -35,6 +35,7 @@
   width: 100%;
   display: flex;
   flex-direction: column;
+  color: var(--ink); /* sticker text is always ink, day or night */
   background: var(--white);
   border-left: var(--outline);
   box-shadow: -10px 0 0 rgba(43, 33, 25, 0.08);
@@ -174,6 +175,7 @@
 .media-frame:nth-child(even) { transform: rotate(1.2deg); }
 .media-img {
   width: 100%;
+  height: auto; /* keep the w/h-attr aspect ratio when scaled down */
   border: 3px solid var(--ink);
   border-radius: 20px;
   box-shadow: 3px 3px 0 rgba(43, 33, 25, 0.16);
@@ -267,6 +269,27 @@
   transform: rotate(-0.6deg);
 }
 
+/* the FLIP "seed" that flies from a clicked leaf to the card */
+.panel-seed {
+  position: fixed;
+  z-index: var(--z-seed);
+  pointer-events: none;
+  background: var(--white);
+  border: 3px solid var(--ink);
+  border-radius: 22px 27px 20px 29px / 26px 20px 29px 22px;
+  transform-origin: 0 0;
+  will-change: transform, opacity;
+}
+
+/* card content rises in one block at a time (panel.js sets --ci) */
+#panel.show .card-body > * {
+  animation: card-rise 0.38s var(--smooth) backwards;
+  animation-delay: calc(var(--ci, 0) * 0.035s + 0.12s);
+}
+@keyframes card-rise {
+  from { opacity: 0; translate: 0 14px; }
+}
+
 /* ── phone: panel becomes a bottom sheet ── */
 @media (max-width: 767px) {
   #panel {
@@ -312,11 +335,32 @@
   padding: 10px 18px 30px;
 }
 
-/* little sky above the vine */
+/* little sky above the vine — the sun doubles as the theme toggle here too */
 .vine-deco { position: relative; height: 46px; pointer-events: none; }
-.vine-sun { position: absolute; top: -4px; right: 4px; width: 62px; }
+.vine-sun {
+  position: absolute;
+  top: -4px;
+  right: 4px;
+  width: 62px;
+  height: 62px;
+  padding: 0;
+  border: none;
+  background: none;
+  pointer-events: auto;
+  cursor: pointer;
+}
 .vine-sun svg { width: 100%; height: auto; }
+.vine-sun .sun,
+.vine-sun .moon {
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.55s ease, transform 0.8s var(--smooth);
+}
+.vine-sun .moon { opacity: 0; transform: translateY(14px) rotate(-40deg); }
+[data-theme="night"] .vine-sun .sun { opacity: 0; transform: translateY(16px) rotate(50deg); }
+[data-theme="night"] .vine-sun .moon { opacity: 1; transform: none; }
 .vine-sun .sun-rays { transform-origin: 60px 60px; animation: sun-spin 60s linear infinite; }
+[data-theme="night"] .vine-sun .sun-rays { animation-play-state: paused; }
 .vine-cloud { top: 6px; left: 6px; transform: scale(0.5); transform-origin: left top; }
 
 /* "me!" root card */
@@ -329,6 +373,7 @@
   padding: 10px 14px;
   margin: 2px 0 14px;
   text-align: left;
+  color: var(--ink); /* sticker text is always ink, day or night */
   background: var(--white);
   border: var(--outline);
   border-radius: 22px 26px 24px 28px / 26px 22px 28px 24px;
@@ -365,9 +410,10 @@
   right: -22%;
   bottom: -96px;
   height: 176px;
-  background: #99C97E;
+  background: var(--hill-2);
   border: var(--outline);
   border-radius: 50%;
+  transition: background-color 0.5s ease;
 }
 .vine-ground .dog,
 .vine-ground .robot { position: absolute; transform: none; }
@@ -394,6 +440,7 @@
   font-family: var(--font-display);
   font-weight: 800;
   font-size: 1.08rem;
+  color: var(--ink); /* sticker text is always ink, day or night */
   text-align: left;
   background: var(--accent-soft, var(--white));
   border: var(--outline);
@@ -454,6 +501,7 @@
   margin: 10px 0 10px 26px;
   padding: 11px 14px;
   text-align: left;
+  color: var(--ink); /* sticker text is always ink, day or night */
   background: var(--white);
   border: 2.5px solid var(--ink);
   border-radius: 18px 22px 20px 24px / 22px 18px 24px 20px;
@@ -479,9 +527,27 @@
   overflow: hidden;
 }
 
+/* the vine sections sprout as they scroll into view (phone only page
+   that scrolls). Pure CSS; browsers without scroll-driven animations
+   simply show them static. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .vine-me, .vine-sec {
+      animation: vine-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 55%;
+    }
+  }
+}
+@keyframes vine-in {
+  from { opacity: 0; transform: translateY(26px) scale(0.96); }
+}
+
 /* reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .live-badge::before { animation: none; }
   .vine-sun .sun-rays { animation: none; }
+  /* must out-specify the #panel.show rule or it silently loses */
+  #panel.show .card-body > * { animation: none; }
   #panel, #backdrop, .vine-list, .vine-caret, .vine-list li { transition-duration: 0.01ms !important; transition-delay: 0s !important; }
 }

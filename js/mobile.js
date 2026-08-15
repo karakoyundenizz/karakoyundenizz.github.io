@@ -33,10 +33,21 @@ window.PORTFOLIO = window.PORTFOLIO || {};
 
     var vine = el("div", "vine", rootEl);
 
-    /* little sky: sun + a drifting cloud */
+    /* little sky: the sun (which is also the day/night switch) + a cloud */
     var deco = el("div", "vine-deco", vine);
-    deco.setAttribute("aria-hidden", "true");
-    deco.innerHTML = '<div class="vine-sun">' + (SPRITES.sun || "") + '</div><div class="cloud vine-cloud"></div>';
+    var sunBtn = el("button", "vine-sun", deco);
+    sunBtn.type = "button";
+    sunBtn.innerHTML =
+      '<span class="sun" aria-hidden="true">' + (SPRITES.sun || "") + "</span>" +
+      '<span class="moon" aria-hidden="true">' + (SPRITES.moon || "") + "</span>";
+    var cloud = el("button", "cloud vine-cloud", deco);
+    cloud.type = "button";
+    cloud.setAttribute("aria-label", "Rain");
+    cloud.setAttribute("aria-pressed",
+      document.documentElement.classList.contains("raining") ? "true" : "false");
+    cloud.title = "tap the cloud for rain";
+    cloud.innerHTML = window.PORTFOLIO.RAIN_HTML || "";
+    if (window.PORTFOLIO.THEME) window.PORTFOLIO.THEME.syncUi();
 
     /* "me!" root card — same about card as the desktop root node */
     var me = el("button", "vine-me", vine);

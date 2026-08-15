@@ -22,29 +22,93 @@
 }
 
 /* ── decorations ── */
-.deco { position: absolute; inset: 0; pointer-events: none; }
+.deco { position: absolute; inset: 0; pointer-events: none; transition: opacity 0.45s ease; }
 
-.sun {
+/* three depth layers — atmosphere.js writes --par-x/--par-y (−1..1)
+   and --gust (0..1) on .stage; the world shifts, the tree stays still */
+.deco-sky {
+  transform: translate(calc(var(--par-x, 0) * -14px + var(--gust, 0) * -10px), calc(var(--par-y, 0) * -7px));
+}
+.deco-hills {
+  transform: translate(calc(var(--par-x, 0) * -7px), calc(var(--par-y, 0) * -3px));
+}
+.deco-motes {
+  transform: translate(calc(var(--par-x, 0) * 10px + var(--gust, 0) * 14px), calc(var(--par-y, 0) * 5px));
+}
+/* promote the layers only where atmosphere.js actually drives them —
+   mirrors its gate; elsewhere will-change would pin stage-sized GPU
+   textures on exactly the devices with the least memory */
+@media (pointer: fine) and (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+  .deco-sky, .deco-hills, .deco-motes { will-change: transform; }
+}
+
+/* ── sun/moon toggle: the sun IS the theme switch ── */
+.sun-toggle {
   position: absolute;
   top: 30px;
   right: 90px;
   width: 130px;
+  height: 130px;
+  padding: 0;
+  border: none;
+  background: none;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: transform 0.25s var(--pop);
 }
+.sun-toggle:hover { transform: scale(1.07) rotate(4deg); }
+.sun-toggle .sun,
+.sun-toggle .moon {
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.55s ease, transform 0.8s var(--smooth);
+}
+.sun-toggle svg { width: 100%; height: auto; }
+.sun-toggle .moon { opacity: 0; transform: translateY(28px) rotate(-40deg); }
+[data-theme="night"] .sun-toggle .sun { opacity: 0; transform: translateY(32px) rotate(50deg); }
+[data-theme="night"] .sun-toggle .moon { opacity: 1; transform: none; }
 .sun-rays {
   transform-origin: 60px 60px;
   animation: sun-spin 60s linear infinite;
 }
+[data-theme="night"] .sun-toggle .sun-rays { animation-play-state: paused; }
 @keyframes sun-spin { to { transform: rotate(360deg); } }
+
+/* ── stars: a dot field that only wakes at night ── */
+.stars {
+  position: absolute;
+  inset: 0 0 45% 0;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+.stars svg { width: 100%; height: 100%; }
+.star-tw1, .star-tw2 {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: star-twinkle 3.6s ease-in-out infinite alternate;
+  animation-play-state: paused; /* only spend the loop when visible */
+}
+.star-tw2 { animation-duration: 4.4s; animation-delay: 1.2s; }
+[data-theme="night"] .stars { opacity: 1; }
+[data-theme="night"] .star-tw1,
+[data-theme="night"] .star-tw2 { animation-play-state: running; }
+/* opacity only — SVG child transforms fall off the compositor in
+   some engines, and 12 of these run all night */
+@keyframes star-twinkle {
+  from { opacity: 0.35; }
+  to   { opacity: 1; }
+}
 
 .cloud {
   position: absolute;
   width: 170px;
   height: 54px;
-  background: var(--white);
+  background: var(--cloud);
   border: var(--outline);
   border-radius: 60px;
   box-shadow: 3px 4px 0 rgba(43, 33, 25, 0.12);
   opacity: 0.9;
+  transition: background-color 0.5s ease;
 }
 .cloud::before, .cloud::after {
   content: "";
@@ -62,20 +126,87 @@
   to   { translate: 160px 12px; }
 }
 
+/* ── rain: tap a cloud and it opens up ──
+   drops live INSIDE the cloud, so the shower drifts along with it */
+button.cloud { pointer-events: auto; cursor: pointer; }
+button.cloud:hover { filter: brightness(1.04); }
+html.raining .cloud { filter: brightness(0.94) saturate(0.85); }
+.cloud .rain {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 8%;
+  right: 8%;
+  height: var(--fall, 300px);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+/* per-cloud fall distance so the bits actually reach the hills
+   (cloud-2 is scaled 0.72, so its shaft needs to be longer) */
+.cloud-1 { --fall: 580px; }
+.cloud-2 { --fall: 850px; } /* longer: this cloud is scaled 0.72 and sits higher */
+/* keep the higher cloud's bits from turning into streaks over the
+   longer distance — !important because per-drop durations are inline */
+html.raining .cloud-2 .drop { animation-duration: 2.3s !important; }
+/* it rains bits: little 0s and 1s tumble out of the cloud */
+.cloud .drop {
+  position: absolute;
+  top: -16px;
+  font-family: var(--font-display);
+  font-style: normal;
+  font-weight: 800;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--rain);
+  opacity: 0;
+}
+html.raining .cloud .rain { opacity: 1; }
+html.raining .cloud .drop { animation: drop-fall 1.55s linear infinite; }
+/* binary visibility — fitting, for bits */
+@keyframes drop-fall {
+  from { transform: translateY(0); opacity: 1; }
+  to   { transform: translateY(var(--fall, 300px)); opacity: 1; }
+}
+
+/* the bits pool into a puddle where they land */
+.cloud .puddle {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  bottom: -5px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--rain);
+  border: 2px solid var(--ink);
+  opacity: 0;
+  transform: scaleX(0.15);
+  transition: opacity 0.6s ease, transform 1.6s var(--smooth);
+}
+html.raining .cloud .puddle {
+  opacity: 0.75;
+  transform: scaleX(1);
+  /* fills up only after the first bits have had time to land */
+  transition-delay: 1.2s;
+}
+/* the phone vine has no ground under its little sky — no puddle there */
+.vine-cloud .puddle { display: none; }
+.vine-cloud { --fall: 300px; }
+
 .hill {
   position: absolute;
   border: var(--outline);
   border-radius: 50%;
+  transition: background-color 0.5s ease;
 }
 .hill-back {
   width: 2000px; height: 560px;
   left: -220px; bottom: -400px;
-  background: #B7D9A0;
+  background: var(--hill-1);
 }
 .hill-front {
   width: 1700px; height: 480px;
   left: 120px; bottom: -360px;
-  background: #99C97E;
+  background: var(--hill-2);
 }
 
 .pollen {
@@ -99,6 +230,40 @@
   60%  { opacity: 0.85; }
   100% { transform: translateY(-420px) translateX(60px); opacity: 0; }
 }
+
+/* at night the pollen motes become fireflies — same six elements,
+   swapped loop. The glow is light emission, not a sticker shadow. */
+[data-theme="night"] .pollen {
+  background: #FFE9A3;
+  border-color: rgba(43, 33, 25, 0.85);
+  box-shadow: 0 0 10px 3px rgba(255, 226, 130, 0.5);
+  animation: firefly-wander 16s ease-in-out infinite;
+}
+[data-theme="night"] .pollen-2 { animation-delay: 2.7s; }
+[data-theme="night"] .pollen-3 { animation-delay: 5.2s; }
+[data-theme="night"] .pollen-4 { animation-delay: 8.1s; }
+[data-theme="night"] .pollen-5 { animation-delay: 10.6s; }
+[data-theme="night"] .pollen-6 { animation-delay: 13.4s; }
+@keyframes firefly-wander {
+  0%   { transform: translate(0, 0); opacity: 0; }
+  10%  { opacity: 0.95; }
+  25%  { transform: translate(56px, -48px); opacity: 0.3; }
+  40%  { transform: translate(10px, -86px); opacity: 0.95; }
+  55%  { transform: translate(-34px, -120px); opacity: 0.25; }
+  70%  { transform: translate(24px, -70px); opacity: 0.9; }
+  85%  { transform: translate(52px, -30px); opacity: 0.3; }
+  100% { transform: translate(0, 0); opacity: 0; }
+}
+
+/* falling leaves (spawned sparingly by atmosphere.js, capped) */
+.leaf-fall {
+  position: absolute;
+  width: 26px;
+  pointer-events: none;
+  z-index: 4; /* above the strokes, behind every node */
+  will-change: transform, opacity;
+}
+.leaf-fall svg { width: 100%; height: auto; }
 
 /* ── SVG tree strokes ── */
 .trunk-path {
@@ -146,12 +311,13 @@
   align-items: center;
   gap: 8px;
   font-family: var(--font-display);
+  color: var(--ink); /* sticker text is always ink, day or night */
   border: var(--outline);
   background: var(--white);
   box-shadow: var(--sticker-shadow);
   transform: translate(-50%, -50%) rotate(var(--tilt, 0deg)) scale(var(--sc, 1));
   transition: transform 0.24s var(--pop), opacity 0.2s ease, box-shadow 0.2s ease;
-  z-index: 5;
+  z-index: var(--z-node);
 }
 .node-icon { width: 24px; height: 24px; flex: none; color: var(--accent, var(--ink)); }
 .node-label { white-space: nowrap; }
@@ -172,7 +338,7 @@
   padding: 4px;
   border-radius: 47% 53% 50% 50% / 52% 48% 55% 45%;
   background: var(--white);
-  z-index: 6;
+  z-index: var(--z-friend);
 }
 .node.root svg { width: 92px; height: 92px; }
 .root-photo {
@@ -256,7 +422,7 @@
     opacity 0.18s ease,
     visibility 0s linear 0.3s,
     box-shadow 0.2s ease;
-  z-index: 7;
+  z-index: var(--z-leaf);
 }
 .leaf-group.open .node.leaf {
   visibility: visible;
@@ -269,14 +435,16 @@
     box-shadow 0.2s ease;
 }
 .leaf-icon { width: 19px; height: 19px; }
-.node.leaf:hover { --sc: 1.1; z-index: 9; }
+.node.leaf:hover { --sc: 1.1; z-index: var(--z-leaf-hover); }
 
-/* idle sway once opened (starts after the pop settles) */
+/* idle sway once opened (starts after the pop settles).
+   --sway grows with --gust so wind gusts shake the whole canopy. */
 @keyframes leaf-sway {
-  from { transform: translate(-50%, -50%) rotate(calc(var(--tilt, 0deg) - 2deg)) scale(var(--sc, 1)); }
-  to   { transform: translate(-50%, -50%) rotate(calc(var(--tilt, 0deg) + 2.4deg)) scale(var(--sc, 1)); }
+  from { transform: translate(-50%, -50%) rotate(calc(var(--tilt, 0deg) - var(--sway, 2deg))) scale(var(--sc, 1)); }
+  to   { transform: translate(-50%, -50%) rotate(calc(var(--tilt, 0deg) + var(--sway, 2deg) * 1.2)) scale(var(--sc, 1)); }
 }
 .leaf-group.open .node.leaf {
+  --sway: calc(2deg + var(--gust, 0) * 5deg);
   animation: leaf-sway 3.8s ease-in-out calc(0.7s + var(--i, 0) * 0.35s) infinite alternate;
 }
 
@@ -310,7 +478,7 @@
   position: absolute;
   width: 0; height: 0;
   animation: bee-x 7.5s ease-in-out infinite alternate;
-  z-index: 8;
+  z-index: var(--z-bee);
   pointer-events: none;
 }
 .bee {
@@ -328,12 +496,20 @@
 @keyframes bee-y { from { translate: 0 -46px; } to { translate: 0 40px; } }
 @keyframes bee-flap { from { transform: scaleY(1); } to { transform: scaleY(0.4); } }
 
+/* the colleague lands on the Experience pill when that branch is pinned */
+.bee-orbit, .bee { transition: translate 0.9s var(--smooth); }
+.stage[data-open="experience"] .bee-orbit { animation: none; translate: 24px 64px; }
+.stage[data-open="experience"] .bee { animation: none; translate: 0 0; }
+
+/* bees sleep at night; the fireflies take their shift */
+[data-theme="night"] .bee-orbit { display: none; }
+
 /* ── Ateş the dog ── */
 .dog {
   position: absolute;
   width: 96px;
   transform: translate(-50%, -100%);
-  z-index: 6;
+  z-index: var(--z-friend);
   border: none;
   background: none;
   padding: 0;
@@ -356,6 +532,28 @@
   0%, 91%, 100% { transform: scaleY(1); }
   93%, 95% { transform: scaleY(0.08); }
 }
+
+/* Ateş sleeps at night */
+[data-theme="night"] .dog-eye { animation: none; transform: scaleY(0.1); }
+[data-theme="night"] .dog-tail { animation: none; }
+[data-theme="night"] .dog::before {
+  content: "z z";
+  position: absolute;
+  top: -4px;
+  right: -10px;
+  font-family: var(--font-hand);
+  font-size: 0.95rem;
+  color: var(--page-text-soft);
+  animation: zzz-float 3.4s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes zzz-float {
+  0%   { opacity: 0; translate: 0 0; }
+  30%  { opacity: 0.9; }
+  100% { opacity: 0; translate: 9px -20px; }
+}
+[data-theme="night"] .dog .dog-bubble { font-size: 0; }
+[data-theme="night"] .dog .dog-bubble::after { content: "zzz… (still hire my human)"; font-size: 1rem; }
 .dog.barking svg { animation: dog-hop 0.5s var(--pop); }
 @keyframes dog-hop {
   0%, 100% { translate: 0 0; }
@@ -390,7 +588,7 @@
   position: absolute;
   width: 118px;
   transform: translate(-50%, -100%);
-  z-index: 6;
+  z-index: var(--z-friend);
   border: none;
   background: none;
   padding: 0;
@@ -433,13 +631,41 @@
 .robot:focus-visible .robot-bubble,
 .robot.cheering .robot-bubble { opacity: 1; scale: 1; }
 
+/* the robot's eyes glow at night (it is a robot, after all) */
+[data-theme="night"] .robot-eye { fill: #7FF7E0; }
+[data-theme="night"] .robot-antenna {
+  fill: #FFD166;
+  filter: drop-shadow(0 0 4px rgba(255, 209, 102, 0.9));
+}
+
+/* ── focus & calm ──
+   pinned branch: the world steps back so the open canopy reads;
+   open panel: every ambient loop pauses while the visitor reads */
+.stage:not([data-open=""]) .deco { opacity: 0.55; }
+.stage:not([data-open=""]) .deco * { animation-play-state: paused; }
+body.panel-open .deco *,
+body.panel-open .bee-orbit,
+body.panel-open .bee,
+body.panel-open .bee-wing,
+body.panel-open .dog-tail,
+body.panel-open .dog-eye,
+body.panel-open .dog::before,
+body.panel-open .leaf-group.open .node.leaf { animation-play-state: paused; }
+
 /* ── reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
   .sun-rays, .cloud-1, .cloud-2, .pollen,
   .bee-orbit, .bee, .bee-wing,
   .dog-tail, .dog-eye, .robot.cheering .robot-figure,
-  .leaf-group.open .node.leaf { animation: none; }
+  .leaf-group.open .node.leaf,
+  .star-tw1, .star-tw2,
+  [data-theme="night"] .pollen,
+  [data-theme="night"] .dog::before { animation: none; }
   .pollen { opacity: 0.5; }
+  [data-theme="night"] .pollen { opacity: 0.6; }
+  /* animated rain would be flattened into static streaks — hide it */
+  html.raining .cloud .rain { opacity: 0; }
+  html.raining .cloud .drop { animation: none; }
   .node, .node.leaf, .leaf-group.open .node.leaf,
   .trunk-path, .branch-path, .leaf-path {
     transition-delay: 0s !important;

@@ -44,6 +44,39 @@
       : "psst — this portfolio is a <strong>tree</strong>. hover the branches, click the leaves";
   }
 
+  /* split the hero name into letter spans so each one can slap down
+     like a sticker (CSS drives the animation). Screen readers keep
+     the whole name via aria-label; the spans are decoration. */
+  function splitHeroName() {
+    var h1 = document.querySelector(".hero-name");
+    if (!h1 || h1.dataset.split) return;
+    var name = h1.textContent.trim();
+    if (!name) return;
+    h1.dataset.split = "1";
+    h1.setAttribute("aria-label", name);
+    var frag = document.createDocumentFragment();
+    var li = 0;
+    var words = name.split(/\s+/);
+    words.forEach(function (word, wi) {
+      var w = document.createElement("span");
+      w.className = "word";
+      w.setAttribute("aria-hidden", "true");
+      for (var i = 0; i < word.length; i++) {
+        var s = document.createElement("span");
+        s.className = "ltr";
+        s.textContent = word.charAt(i);
+        s.style.setProperty("--li", li);
+        s.style.setProperty("--lr", ((li % 2 ? -1 : 1) * (2 + (li * 7) % 3)) + "deg");
+        li++;
+        w.appendChild(s);
+      }
+      frag.appendChild(w);
+      if (wi < words.length - 1) frag.appendChild(document.createTextNode(" "));
+    });
+    h1.textContent = "";
+    h1.appendChild(frag);
+  }
+
   /* deep links: ?open=projects pre-expands a branch,
      ?open=products&item=guild also opens that card.
      Applied exactly once, and only for ids that actually exist. */
@@ -77,6 +110,7 @@
     }
     updateHint(isPhone);
     applyDeepLink(isPhone);
+    if (P.ATMOSPHERE) P.ATMOSPHERE.onRender();
   }
 
   var gameLinkDone = false;
@@ -102,7 +136,19 @@
     resizeTimer = setTimeout(fitStage, 120);
   }
 
+  /* clouds toggle a gentle rain — delegated, so it survives re-renders */
+  document.addEventListener("click", function (e) {
+    var cloud = e.target.closest && e.target.closest("button.cloud");
+    if (!cloud) return;
+    var on = document.documentElement.classList.toggle("raining");
+    var clouds = document.querySelectorAll("button.cloud");
+    for (var i = 0; i < clouds.length; i++) {
+      clouds[i].setAttribute("aria-pressed", on ? "true" : "false");
+    }
+  });
+
   function boot() {
+    splitHeroName();
     P.PANEL.init();
     render();
     if (!gameLinkDone) {
