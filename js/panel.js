@@ -288,10 +288,6 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     if (about) open(about, null, opener);
   }
 
-  function openColophon(opener) {
-    var c = window.PORTFOLIO.CONTENT.colophon;
-    if (c) open(c, null, opener);
-  }
 
   function close() {
     if (!isOpen) return;
@@ -454,7 +450,6 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     init: init,
     open: open,
     openAbout: openAbout,
-    openColophon: openColophon,
     close: close,
     isOpen: function () { return isOpen; },
     isVisited: isVisited,

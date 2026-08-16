@@ -12,7 +12,6 @@
      tree scaled to 0.48 with 7px labels is no use to a thumb */
   var phoneMq = window.matchMedia("(max-width: 767px), ((pointer: coarse) and (max-width: 1100px) and (orientation: portrait))");
   var reduceMq = window.matchMedia("(prefers-reduced-motion: reduce)");
-  var MIN_SCALE = 0.7;   /* below this the leaf labels drop under ~11px */
   var resizeTimer = 0;
   var deepLinkDone = false;
 
@@ -32,19 +31,15 @@
     var stage = P.TREE.getStage();
     if (!stage || !document.contains(stage)) return;
     var w = stageWrap.clientWidth;
-    /* measure against the viewport, not the wrap: the wrap's min-height
-       is what we're about to set, so reading it back would feed on itself */
-    var hero = document.getElementById("hero");
-    var h = Math.max(0, window.innerHeight - (hero ? hero.offsetHeight : 0));
+    var h = stageWrap.clientHeight;
     var scale = Math.min(w / P.LAYOUT.STAGE_W, h / P.LAYOUT.STAGE_H);
-    /* never scale up past 1.05 — the cartoon strokes get soupy;
-       never below MIN_SCALE — short laptops scroll ~100px instead of
-       shrinking the leaves to 8px */
-    scale = Math.max(MIN_SCALE, Math.min(scale, 1.05));
-    var stageH = P.LAYOUT.STAGE_H * scale;
-    stageWrap.style.minHeight = Math.ceil(stageH) + "px";
+    /* never scale up past 1.05 — the cartoon strokes get soupy.
+       The whole tree always fits the viewport (no scrolling on desktop);
+       the compact-hero media query in base.css buys the stage room on
+       short laptop screens */
+    scale = Math.min(scale, 1.05);
     stage.style.transform = "translateX(-50%) scale(" + scale.toFixed(4) + ")";
-    stage.style.top = Math.max(0, (Math.max(h, stageH) - stageH) / 2) + "px";
+    stage.style.top = Math.max(0, (h - P.LAYOUT.STAGE_H * scale) / 2) + "px";
   }
 
   function updateHint(isPhone) {
@@ -91,7 +86,6 @@
       html += "<h2>" + esc(s.label) + "</h2>";
       s.items.filter(function (i) { return !i.hidden; }).forEach(function (i) { html += block(i); });
     });
-    if (C.colophon) { html += "<h2>Colophon</h2>" + block(C.colophon); }
     sec.innerHTML = html;
     stageWrap.parentNode.insertBefore(sec, stageWrap.nextSibling);
   }
@@ -155,7 +149,6 @@
   function render() {
     var isPhone = phoneMq.matches;
     if (isPhone) {
-      stageWrap.style.minHeight = ""; /* the desktop floor must not pad the vine */
       P.MOBILE.render(stageRoot);
     } else {
       P.TREE.render(stageRoot);
@@ -202,11 +195,7 @@
     }
   });
 
-  /* the footer opens the colophon; the hint retires after the first grow */
-  document.addEventListener("click", function (e) {
-    var fl = e.target.closest && e.target.closest(".footer-link");
-    if (fl && P.PANEL) P.PANEL.openColophon(fl);
-  });
+  /* the hint retires after the first grow */
   stageRoot.addEventListener("click", function (e) {
     if (e.target.closest && e.target.closest(".node.branch, .vine-head")) retireHint();
   });

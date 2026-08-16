@@ -54,28 +54,6 @@ window.PORTFOLIO.CONTENT = {
     note: "root node = me. everything else grew from here.",
   },
 
-  /* card that opens from the footer: how the site itself is built */
-  colophon: {
-    id: "colophon",
-    title: "How this tree is built",
-    subtitle: "vanilla HTML · CSS · JS · zero dependencies · no build step",
-    icon: "tree",
-    summary: "A CV as a data structure, drawn by hand in code.",
-    bullets: [
-      "content.js is the single source of truth — the renderers hold zero copy. Desktop grows a radial tree; phones get a vine.",
-      "The wobbly ink edge on the trunk is one SVG filter: feTurbulence + feDisplacementMap. Nothing inside it ever animates — that would re-rasterize it every frame.",
-      "The seed that flies from a leaf to its card is a hand-rolled FLIP on the Web Animations API — 340 ms, skipped under prefers-reduced-motion.",
-      "One requestAnimationFrame loop for the whole page (parallax, wind, falling leaves) — and it parks itself when nothing moves.",
-      "Self-hosted subsetted woff2, WebP with intrinsic sizes (zero layout shift), JSON-LD, an OG image, and it still works with JavaScript off.",
-      "Deep links: ?open=projects&item=y86 · ?theme=night · ?rain=1 · ?game=1",
-    ],
-    tags: [],
-    links: [
-      { label: "The source", href: "https://github.com/karakoyundenizz/karakoyundenizz.github.io", kind: "github" },
-    ],
-    note: "yes, I optimised a portfolio's cycles per element too. last pruned Aug 2026.",
-  },
-
   sections: [
 
     /* ─────────────── EDUCATION ─────────────── */
