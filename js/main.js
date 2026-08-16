@@ -8,7 +8,11 @@
   var stageWrap = document.getElementById("stage-wrap");
   var stageRoot = document.getElementById("stage-root");
   var hint = document.getElementById("hero-hint");
-  var phoneMq = window.matchMedia("(max-width: 767px)");
+  /* phones AND coarse-pointer tablets in portrait get the vine — a hover
+     tree scaled to 0.48 with 7px labels is no use to a thumb */
+  var phoneMq = window.matchMedia("(max-width: 767px), ((pointer: coarse) and (max-width: 1100px) and (orientation: portrait))");
+  var reduceMq = window.matchMedia("(prefers-reduced-motion: reduce)");
+  var MIN_SCALE = 0.7;   /* below this the leaf labels drop under ~11px */
   var resizeTimer = 0;
   var deepLinkDone = false;
 
@@ -28,12 +32,19 @@
     var stage = P.TREE.getStage();
     if (!stage || !document.contains(stage)) return;
     var w = stageWrap.clientWidth;
-    var h = stageWrap.clientHeight;
+    /* measure against the viewport, not the wrap: the wrap's min-height
+       is what we're about to set, so reading it back would feed on itself */
+    var hero = document.getElementById("hero");
+    var h = Math.max(0, window.innerHeight - (hero ? hero.offsetHeight : 0));
     var scale = Math.min(w / P.LAYOUT.STAGE_W, h / P.LAYOUT.STAGE_H);
-    /* never scale up past 1.05 — the cartoon strokes get soupy */
-    scale = Math.min(scale, 1.05);
+    /* never scale up past 1.05 — the cartoon strokes get soupy;
+       never below MIN_SCALE — short laptops scroll ~100px instead of
+       shrinking the leaves to 8px */
+    scale = Math.max(MIN_SCALE, Math.min(scale, 1.05));
+    var stageH = P.LAYOUT.STAGE_H * scale;
+    stageWrap.style.minHeight = Math.ceil(stageH) + "px";
     stage.style.transform = "translateX(-50%) scale(" + scale.toFixed(4) + ")";
-    stage.style.top = Math.max(0, (h - P.LAYOUT.STAGE_H * scale) / 2) + "px";
+    stage.style.top = Math.max(0, (Math.max(h, stageH) - stageH) / 2) + "px";
   }
 
   function updateHint(isPhone) {
@@ -41,7 +52,48 @@
     hint.hidden = false;
     hint.innerHTML = isPhone
       ? "psst — this portfolio is a <strong>tree</strong>. tap a branch to grow it"
-      : "psst — this portfolio is a <strong>tree</strong>. hover the branches, click the leaves";
+      : "psst — this portfolio is a <strong>tree</strong>. hover the branches, click the leaves — or Tab to a branch and press ↓";
+  }
+
+  /* once the visitor has grown a branch, the hint has done its job */
+  var hintRetired = false;
+  function retireHint() {
+    if (hintRetired || !hint) return;
+    hintRetired = true;
+    hint.classList.add("retired");
+  }
+
+  /* a linear, screen-reader-first mirror of the whole CV, rendered from
+     content.js right after the stage. Visually hidden; visible in print;
+     and it's what crawlers and AI assistants read, since the tree itself
+     is buttons that open dialogs. */
+  function buildTextMirror() {
+    if (document.getElementById("cv-text")) return;
+    var C = P.CONTENT;
+    var sec = document.createElement("section");
+    sec.id = "cv-text";
+    sec.className = "sr-only";
+    sec.setAttribute("aria-labelledby", "cv-text-h");
+    var html = '<h2 id="cv-text-h">Deniz Karakoyun — CV as a list</h2>';
+    function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+    function block(item) {
+      var out = "<h3>" + esc(item.title) + (item.subtitle ? " <small>— " + esc(item.subtitle) + "</small>" : "") + "</h3>";
+      if (item.summary) out += "<p>" + esc(item.summary) + "</p>";
+      if (item.stats && item.stats.length) out += "<p>" + item.stats.map(function (s) { return esc(s.value) + " " + esc(s.label); }).join(" · ") + "</p>";
+      if (item.bullets && item.bullets.length) out += "<ul>" + item.bullets.map(function (b) { return "<li>" + esc(b) + "</li>"; }).join("") + "</ul>";
+      if (item.tags && item.tags.length) out += "<p>Tags: " + item.tags.map(function (t) { return esc(typeof t === "string" ? t : t.label); }).join(", ") + "</p>";
+      if (item.links && item.links.length) out += "<p>" + item.links.map(function (l) { return '<a href="' + esc(l.href) + '">' + esc(l.label) + "</a>"; }).join(" · ") + "</p>";
+      if (item.note) out += "<p><em>" + esc(item.note) + "</em></p>";
+      return out;
+    }
+    if (C.about) html += block(C.about);
+    C.sections.forEach(function (s) {
+      html += "<h2>" + esc(s.label) + "</h2>";
+      s.items.filter(function (i) { return !i.hidden; }).forEach(function (i) { html += block(i); });
+    });
+    if (C.colophon) { html += "<h2>Colophon</h2>" + block(C.colophon); }
+    sec.innerHTML = html;
+    stageWrap.parentNode.insertBefore(sec, stageWrap.nextSibling);
   }
 
   /* split the hero name into letter spans so each one can slap down
@@ -103,6 +155,7 @@
   function render() {
     var isPhone = phoneMq.matches;
     if (isPhone) {
+      stageWrap.style.minHeight = ""; /* the desktop floor must not pad the vine */
       P.MOBILE.render(stageRoot);
     } else {
       P.TREE.render(stageRoot);
@@ -128,8 +181,10 @@
       var item = findItem(section, itemId);
       if (item) P.PANEL.open(item, section, null);
     }
-    stageRoot.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    stageRoot.scrollIntoView({ behavior: reduceMq.matches ? "auto" : "smooth", block: "nearest" });
   }
+  /* panel.js's evidence chips jump here too */
+  P.NAV = { openTreeSection: openTreeSection };
 
   function onResize() {
     clearTimeout(resizeTimer);
@@ -147,10 +202,23 @@
     }
   });
 
+  /* the footer opens the colophon; the hint retires after the first grow */
+  document.addEventListener("click", function (e) {
+    var fl = e.target.closest && e.target.closest(".footer-link");
+    if (fl && P.PANEL) P.PANEL.openColophon(fl);
+  });
+  stageRoot.addEventListener("click", function (e) {
+    if (e.target.closest && e.target.closest(".node.branch, .vine-head")) retireHint();
+  });
+  stageRoot.addEventListener("mouseover", function (e) {
+    if (e.target.closest && e.target.closest(".node.leaf")) retireHint();
+  });
+
   function boot() {
     splitHeroName();
     P.PANEL.init();
     render();
+    buildTextMirror();
     if (!gameLinkDone) {
       gameLinkDone = true;
       applyGameLink();
@@ -160,6 +228,7 @@
       ["chip-gpa", "education", "metu"],
       ["chip-products", "products", null],
       ["chip-now", "experience", "kuartis"],
+      ["chip-class", "education", "metu"],
     ];
     chipTargets.forEach(function (t) {
       var chip = document.getElementById(t[0]);

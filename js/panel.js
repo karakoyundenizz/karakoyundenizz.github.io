@@ -12,6 +12,9 @@ window.PORTFOLIO = window.PORTFOLIO || {};
   var backdrop = null;
   var openerEl = null;
   var isOpen = false;
+  var currentItemId = null;
+  var lightbox = null;   /* the enlarged-screenshot overlay, built lazily */
+  var lightboxFrom = null;
 
   var LINK_ICONS = {
     web: "link",
@@ -98,7 +101,11 @@ window.PORTFOLIO = window.PORTFOLIO || {};
       strip.setAttribute("aria-label", item.title + " screenshots — scroll sideways");
       item.media.forEach(function (m) {
         var frame = el("div", "media-frame" + (m.wide ? " wide" : ""), strip);
-        var img = el("img", "media-img", frame);
+        /* each shot is a button: click to enlarge (the evidence is legible only big) */
+        var btn = el("button", "media-btn", frame);
+        btn.type = "button";
+        btn.setAttribute("aria-label", "Enlarge: " + (m.alt || "screenshot"));
+        var img = el("img", "media-img", btn);
         /* photo slots may not be filled yet — vanish instead of showing a broken image */
         img.onerror = function () {
           frame.remove();
@@ -109,7 +116,13 @@ window.PORTFOLIO = window.PORTFOLIO || {};
         img.loading = "lazy";
         /* intrinsic size = zero layout shift while the photo loads */
         if (m.w && m.h) { img.width = m.w; img.height = m.h; }
+        btn.addEventListener("click", function () { openLightbox(img, m); });
       });
+      if (item.media.length > 1) {
+        var cue = el("span", "media-cue", strip);
+        cue.setAttribute("aria-hidden", "true");
+        cue.textContent = "↔ swipe";
+      }
     }
 
     if (item.stats && item.stats.length) {
@@ -136,7 +149,20 @@ window.PORTFOLIO = window.PORTFOLIO || {};
       tagRow.setAttribute("aria-label", "Technologies");
       item.tags.forEach(function (t) {
         var li = el("li", "tag", tagRow);
-        li.textContent = t;
+        if (typeof t === "string") {
+          li.textContent = t;
+          return;
+        }
+        /* {label, section, item}: a chip that jumps to the leaf proving it */
+        li.className = "tag tag-link";
+        var b = el("button", "tag-btn", li);
+        b.type = "button";
+        b.textContent = t.label;
+        b.setAttribute("aria-label", t.label + " — open the leaf that proves it");
+        b.addEventListener("click", function () {
+          close();
+          if (window.PORTFOLIO.NAV) window.PORTFOLIO.NAV.openTreeSection(t.section, t.item);
+        });
       });
     }
 
@@ -145,13 +171,18 @@ window.PORTFOLIO = window.PORTFOLIO || {};
       item.links.forEach(function (lnk) {
         var a = el("a", "btn card-link link-" + (lnk.kind || "web"), linkRow);
         a.href = lnk.href;
-        if (lnk.kind !== "email" && lnk.download === undefined) {
+        var newTab = lnk.kind !== "email" && lnk.download === undefined;
+        if (newTab) {
           a.target = "_blank";
           a.rel = "noopener";
         }
         if (lnk.download) a.setAttribute("download", "");
         a.appendChild(icon(LINK_ICONS[lnk.kind] || "link"));
         a.appendChild(document.createTextNode(lnk.label));
+        if (newTab) {
+          var sr = el("span", "sr-only", a);
+          sr.textContent = " (opens in a new tab)";
+        }
       });
     }
 
@@ -212,14 +243,33 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     return true;
   }
 
+  /* ── traversal memory: which leaves have been read this session ── */
+  var VISITED_KEY = "deniz-visited";
+  function visitedSet() {
+    try { return JSON.parse(sessionStorage.getItem(VISITED_KEY) || "[]"); } catch (e) { return []; }
+  }
+  function markVisited(id) {
+    if (!id) return;
+    var v = visitedSet();
+    if (v.indexOf(id) === -1) {
+      v.push(id);
+      try { sessionStorage.setItem(VISITED_KEY, JSON.stringify(v)); } catch (e) { /* private mode */ }
+    }
+  }
+  function isVisited(id) { return visitedSet().indexOf(id) !== -1; }
+
   function open(item, section, opener) {
     if (!panel) return;
+    if (isOpen) closeLightbox();
     openerEl = opener || null;
+    currentItemId = item.id || null;
     var closeBtn = buildCard(item, section);
     backdrop.hidden = false;
     panel.hidden = false;
     document.body.classList.add("panel-open");
     if (window.PORTFOLIO.ATMOSPHERE) window.PORTFOLIO.ATMOSPHERE.pause();
+    /* the leaf whose card is up stays lit behind the backdrop */
+    if (openerEl && openerEl.classList) openerEl.classList.add("is-open");
     /* the seed leads, the panel follows a beat behind it */
     var seeded = flySeed(openerEl);
     panel.style.transitionDelay = seeded ? "0.06s" : "";
@@ -238,15 +288,30 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     if (about) open(about, null, opener);
   }
 
+  function openColophon(opener) {
+    var c = window.PORTFOLIO.CONTENT.colophon;
+    if (c) open(c, null, opener);
+  }
+
   function close() {
     if (!isOpen) return;
     isOpen = false;
+    closeLightbox();
     panel.style.transitionDelay = "";
     panel.classList.remove("show");
     backdrop.classList.remove("show");
     document.body.classList.remove("panel-open");
     if (window.PORTFOLIO.ATMOSPHERE) window.PORTFOLIO.ATMOSPHERE.resume();
     document.removeEventListener("keydown", onKeydown, true);
+    /* remember the visit: the leaf keeps a small "read" mark */
+    if (openerEl && openerEl.classList) {
+      openerEl.classList.remove("is-open");
+      if (openerEl.classList.contains("leaf") || openerEl.classList.contains("vine-item")) {
+        openerEl.classList.add("visited");
+        markVisited(currentItemId);
+      }
+    }
+    currentItemId = null;
     window.setTimeout(function () {
       if (!isOpen) { panel.hidden = true; backdrop.hidden = true; }
     }, 320);
@@ -263,15 +328,81 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     openerEl = null;
   }
 
+  /* ── lightbox: the evidence screenshots, legible ── */
+  function buildLightbox() {
+    if (lightbox) return;
+    lightbox = el("div", "lightbox", document.body);
+    lightbox.hidden = true;
+    lightbox.setAttribute("role", "dialog");
+    lightbox.setAttribute("aria-modal", "true");
+    lightbox.setAttribute("aria-label", "Enlarged screenshot");
+    var fig = el("figure", "lightbox-figure", lightbox);
+    var img = el("img", "lightbox-img", fig);
+    img.alt = "";
+    var cap = el("figcaption", "lightbox-cap", fig);
+    var x = el("button", "panel-close lightbox-close", lightbox);
+    x.type = "button";
+    x.setAttribute("aria-label", "Close enlarged screenshot");
+    x.textContent = "×";
+    x.addEventListener("click", closeLightbox);
+    lightbox.addEventListener("click", function (e) {
+      if (e.target === lightbox || e.target === fig) closeLightbox();
+    });
+    lightbox._img = img;
+    lightbox._cap = cap;
+    lightbox._close = x;
+  }
+
+  function openLightbox(thumb, m) {
+    buildLightbox();
+    lightboxFrom = thumb;
+    var img = lightbox._img;
+    img.src = m.src;
+    img.alt = m.alt || "";
+    if (m.w && m.h) { img.width = m.w; img.height = m.h; }
+    lightbox._cap.textContent = m.alt || "";
+    lightbox.hidden = false;
+    requestAnimationFrame(function () { lightbox.classList.add("show"); });
+    /* grow out of the thumbnail — same FLIP vocabulary as the seed */
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!reduce && "animate" in Element.prototype && thumb && thumb.getBoundingClientRect) {
+      var from = thumb.getBoundingClientRect();
+      requestAnimationFrame(function () {
+        var to = img.getBoundingClientRect();
+        if (!from.width || !to.width) return;
+        img.animate([
+          { transform: "translate(" + (from.left - to.left) + "px," + (from.top - to.top) + "px) scale(" + (from.width / to.width).toFixed(4) + ")", opacity: 0.6 },
+          { transform: "none", opacity: 1 },
+        ], { duration: 320, easing: "cubic-bezier(0.22, 1, 0.36, 1)" });
+      });
+    }
+    lightbox._close.focus();
+  }
+
+  function closeLightbox() {
+    if (!lightbox || lightbox.hidden) return;
+    lightbox.classList.remove("show");
+    var lb = lightbox;
+    window.setTimeout(function () { if (!lb.classList.contains("show")) lb.hidden = true; }, 220);
+    if (lightboxFrom && document.contains(lightboxFrom)) {
+      var b = lightboxFrom.closest ? lightboxFrom.closest("button") : null;
+      (b || lightboxFrom).focus();
+    }
+    lightboxFrom = null;
+  }
+
   function onKeydown(e) {
+    var lbOpen = lightbox && !lightbox.hidden;
     if (e.key === "Escape") {
       e.stopPropagation();
-      close();
+      if (lbOpen) closeLightbox(); else close();
       return;
     }
     if (e.key !== "Tab") return;
-    /* simple focus trap */
-    var focusables = panel.querySelectorAll("a[href], button, [tabindex='0']");
+    /* simple focus trap (the lightbox, when up, is its own tiny trap) */
+    var focusables = lbOpen
+      ? lightbox.querySelectorAll("button")
+      : panel.querySelectorAll("a[href], button, [tabindex='0']");
     if (!focusables.length) return;
     var first = focusables[0];
     var last = focusables[focusables.length - 1];
@@ -323,7 +454,9 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     init: init,
     open: open,
     openAbout: openAbout,
+    openColophon: openColophon,
     close: close,
     isOpen: function () { return isOpen; },
+    isVisited: isVisited,
   };
 })();

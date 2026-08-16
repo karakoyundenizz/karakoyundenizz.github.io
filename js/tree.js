@@ -282,7 +282,7 @@ window.PORTFOLIO.RAIN_HTML =
     btn.style.top = layout.root.y - 46 + "px";
     btn.setAttribute("aria-label", "me! — about Deniz Karakoyun");
     btn.innerHTML =
-      '<img class="root-photo" src="assets/img/me.jpg" alt="" onerror="this.remove()">' +
+      '<img class="root-photo" src="assets/img/me.webp" alt="" onerror="this.remove()">' +
       '<svg viewBox="0 0 120 120" aria-hidden="true">' +
       '<circle cx="60" cy="62" r="44" fill="#F8C79A" stroke="#2B2119" stroke-width="5"/>' +
       '<path d="M22 55 C18 26 40 12 60 12 C80 12 102 26 98 55 C94 42 86 36 60 36 C34 36 26 42 22 55 Z" fill="#3A2A1E" stroke="#2B2119" stroke-width="5" stroke-linejoin="round"/>' +
@@ -333,9 +333,24 @@ window.PORTFOLIO.RAIN_HTML =
       star.textContent = "★";
       star.setAttribute("aria-hidden", "true");
     }
-    btn.appendChild(icon(it.icon, "node-icon leaf-icon"));
+    /* flagship fruit wears the real product mark; other leaves their drawn icon.
+       If the logo can't load, fall back to the drawn icon. */
+    if (it.flagship && it.logo) {
+      var mark = el("img", "leaf-mark", btn);
+      mark.alt = "";
+      mark.width = 20;
+      mark.height = 20;
+      mark.onerror = function () { btn.replaceChild(icon(it.icon, "node-icon leaf-icon"), mark); };
+      mark.src = it.logo;
+    } else {
+      btn.appendChild(icon(it.icon, "node-icon leaf-icon"));
+    }
     var label = el("span", "node-label", btn);
     label.textContent = it.node || it.title;
+    /* traversal memory: leaves read earlier this session keep their mark */
+    if (window.PORTFOLIO.PANEL && window.PORTFOLIO.PANEL.isVisited && window.PORTFOLIO.PANEL.isVisited(it.id)) {
+      btn.classList.add("visited");
+    }
     return btn;
   }
 
@@ -437,9 +452,8 @@ window.PORTFOLIO.RAIN_HTML =
     stage.style.height = layoutResult.stageH + "px";
     stage.dataset.open = "";
 
-    buildDecorations(stage, layoutResult);
-
-    /* SVG underlay */
+    /* SVG underlay (decorations are appended AFTER the nodes so the tree
+       comes first in tab order; z-index keeps them painted underneath) */
     var svg = svgEl("svg", {
       class: "stage-svg",
       viewBox: "0 0 " + layoutResult.stageW + " " + layoutResult.stageH,
@@ -511,6 +525,7 @@ window.PORTFOLIO.RAIN_HTML =
     buildDog(stage, layoutResult);
     buildRobot(stage, layoutResult);
     buildBikeButton(stage, layoutResult);
+    buildDecorations(stage, layoutResult);
 
     /* ── events (delegated) ── */
     stage.addEventListener("mouseover", function (e) {

@@ -20,6 +20,15 @@ window.PORTFOLIO = window.PORTFOLIO || {};
   var FLAGSHIP_EXTRA = 30;
   var PAD = 60;                    // keep nodes inside the stage
 
+  /* collision relaxation — minimum centre-to-centre distances (px).
+     Two pills "collide" when they are closer than X horizontally AND Y
+     vertically; they are then pushed apart along x only. */
+  var LEAF_SEP_X = 118;            // leaf vs leaf (same section)
+  var LEAF_SEP_Y = 56;
+  var BRANCH_SEP_X = 140;          // leaf vs any branch pill (branch pills are wider)
+  var BRANCH_SEP_Y = 64;
+  var RELAX_ITERATIONS = 30;
+
   function rad(deg) { return (deg * Math.PI) / 180; }
 
   function polar(cx, cy, angleDeg, r) {
@@ -64,6 +73,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     var cursor = ARC_START;
     var branches = [];
     var leaves = [];
+    var pending = [];   // { leaf, tip, bend } — twig paths are drawn after relaxation
 
     sections.forEach(function (section, si) {
       var wedge = (arc * s_weight(section)) / totalWeight;
@@ -90,23 +100,53 @@ window.PORTFOLIO = window.PORTFOLIO || {};
       var span = gap * (n - 1);
       var startAngle = centerAngle - span / 2;
 
-      items.forEach(function (item, i) {
+      /* 1. raw radial offsets from the branch tip */
+      var offsets = items.map(function (item, i) {
         var angle = startAngle + gap * i;
         var r = LEAF_RADIUS + (i % 2 === 1 ? LEAF_RADIUS_STAGGER : 0);
         if (item.flagship) r += FLAGSHIP_EXTRA;
-        var lpos = polar(bpos.x, bpos.y, angle, r);
-        lpos.x = clamp(lpos.x + (item.dx || 0), PAD, STAGE_W - PAD);
-        lpos.y = clamp(lpos.y + (item.dy || 0), PAD, STAGE_H - PAD);
+        var p = polar(0, 0, angle, r);
+        return { x: p.x, y: p.y, angle: angle };
+      });
 
-        leaves.push({
+      /* 2. fit the whole fan inside the padded stage by squashing it
+         (uniformly, per axis) towards the branch tip.  A branch pointing
+         nearly straight up near the top edge — "projects" — would
+         otherwise have half its leaves clamped onto the same y = PAD
+         line (a flat clothesline).  Squashing keeps the fan's shape and
+         every twig still runs straight from tip to pill. */
+      var kx = 1, ky = 1;
+      offsets.forEach(function (o) {
+        if (o.x < 0) kx = Math.min(kx, (bpos.x - PAD) / -o.x);
+        if (o.x > 0) kx = Math.min(kx, (STAGE_W - PAD - bpos.x) / o.x);
+        if (o.y < 0) ky = Math.min(ky, (bpos.y - PAD) / -o.y);
+        if (o.y > 0) ky = Math.min(ky, (STAGE_H - PAD - bpos.y) / o.y);
+      });
+      kx = Math.max(kx, 0);
+      ky = Math.max(ky, 0);
+
+      items.forEach(function (item, i) {
+        var o = offsets[i];
+        var leaf = {
           section: section,
           item: item,
-          x: lpos.x,
-          y: lpos.y,
-          angle: angle,
-          path: curvePath(bpos, lpos, i % 2 === 0 ? 0.14 : -0.14),
-        });
+          /* dx/dy are hand nudges from content.js — applied AFTER the
+             fit so they always move the pill (they used to be clamped away) */
+          x: bpos.x + o.x * kx + (item.dx || 0),
+          y: bpos.y + o.y * ky + (item.dy || 0),
+          angle: o.angle,
+          path: "",
+        };
+        leaves.push(leaf);
+        pending.push({ leaf: leaf, tip: bpos, bend: i % 2 === 0 ? 0.14 : -0.14 });
       });
+    });
+
+    /* 3. push colliding pills apart along x, then 4. draw the twigs to
+       wherever the pills finally ended up */
+    relax(leaves, branches);
+    pending.forEach(function (p) {
+      p.leaf.path = curvePath(p.tip, p.leaf, p.bend);
     });
 
     return {
@@ -125,6 +165,45 @@ window.PORTFOLIO = window.PORTFOLIO || {};
   }
 
   function s_weight(section) { return section._weight; }
+
+  /* Deterministic collision relaxation.  Leaves are pushed apart along x
+     from (a) other leaves of the same section (half the overlap each) and
+     (b) every branch pill (branch pills stay put; the leaf takes the full
+     overlap).  Positions are kept inside the padded stage width. */
+  function relax(leaves, branches) {
+    var i, j, k, a, b, dx, dy, overlap, dir;
+    for (var iter = 0; iter < RELAX_ITERATIONS; iter++) {
+      var moved = false;
+      for (i = 0; i < leaves.length; i++) {
+        a = leaves[i];
+        for (k = 0; k < branches.length; k++) {
+          b = branches[k];
+          dy = Math.abs(a.y - b.y);
+          if (dy >= BRANCH_SEP_Y) continue;
+          dx = a.x - b.x;
+          overlap = BRANCH_SEP_X - Math.abs(dx);
+          if (overlap <= 0) continue;
+          dir = dx > 0 || (dx === 0 && a.x >= STAGE_W / 2) ? 1 : -1;
+          a.x = clamp(a.x + dir * overlap, PAD, STAGE_W - PAD);
+          moved = true;
+        }
+        for (j = i + 1; j < leaves.length; j++) {
+          b = leaves[j];
+          if (b.section !== a.section) continue;
+          dy = Math.abs(a.y - b.y);
+          if (dy >= LEAF_SEP_Y) continue;
+          dx = b.x - a.x;
+          overlap = LEAF_SEP_X - Math.abs(dx);
+          if (overlap <= 0) continue;
+          dir = dx >= 0 ? 1 : -1;   // tie → later leaf goes right
+          a.x = clamp(a.x - dir * overlap / 2, PAD, STAGE_W - PAD);
+          b.x = clamp(b.x + dir * overlap / 2, PAD, STAGE_W - PAD);
+          moved = true;
+        }
+      }
+      if (!moved) break;
+    }
+  }
 
   window.PORTFOLIO.LAYOUT = {
     STAGE_W: STAGE_W,

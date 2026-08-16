@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://karakoyundenizz.github.io/</loc>
+    <lastmod>2026-08-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://karakoyundenizz.github.io/assets/img/og.jpg</image:loc>
+      <image:title>The Deniz Tree — Deniz Karakoyun's portfolio</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://karakoyundenizz.github.io/assets/cv/Deniz_Karakoyun_CV.pdf</loc>
+    <lastmod>2026-08-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+</urlset>

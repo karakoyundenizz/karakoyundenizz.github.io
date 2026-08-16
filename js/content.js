@@ -16,11 +16,15 @@
                don't exist yet are skipped silently, so you can pre-wire photo
                slots. w/h = intrinsic pixel size (prevents layout shift);
                wide: true → landscape frame
+     stats     [] of {value, label} — 2-up hand-drawn number tiles under the
+               summary; the place for the numbers you want skimmed
      flagship  true → bigger "golden fruit" leaf + richer card
      theme     "dark" → card header gets the near-black Phera band
      note      handwritten footnote at the bottom of the card
      hidden    true → item disappears from the site (easy pruning)
      dx, dy    optional fine-tune offset of the leaf, in stage pixels
+   Tags may also be objects {label, section, item} — those render as
+   clickable chips that jump to the leaf proving the skill.
    ════════════════════════════════════════════════════════════════════ */
 
 window.PORTFOLIO = window.PORTFOLIO || {};
@@ -31,22 +35,45 @@ window.PORTFOLIO.CONTENT = {
   about: {
     id: "about",
     title: "Deniz Karakoyun",
-    subtitle: "Computer Engineering @ METU · Ankara, Türkiye",
+    subtitle: "Computer Engineering @ METU · class of 2027 · Ankara, Türkiye",
     icon: "tree",
-    summary: "Happiest a few layers below the surface — Assembly, OS internals, and making code faster cycle by cycle.",
+    summary: "Two apps in the stores, one ROS 2 node on a robot, and a lot of hours spent a few layers below the surface.",
     bullets: [
-      "How I work: understand the problem, design the algorithm, write it efficiently, test it well.",
-      "Built two live products — Guild and Phera Labs, each co-founded with a friend — but my compass points at OS and low-level systems, with algorithm design a close second.",
-      "Outside code: time with friends and anything physical — tennis, volleyball, basketball, camping, cycling, fitness.",
+      "Guild — a campus community app I built end to end (iOS, Android, web, backend, admin), live at nine universities and counting.",
+      "KUARTIS: a C++17 ROS 2 node on a Jetson that decides whether a GPS fix can be trusted — written test-first.",
+      "Where I'm headed: OS & low-level systems, with algorithm design a close second. Next up: OS, embedded, robotics or infra work — C, C++, Linux, ROS 2.",
+      "Outside code: time with friends and anything physical. References available on request.",
     ],
     tags: [],
     links: [
-      { label: "Download CV", href: "assets/cv/Deniz_Karakoyun_CV.pdf", kind: "download", download: true },
+      { label: "Download CV (PDF · Aug 2026)", href: "assets/cv/Deniz_Karakoyun_CV.pdf", kind: "download", download: true },
       { label: "GitHub", href: "https://github.com/karakoyundenizz", kind: "github" },
       { label: "LinkedIn", href: "https://www.linkedin.com/in/deniz-karakoyun-2235b922a/", kind: "linkedin" },
       { label: "karakoyun.deniz@metu.edu.tr", href: "mailto:karakoyun.deniz@metu.edu.tr", kind: "email" },
     ],
     note: "root node = me. everything else grew from here.",
+  },
+
+  /* card that opens from the footer: how the site itself is built */
+  colophon: {
+    id: "colophon",
+    title: "How this tree is built",
+    subtitle: "vanilla HTML · CSS · JS · zero dependencies · no build step",
+    icon: "tree",
+    summary: "A CV as a data structure, drawn by hand in code.",
+    bullets: [
+      "content.js is the single source of truth — the renderers hold zero copy. Desktop grows a radial tree; phones get a vine.",
+      "The wobbly ink edge on the trunk is one SVG filter: feTurbulence + feDisplacementMap. Nothing inside it ever animates — that would re-rasterize it every frame.",
+      "The seed that flies from a leaf to its card is a hand-rolled FLIP on the Web Animations API — 340 ms, skipped under prefers-reduced-motion.",
+      "One requestAnimationFrame loop for the whole page (parallax, wind, falling leaves) — and it parks itself when nothing moves.",
+      "Self-hosted subsetted woff2, WebP with intrinsic sizes (zero layout shift), JSON-LD, an OG image, and it still works with JavaScript off.",
+      "Deep links: ?open=projects&item=y86 · ?theme=night · ?rain=1 · ?game=1",
+    ],
+    tags: [],
+    links: [
+      { label: "The source", href: "https://github.com/karakoyundenizz/karakoyundenizz.github.io", kind: "github" },
+    ],
+    note: "yes, I optimised a portfolio's cycles per element too. last pruned Aug 2026.",
   },
 
   sections: [
@@ -64,16 +91,18 @@ window.PORTFOLIO.CONTENT = {
           node: "METU · CENG",
           subtitle: "B.Sc. Computer Engineering · 2021 – 2027 (expected) · Ankara",
           icon: "gradcap",
-          summary: "CGPA 3.61 / 4.00",
-          bullets: [
-            "Focus: operating systems, computer organization, low-level programming, algorithms.",
+          summary: "Operating systems, computer organization, algorithms — and the exam rank that got me in the door.",
+          stats: [
+            { value: "3.61 / 4.00", label: "CGPA" },
+            { value: "799th / ~3M", label: "YKS rank, 2021" },
           ],
-          tags: ["Operating Systems", "Computer Organization", "Algorithms", "Embedded Systems"],
+          bullets: [],
+          tags: ["Operating Systems", "Computer Organization", "Algorithms", "Embedded"],
           links: [],
           media: [
             { src: "assets/img/metu-ceng.webp", alt: "The METU Department of Computer Engineering entrance", w: 1000, h: 667, wide: true },
           ],
-          note: "seed of this tree: ranked 799 out of ~3,000,000 in the national university exam",
+          note: "seed of this tree: 799th out of ~3,000,000 in the national university exam",
         },
         {
           id: "highschool",
@@ -108,20 +137,20 @@ window.PORTFOLIO.CONTENT = {
             "Caught a case where a silent GPS looked healthy: wrote the failing test first, then the fix.",
             "Fixed a data race in the multi-threaded test harness.",
           ],
-          tags: ["ROS 2", "C++17", "GNSS", "TDD", "GTest", "Jetson"],
+          tags: ["ROS 2", "C++17", "GNSS", "TDD", "GoogleTest", "Jetson"],
           links: [],
           logo: "assets/img/kuartis.png",
         },
         {
           id: "aselsan-ce",
           title: "ASELSAN — Candidate Engineer",
-          node: "ASELSAN",
-          subtitle: "Jul 2026 – present · Ankara",
+          node: "ASELSAN · '26",
+          subtitle: "until Jul 2026 · candidate-engineer programme · Ankara",
           icon: "chip",
           summary: "High-volume data pipelines for system evaluation.",
           bullets: [
-            "Pipelines that process millions of data points for evaluation and offline experiments.",
-            "Multithreading and synchronization to keep the streams race-free.",
+            "Built the C++ pipelines that chew through millions of data points per run for system evaluation and offline experiments.",
+            "Owned the multithreading and synchronization that kept those streams race-free.",
           ],
           tags: ["C++", "Multithreading", "Data Pipelines"],
           links: [],
@@ -130,13 +159,13 @@ window.PORTFOLIO.CONTENT = {
         {
           id: "romer",
           title: "ROMER — Undergraduate Researcher",
-          node: "ROMER 🐝",
-          subtitle: "Jan 2026 – present · METU Robotics & AI Center",
+          node: "ROMER · '26",
+          subtitle: "Jan – Jul 2026 · METU Robotics & AI Center",
           icon: "bee",
           summary: "Teaching computers to tell which way a honey bee is facing.",
           bullets: [
-            "CNN and ResNet models for bee orientation detection.",
-            "Full model lifecycle: dataset, training, tuning.",
+            "Trained CNN and ResNet classifiers that read a honey bee's heading from a top-down frame.",
+            "Owned the loop end to end: built the dataset, trained, tuned, and went back to the failure cases.",
           ],
           tags: ["Python", "CNN", "ResNet", "Computer Vision"],
           links: [],
@@ -149,13 +178,13 @@ window.PORTFOLIO.CONTENT = {
         {
           id: "bites",
           title: "BİTES — Software Engineering Intern",
-          node: "BİTES",
+          node: "BİTES · '25",
           subtitle: "Aug – Sep 2025 · Ankara",
           icon: "window",
           summary: "A team & project management desktop app.",
           bullets: [
-            "C# / WPF features for users, teams, projects and tasks — MVVM, data binding, validation.",
-            "xUnit tests with mocks; iterated on user feedback.",
+            "Shipped C# / WPF features for users, teams, projects and tasks — MVVM, data binding, validation.",
+            "Wrote xUnit tests with mocks, and reshaped the task screens after rounds of user feedback.",
           ],
           tags: ["C#", "WPF", "MVVM", "xUnit"],
           links: [],
@@ -164,31 +193,33 @@ window.PORTFOLIO.CONTENT = {
         {
           id: "aselsan-intern",
           title: "ASELSAN — Intern",
-          node: "ASELSAN '25",
+          node: "ASELSAN · '25",
           subtitle: "Jul – Aug 2025 · Ankara",
           icon: "chip",
           summary: "Testing embedded systems, automating the boring parts.",
           bullets: [
-            "C++ unit tests with Google Test for embedded systems.",
-            "Automated GUI workflows with Python and Pywinauto.",
+            "Wrote C++ unit tests with GoogleTest for embedded systems.",
+            "Automated GUI test workflows with Python and Pywinauto.",
           ],
-          tags: ["C++", "Google Test", "Python", "Pywinauto"],
+          tags: ["C++", "GoogleTest", "Python", "Pywinauto"],
           links: [],
           logo: "assets/img/aselsan-logo.jpg",
         },
         {
           id: "exa4mind",
           title: "EXA4MIND — Data Mining Intern",
-          node: "EXA4MIND",
+          node: "EXA4MIND · '24",
           subtitle: "Aug – Sep 2024 · EU Horizon research project",
           icon: "flow",
           summary: "Low-latency streaming pipelines for scientific data.",
           bullets: [
-            "Streaming pipelines with Kafka, Flink and ZeroMQ.",
-            "Benchmarked ZeroMQ against Kafka for speed and accuracy.",
+            "Built streaming pipelines for scientific data with Kafka, Flink and ZeroMQ.",
+            "Benchmarked ZeroMQ against Kafka on latency and throughput and wrote up the trade-offs.",
           ],
           tags: ["Kafka", "Flink", "ZeroMQ"],
-          links: [],
+          links: [
+            { label: "Benchmark write-up (PDF)", href: "https://github.com/karakoyundenizz/EXA4MIND/blob/main/zeroMQkafka.pdf", kind: "github" },
+          ],
           logo: "assets/img/exa4mind-logo.jpg",
         },
       ],
@@ -204,16 +235,21 @@ window.PORTFOLIO.CONTENT = {
         {
           id: "guild",
           title: "Guild",
-          node: "Guild ★",
-          subtitle: "Co-founder & developer · live on the App Store and Google Play",
+          node: "Guild",
+          subtitle: "Co-founder & sole developer · App Store · Google Play",
           icon: "star",
           summary: "A student community app for Turkey — verify with your university email, get your whole campus in one feed.",
+          stats: [
+            { value: "9", label: "universities live" },
+            { value: "5", label: "surfaces, one dev" },
+          ],
           bullets: [
             "Co-founded with my close friend Emirhan Güler at METU; I built and shipped the code — iOS, Android, web, backend, admin.",
             "Forum with anonymous posts and polls, events with seat reservations and door check-in, student societies, and a nationwide opportunities board.",
-            "Live at METU, Hacettepe and Ankara University.",
+            "Live at nine universities — METU, Hacettepe, Ankara University and more — and the list keeps growing (the current one is on getguild.app).",
           ],
           tags: [],
+          note: "built between exams. the door check-in scanner was the fun part.",
           links: [
             { label: "getguild.app", href: "https://getguild.app", kind: "web" },
             { label: "App Store", href: "https://apps.apple.com/app/id6761904539", kind: "appstore" },
@@ -232,16 +268,17 @@ window.PORTFOLIO.CONTENT = {
         {
           id: "phera",
           title: "Phera Labs",
-          node: "Phera Labs ★",
+          node: "Phera Labs",
           subtitle: "Co-founder & developer · pheralabs.com",
           icon: "star",
           summary: "An art-tech startup's platform — students exhibit digital art, and the best of it joins an international NFT collection.",
           bullets: [
             "Co-founded and grew it with my high school friend Sabri Ilgaz; I built the platform — design, frontend, backend, database, admin.",
             "\"Phera-Land\": a 360° drag-to-spin gallery you can wander through.",
-            "The whole commerce side too: limited prints, QR-ticketed events, referral rewards.",
+            "Also built the commerce side: limited prints, QR-ticketed events, referral rewards.",
           ],
           tags: [],
+          note: "the 360° gallery started as a weekend experiment. it stayed.",
           links: [
             { label: "pheralabs.com", href: "https://pheralabs.com", kind: "web" },
           ],
@@ -272,7 +309,9 @@ window.PORTFOLIO.CONTENT = {
             "The tricky part was the plumbing — deadlock-free IPC over Unix domain sockets, so no stage ever blocks another.",
           ],
           tags: ["C", "fork/exec", "IPC", "Unix sockets"],
-          links: [],
+          links: [
+            { label: "Code on GitHub", href: "https://github.com/karakoyundenizz/CENG334---Operating-Systems/tree/main/Hw1", kind: "github" },
+          ],
           media: [
             { src: "assets/img/orchestrator-figs.png", alt: "The assignment's structure figures: an operator chain pipeline (sort, filter, unique) and the N-ary merger tree", w: 830, h: 600, wide: true },
           ],
@@ -284,17 +323,24 @@ window.PORTFOLIO.CONTENT = {
           node: "Y86-64",
           subtitle: "Assembly · HCL · Y86-64",
           icon: "chip",
-          summary: "Extended a pipelined processor simulator, then made programs measurably faster on it.",
+          summary: "Extended a pipelined processor simulator, then made a bilateral filter run 2.1× faster on it.",
+          stats: [
+            { value: "2.1×", label: "speedup" },
+            { value: "1442 → 688", label: "cycles / element" },
+          ],
           bullets: [
             "Y86-64 is a teaching version of x86-64 — I worked on the processor itself, adding instructions and resolving data and control hazards in its control logic.",
             "Then tuned programs to run fast on it: loop unrolling, instruction reordering, custom functions — every saved cycle counts.",
           ],
-          tags: ["Y86-64", "HCL", "Assembly", "CPE"],
-          links: [],
+          tags: ["HCL", "Assembly", "Pipelining", "Hazard resolution"],
+          links: [
+            { label: "Processor (HCL)", href: "https://github.com/karakoyundenizz/CENG331---COMPUTER-ORGANIZATION/tree/main/ARCHITECTURE", kind: "github" },
+            { label: "Performance lab", href: "https://github.com/karakoyundenizz/CENG331---COMPUTER-ORGANIZATION/tree/main/PERFORMANCE", kind: "github" },
+          ],
           media: [
             { src: "assets/img/perf-results.webp", alt: "My actual benchmark run on the course server: bilateral filter down from 1442 to 688 CPE — a 2.1x speedup", w: 1100, h: 612, wide: true },
           ],
-          note: "real output from my run: 1442 → 688 cycles per element",
+          note: "the screenshot is the real run, not a slide.",
         },
         {
           id: "bomblab",
@@ -303,12 +349,19 @@ window.PORTFOLIO.CONTENT = {
           subtitle: "x86-64 · GDB · reverse engineering",
           icon: "terminal",
           summary: "Defused a multi-stage binary bomb with GDB and a disassembler.",
+          stats: [
+            { value: "6 / 6", label: "phases defused" },
+            { value: "0", label: "explosions" },
+          ],
           bullets: [
             "Each phase hides a password inside a binary — you disassemble it, watch the registers, and read the logic backwards. Every phase ends in a call to explode_bomb; guess wrong and it goes off.",
             "Then switched sides: crafted code-injection and return-oriented-programming exploits against vulnerable binaries, in a sandboxed course lab.",
           ],
           tags: ["x86-64", "GDB", "Reverse Engineering", "ROP"],
-          links: [],
+          links: [
+            { label: "Bomb Lab", href: "https://github.com/karakoyundenizz/CENG331---COMPUTER-ORGANIZATION/tree/main/BOMB", kind: "github" },
+            { label: "Attack Lab", href: "https://github.com/karakoyundenizz/CENG331---COMPUTER-ORGANIZATION/tree/main/ATTACK", kind: "github" },
+          ],
           media: [
             { src: "assets/img/bomb-asm.webp", alt: "GDB disassembly of phase_2 from my bomb, with the explode_bomb branch at the bottom", w: 1000, h: 717, wide: true },
             { src: "assets/img/bomb-defused.webp", alt: "Terminal output: all six phases defused — Congratulations! You've defused the bomb!", w: 1000, h: 551, wide: true },
@@ -328,7 +381,9 @@ window.PORTFOLIO.CONTENT = {
             "Direct LED control across PORTB, PORTC and PORTD, every output pin in a known state.",
           ],
           tags: ["PIC18", "Assembly", "C", "Interrupts", "Embedded"],
-          links: [],
+          links: [
+            { label: "Code on GitHub", href: "https://github.com/karakoyundenizz/CENG336---Embedded-Systems-Development", kind: "github" },
+          ],
           media: [
             { src: "assets/img/pic18-board.webp", alt: "The actual PIC18 development board with the Flappy Bird LED game area marked, next to its LED grid layout", w: 950, h: 320, wide: true },
           ],
@@ -347,7 +402,9 @@ window.PORTFOLIO.CONTENT = {
             "Dijkstra with heuristics that blend ticket cost and travel time, plus airline filtering.",
           ],
           tags: ["C++", "Dijkstra", "Hash Table"],
-          links: [],
+          links: [
+            { label: "Code on GitHub", href: "https://github.com/karakoyundenizz/CENG-213", kind: "github" },
+          ],
           media: [
             { src: "assets/img/flight-listing.png", alt: "The MultiGraph data layout: GraphEdge and GraphVertex structs with adjacency lists in C++", w: 1000, h: 640, wide: true },
           ],
@@ -364,7 +421,9 @@ window.PORTFOLIO.CONTENT = {
             "SQL analytics on top — user reputation scores and model performance metrics.",
           ],
           tags: ["Java", "SQL", "Database Design"],
-          links: [],
+          links: [
+            { label: "Code on GitHub", href: "https://github.com/karakoyundenizz/CENG351---Data-Management-and-File-Structures/tree/main/PA1", kind: "github" },
+          ],
           media: [
             { src: "assets/img/modelhub-schema.webp", alt: "The platform's relational schema: Users, Organizations, Models, ModelVersions, Datasets, Runs, Results and their references", w: 1000, h: 1160 },
           ],
@@ -376,13 +435,19 @@ window.PORTFOLIO.CONTENT = {
           subtitle: "Team of two · Software Engineering (CENG350)",
           icon: "flow",
           summary: "Architecture design for the Koster Seafloor Observatory — spotting marine species in seafloor video with ML and citizen science.",
+          stats: [
+            { value: "74", label: "pages of SAD" },
+            { value: "6", label: "subsystems" },
+          ],
           bullets: [
             "Co-authored a 74-page Software Architecture Description: six subsystems, from a researcher web UI to a YOLO-based detection pipeline trained on HPC.",
             "The loop that makes it work: volunteers annotate footage on Zooniverse, annotations retrain the models, results flow to global biodiversity databases (GBIF, OBIS) in Darwin Core format.",
             "Full UML set — component, class, sequence, state and activity diagrams — plus the SRS.",
           ],
-          tags: ["Software Architecture", "UML", "SRS / SAD", "ML System Design"],
-          links: [],
+          tags: ["Software Architecture", "UML", "Requirements (SRS)", "Architecture (SAD)", "ML System Design"],
+          links: [
+            { label: "The document (PDF)", href: "https://github.com/karakoyundenizz/CENG350---Software-Engineering/blob/main/PROJECT%20DOCUMENT/Project.pdf", kind: "github" },
+          ],
           media: [
             { src: "assets/img/kso-components.png", alt: "KSO component diagram: researcher, data management, citizen science, model API and ML/HPC subsystems", w: 1120, h: 560, wide: true },
             { src: "assets/img/kso-classes.webp", alt: "KSO internal interfaces class diagram", w: 1000, h: 1230 },
@@ -414,9 +479,19 @@ window.PORTFOLIO.CONTENT = {
           title: "Systems & Low-level",
           node: "Systems ♥",
           icon: "chip",
-          summary: "Home turf.",
+          summary: "Home turf. Every chip below is a link to the leaf that proves it.",
           bullets: [],
-          tags: ["OS internals", "Memory management", "Multithreading & sync", "Unix system programming", "Computer organization", "Performance tuning", "ROS 2", "Embedded (PIC18, Jetson)"],
+          tags: [
+            { label: "OS internals", section: "projects", item: "orchestrator" },
+            { label: "Multithreading & sync", section: "experience", item: "kuartis" },
+            { label: "Unix system programming", section: "projects", item: "orchestrator" },
+            { label: "Computer organization", section: "projects", item: "y86" },
+            { label: "Performance tuning", section: "projects", item: "y86" },
+            { label: "Reverse engineering", section: "projects", item: "bomblab" },
+            { label: "ROS 2", section: "experience", item: "kuartis" },
+            { label: "Embedded (PIC18, Jetson)", section: "projects", item: "pic18" },
+            "Memory management",
+          ],
           links: [],
           note: "this is the branch I want to grow the most",
         },
@@ -425,9 +500,14 @@ window.PORTFOLIO.CONTENT = {
           title: "People & Process",
           node: "Teamwork",
           icon: "heart",
-          summary: "The parts that aren't code.",
-          bullets: [],
-          tags: ["Teamwork", "Clear communication", "Ownership", "Planning & prioritizing", "Working with feedback", "Teaching & mentoring"],
+          summary: "The parts that aren't code — with the receipts.",
+          bullets: [
+            "Ownership: sole developer on Guild across five surfaces, from the first commit to the store listings.",
+            "Working with feedback: BİTES task screens reshaped after user rounds; Guild features re-cut from campus feedback.",
+            "Teaching: educational volunteering with primary-school kids.",
+            "Writing things down: co-authored a 74-page architecture document (KSO) that a team could actually build from.",
+          ],
+          tags: [],
           links: [],
         },
         {
@@ -506,7 +586,7 @@ window.PORTFOLIO.CONTENT = {
         {
           id: "ates",
           title: "Ateş",
-          node: "Ateş 🐕",
+          node: "Ateş",
           icon: "paw",
           summary: "My dog of 7+ years — walked twice a day, every day.",
           bullets: [

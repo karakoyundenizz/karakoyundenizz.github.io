@@ -93,6 +93,11 @@
   user-select: none;
   -webkit-user-select: none;
 }
+/* the scene is keyboard-focusable; ring sits inside since overflow is hidden */
+.game-scene:focus-visible {
+  outline: 3px solid var(--teal);
+  outline-offset: -3px;
+}
 .game-ground {
   position: absolute;
   left: 0; right: 0; bottom: 0;

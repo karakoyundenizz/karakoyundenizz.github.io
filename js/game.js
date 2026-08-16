@@ -147,6 +147,10 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     closeBtn.addEventListener("click", close);
 
     scene = el("div", "game-scene", frame);
+    /* the scene is the keyboard target: focus lands here on open so the
+       first Space jumps instead of closing */
+    scene.setAttribute("tabindex", "0");
+    scene.setAttribute("aria-label", "Game area — press Space or the up arrow to jump");
     scene.innerHTML =
       '<div class="game-cloud gc1"></div>' +
       '<div class="game-cloud gc2"></div>' +
@@ -156,11 +160,17 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     riderEl = el("div", "game-rider", scene);
     riderEl.innerHTML = RIDER_SVG;
 
+    /* score ticks every frame — never read it aloud per frame; the
+       final distance is announced once via the message on die() */
     scoreEl = el("div", "game-score", scene);
+    scoreEl.setAttribute("aria-live", "off");
     msgEl = el("div", "game-msg", scene);
+    msgEl.setAttribute("aria-live", "polite");
+    msgEl.setAttribute("aria-atomic", "true");
 
     scene.addEventListener("pointerdown", function (e) {
-      e.preventDefault();
+      e.preventDefault(); /* also blocks the default focus move, so do it by hand */
+      scene.focus({ preventScroll: true });
       tap();
     });
 
@@ -310,7 +320,30 @@ window.PORTFOLIO = window.PORTFOLIO || {};
       close();
       return;
     }
-    if (e.key === " " || e.key === "ArrowUp") {
+    if (e.key === "Tab") {
+      /* simple focus trap — same shape as panel.js */
+      var focusables = overlay.querySelectorAll("button, [tabindex='0']");
+      if (!focusables.length) return;
+      var first = focusables[0];
+      var last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+      return;
+    }
+    if (e.key === "ArrowUp") {
+      e.preventDefault();
+      tap();
+      return;
+    }
+    if (e.key === " ") {
+      /* Space on the close button must still activate the button
+         natively; anywhere else in the dialog it is a jump */
+      if (e.target && e.target.tagName === "BUTTON") return;
       e.preventDefault();
       tap();
     }
@@ -326,7 +359,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     reset();
     setMsg("tap or press space to ride");
     document.addEventListener("keydown", onKeydown, true);
-    closeBtn.focus();
+    scene.focus();
   }
 
   function close() {

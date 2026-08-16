@@ -60,7 +60,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
       '<circle cx="45" cy="60" r="5" fill="#2B2119"/><circle cx="75" cy="60" r="5" fill="#2B2119"/>' +
       '<path d="M46 80 C52 88 68 88 74 80" fill="none" stroke="#2B2119" stroke-width="4.4" stroke-linecap="round"/>' +
       "</svg>" +
-      '<img src="assets/img/me.jpg" alt="" onerror="this.remove()">' +
+      '<img src="assets/img/me.webp" alt="" onerror="this.remove()">' +
       "</span>" +
       '<span class="vine-me-text"><strong>me!</strong><small>who planted this tree — tap for the story</small></span>';
     me.addEventListener("click", function () {
@@ -101,7 +101,19 @@ window.PORTFOLIO = window.PORTFOLIO || {};
           star.textContent = "★";
           star.setAttribute("aria-hidden", "true");
         }
-        btn.appendChild(icon(item.icon, "vine-item-icon"));
+        if (item.flagship && item.logo) {
+          var mark = el("img", "leaf-mark vine-item-icon", btn);
+          mark.alt = "";
+          mark.width = 21;
+          mark.height = 21;
+          mark.onerror = function () { btn.replaceChild(icon(item.icon, "vine-item-icon"), mark); };
+          mark.src = item.logo;
+        } else {
+          btn.appendChild(icon(item.icon, "vine-item-icon"));
+        }
+        if (window.PORTFOLIO.PANEL && window.PORTFOLIO.PANEL.isVisited && window.PORTFOLIO.PANEL.isVisited(item.id)) {
+          btn.classList.add("visited");
+        }
         var text = el("span", "vine-item-text", btn);
         var t = el("span", "vine-item-title", text);
         t.textContent = item.node || item.title;
@@ -133,7 +145,8 @@ window.PORTFOLIO = window.PORTFOLIO || {};
         openSec = sec;
         if (openSectionId) {
           requestAnimationFrame(function () {
-            sec.scrollIntoView({ behavior: "smooth", block: "start" });
+            var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            sec.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
           });
         }
       }

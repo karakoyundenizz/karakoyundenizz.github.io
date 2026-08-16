@@ -21,8 +21,11 @@
   pointer-events: none;
 }
 
-/* ── decorations ── */
-.deco { position: absolute; inset: 0; pointer-events: none; transition: opacity 0.45s ease; }
+/* ── decorations ──
+   appended AFTER the nodes in the DOM (tab order: tree first), so paint
+   order is pinned with z-index: deco under the strokes, strokes under nodes */
+.deco { position: absolute; inset: 0; pointer-events: none; transition: opacity 0.45s ease; z-index: var(--z-deco); }
+.stage-svg { z-index: 2; }
 
 /* three depth layers — atmosphere.js writes --par-x/--par-y (−1..1)
    and --gust (0..1) on .stage; the world shifts, the tree stays still */
@@ -316,7 +319,7 @@ html.raining .cloud .puddle {
   background: var(--white);
   box-shadow: var(--sticker-shadow);
   transform: translate(-50%, -50%) rotate(var(--tilt, 0deg)) scale(var(--sc, 1));
-  transition: transform 0.24s var(--pop), opacity 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.24s var(--pop), --sc 0.24s var(--pop), opacity 0.2s ease, box-shadow 0.2s ease;
   z-index: var(--z-node);
 }
 .node-icon { width: 24px; height: 24px; flex: none; color: var(--accent, var(--ink)); }
@@ -389,7 +392,7 @@ html.raining .cloud .puddle {
   box-shadow: 6px 6px 0 rgba(43, 33, 25, 0.22);
 }
 .node.branch.dim {
-  opacity: 0.45; /* no filter here — filters make the dim transition stutter */
+  opacity: 0.7; /* was .45 — the labels fell under 4.5:1; the open pill still dominates via scale + shadow */
   --sc: 0.9;
 }
 .node-count {
@@ -419,6 +422,7 @@ html.raining .cloud .puddle {
   will-change: transform, opacity;
   transition:
     transform 0.26s var(--pop),
+    --sc 0.26s var(--pop),
     opacity 0.18s ease,
     visibility 0s linear 0.3s,
     box-shadow 0.2s ease;
@@ -430,11 +434,30 @@ html.raining .cloud .puddle {
   --sc: 1;
   transition:
     transform 0.26s var(--pop) calc(var(--i, 0) * 0.04s),
+    --sc 0.26s var(--pop) calc(var(--i, 0) * 0.04s),
     opacity 0.18s ease calc(var(--i, 0) * 0.04s),
     visibility 0s linear 0s,
     box-shadow 0.2s ease;
 }
 .leaf-icon { width: 19px; height: 19px; }
+/* flagship fruit wears the real product mark */
+.leaf-mark { width: 20px; height: 20px; flex: none; border-radius: 6px; border: 1.5px solid var(--ink); object-fit: contain; background: var(--white); }
+
+/* ── traversal memory ── */
+/* the leaf whose card is up stays lit behind the backdrop */
+.node.leaf.is-open { border-color: var(--accent, var(--ink)); background: var(--accent-soft, var(--white)); }
+/* leaves already read this session carry a small ink-outlined dot */
+.node.leaf.visited::after {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent, var(--ink));
+  border: 2px solid var(--ink);
+}
 .node.leaf:hover { --sc: 1.1; z-index: var(--z-leaf-hover); }
 
 /* idle sway once opened (starts after the pop settles).

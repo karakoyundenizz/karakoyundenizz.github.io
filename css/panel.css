@@ -95,8 +95,8 @@
   font-weight: 800;
   font-size: 0.72rem;
   letter-spacing: 1px;
-  color: var(--white);
-  background: var(--leaf-deep);
+  color: var(--ink); /* ink on green: 4.8:1 — white was 3.25:1 */
+  background: var(--leaf);
   border: 2.5px solid var(--ink);
   border-radius: 999px;
   padding: 3px 10px;
@@ -105,7 +105,7 @@
   content: "";
   width: 8px; height: 8px;
   border-radius: 50%;
-  background: var(--white);
+  background: var(--ink);
   animation: live-pulse 1.6s ease-in-out infinite;
 }
 @keyframes live-pulse {
@@ -139,7 +139,7 @@
 }
 .card-dark .card-title { color: #f6f5f1; }
 .card-dark .card-subtitle { color: rgba(246, 245, 241, 0.72); }
-.card-dark .live-badge { background: #14B8A0; }
+.card-dark .live-badge { background: var(--teal-soft); }
 .card-dark .card-logo { border-color: #f6f5f1; }
 .card-dark .panel-close { background: #f6f5f1; }
 
@@ -173,6 +173,15 @@
 }
 .media-frame.wide { width: 320px; } /* landscape shots: diagrams, screenshots */
 .media-frame:nth-child(even) { transform: rotate(1.2deg); }
+.media-btn {
+  display: block;
+  width: 100%;
+  padding: 0;
+  cursor: zoom-in;
+  border-radius: 20px;
+  transition: transform 0.2s var(--pop);
+}
+.media-btn:hover { transform: translate(-1px, -2px); }
 .media-img {
   width: 100%;
   height: auto; /* keep the w/h-attr aspect ratio when scaled down */
@@ -181,6 +190,64 @@
   box-shadow: 3px 3px 0 rgba(43, 33, 25, 0.16);
   background: var(--white);
 }
+/* "there's more to the right" — a hand note pinned to the strip's edge */
+.media-cue {
+  position: sticky;
+  right: 0;
+  align-self: flex-end;
+  flex: none;
+  margin-left: -44px;
+  margin-bottom: 14px;
+  padding: 2px 8px;
+  font-family: var(--font-hand);
+  font-size: 0.9rem;
+  color: var(--ink);
+  background: var(--white);
+  border: 2px solid var(--ink);
+  border-radius: 12px 14px 13px 11px / 11px 13px 12px 14px;
+  box-shadow: 2px 2px 0 rgba(43, 33, 25, 0.16);
+  pointer-events: none;
+}
+
+/* ── lightbox: the enlarged screenshot ── */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-seed) + 1);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(43, 33, 25, 0.55);
+  opacity: 0;
+  transition: opacity 0.22s ease;
+  cursor: zoom-out;
+}
+.lightbox.show { opacity: 1; }
+.lightbox-figure { max-width: min(1100px, 100%); max-height: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.lightbox-img {
+  max-width: 100%;
+  max-height: calc(100vh - 110px);
+  width: auto;
+  height: auto;
+  border: 3px solid var(--ink);
+  border-radius: 22px 26px 24px 28px / 26px 22px 28px 24px;
+  box-shadow: 6px 6px 0 rgba(43, 33, 25, 0.24);
+  background: var(--white);
+  cursor: default;
+}
+.lightbox-cap {
+  max-width: 720px;
+  padding: 5px 14px;
+  font-family: var(--font-hand);
+  font-size: 1.05rem;
+  color: var(--ink);
+  text-align: center;
+  background: var(--white);
+  border: 2.5px solid var(--ink);
+  border-radius: 16px 18px 17px 15px / 15px 17px 16px 18px;
+  box-shadow: 3px 3px 0 rgba(43, 33, 25, 0.16);
+}
+.lightbox-close { position: fixed; top: 16px; right: 16px; width: 44px; height: 44px; cursor: pointer; }
 
 .stats-row {
   display: grid;
@@ -205,7 +272,7 @@
   font-family: var(--font-display);
   font-weight: 800;
   font-size: 1.12rem;
-  color: var(--accent, var(--ink));
+  color: var(--ink); /* accents like gold don't reach 4.5:1 on paper */
 }
 .stat-label { font-size: 0.74rem; color: var(--ink-soft); font-weight: 700; }
 
@@ -245,6 +312,17 @@
   border-radius: 999px;
   white-space: nowrap;
 }
+/* evidence chips: a skill that links to the leaf proving it */
+.tag.tag-link { padding: 0; background: var(--accent-soft, var(--paper-deep)); box-shadow: 2px 2px 0 rgba(43, 33, 25, 0.14); }
+.tag-btn {
+  font: inherit;
+  padding: 3px 11px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 0.15s var(--pop);
+}
+.tag-btn::after { content: " ↗"; opacity: 0.6; }
+.tag-btn:hover { transform: translate(-1px, -1px); }
 
 .links-row {
   display: flex;
@@ -309,6 +387,7 @@
     box-shadow: 0 -8px 0 rgba(43, 33, 25, 0.08);
   }
   .card-header { border-radius: 23px 23px 0 0; padding-top: 26px; touch-action: pan-y; }
+  .panel-close { width: 44px; height: 44px; } /* the one dismiss control that needs no gesture */
   .card-body { padding-bottom: calc(30px + env(safe-area-inset-bottom, 0px)); }
   .media-frame { width: 44vw; max-width: 220px; }
   .card-header::before {
@@ -514,6 +593,18 @@
   border-width: 3px;
 }
 .vine-item .leaf-star { position: absolute; top: -12px; right: -6px; font-size: 1.1rem; color: var(--gold); text-shadow: 1.5px 1.5px 0 var(--ink); }
+.vine-item .leaf-mark { width: 21px; height: 21px; margin-top: 1px; border-radius: 6px; border: 1.5px solid var(--ink); object-fit: contain; background: var(--white); }
+.vine-item.visited::after {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent, var(--ink));
+  border: 2px solid var(--ink);
+}
 .vine-item-icon { width: 21px; height: 21px; flex: none; margin-top: 2px; color: var(--accent, var(--ink)); }
 .vine-item-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .vine-item-title { font-family: var(--font-display); font-weight: 700; font-size: 0.98rem; }

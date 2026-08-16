@@ -4,9 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Deniz Karakoyun — The Deniz Tree</title>
-  <meta name="description" content="Portfolio of Deniz Karakoyun — Computer Engineering student at METU. Low-level systems, OS internals, and two shipped products (Guild, Phera Labs). Explore it as an interactive tree.">
+  <meta name="description" content="Deniz Karakoyun — Computer Engineering student at METU (class of 2027). Two shipped apps (Guild, Phera Labs), a ROS 2 GNSS node at KUARTIS, and a portfolio you explore like a tree: OS internals, low-level systems, embedded, C/C++.">
+  <meta name="author" content="Deniz Karakoyun">
   <meta property="og:title" content="Deniz Karakoyun — The Deniz Tree">
-  <meta property="og:description" content="A portfolio you explore like a data structure: hover the branches, open the leaves.">
+  <meta property="og:description" content="A portfolio you explore like a data structure: hover the branches, open the leaves. METU Computer Engineering · OS & low-level systems · two shipped apps.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://karakoyundenizz.github.io/">
   <meta property="og:image" content="https://karakoyundenizz.github.io/assets/img/og.jpg">
@@ -41,7 +42,9 @@
   <link rel="preload" href="assets/fonts/baloo2-800-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/baloo2-600-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/nunito-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/nunito-700-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/patrickhand-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/img/me.webp" as="image" fetchpriority="high">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/tree.css">
   <link rel="stylesheet" href="css/panel.css">
@@ -49,19 +52,37 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Deniz Karakoyun",
+    "@type": "ProfilePage",
     "url": "https://karakoyundenizz.github.io/",
-    "jobTitle": "Computer Engineering student",
-    "affiliation": { "@type": "CollegeOrUniversity", "name": "Middle East Technical University" },
-    "sameAs": [
-      "https://github.com/karakoyundenizz",
-      "https://www.linkedin.com/in/deniz-karakoyun-2235b922a/"
-    ]
+    "name": "Deniz Karakoyun — The Deniz Tree",
+    "dateModified": "2026-08-16",
+    "mainEntity": {
+      "@type": "Person",
+      "@id": "https://karakoyundenizz.github.io/#deniz",
+      "name": "Deniz Karakoyun",
+      "givenName": "Deniz",
+      "familyName": "Karakoyun",
+      "url": "https://karakoyundenizz.github.io/",
+      "image": "https://karakoyundenizz.github.io/assets/img/me.webp",
+      "jobTitle": "Computer Engineering student",
+      "description": "Computer Engineering student at METU (class of 2027) focused on operating systems, low-level systems and embedded software. Co-founder and developer of Guild and Phera Labs; ROS 2 / C++17 work at KUARTIS.",
+      "alumniOf": { "@type": "CollegeOrUniversity", "name": "Middle East Technical University", "alternateName": "METU", "url": "https://www.metu.edu.tr/" },
+      "address": { "@type": "PostalAddress", "addressLocality": "Ankara", "addressCountry": "TR" },
+      "email": "mailto:karakoyun.deniz@metu.edu.tr",
+      "knowsAbout": ["Operating systems", "Low-level systems programming", "C", "C++", "x86-64 assembly", "Embedded systems", "ROS 2", "Multithreading and synchronization", "Performance optimization", "Mobile app development"],
+      "knowsLanguage": ["tr", "en"],
+      "sameAs": [
+        "https://github.com/karakoyundenizz",
+        "https://www.linkedin.com/in/deniz-karakoyun-2235b922a/",
+        "https://getguild.app",
+        "https://pheralabs.com"
+      ]
+    }
   }
   </script>
 </head>
 <body>
+<a class="skip-link" href="#node-root">Skip to the tree</a>
 
 <!-- ══════════════════ SVG ICON SPRITE ══════════════════ -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -202,8 +223,8 @@
 <header class="hero" id="hero">
   <div class="hero-inner">
     <div class="hero-avatar" aria-hidden="true">
-      <!-- drop a photo at assets/img/me.jpg and it replaces the cartoon face automatically -->
-      <img class="avatar-photo" src="assets/img/me.jpg" alt="" onerror="this.remove()">
+      <!-- drop a photo at assets/img/me.webp and it replaces the cartoon face automatically -->
+      <img class="avatar-photo" src="assets/img/me.webp" alt="" width="360" height="360" decoding="async" fetchpriority="high" onerror="this.remove()">
       <svg viewBox="0 0 120 120" class="avatar-svg">
         <circle cx="60" cy="62" r="44" fill="#F8C79A" stroke="#2B2119" stroke-width="4"/>
         <path d="M22 55 C18 26 40 12 60 12 C80 12 102 26 98 55 C94 42 86 36 60 36 C34 36 26 42 22 55 Z" fill="#3A2A1E" stroke="#2B2119" stroke-width="4" stroke-linejoin="round"/>
@@ -219,20 +240,21 @@
     <div class="hero-text">
       <p class="hero-hello">hi, I'm</p>
       <h1 class="hero-name">Deniz Karakoyun</h1>
-      <p class="hero-tagline">Computer Engineering student <span class="at">@</span> METU — I live where <strong>hardware meets software</strong>.</p>
-      <p class="hero-hand">→ aiming for OS &amp; low-level systems (algorithm design a close second) — the closer to the metal, the happier I am.</p>
+      <p class="hero-tagline">Computer Engineering student <span class="at">@</span> METU — <strong>two shipped apps</strong>, now writing C++17 for a robot's GPS.</p>
+      <p class="hero-hand">→ where I'm headed: OS &amp; low-level systems. the closer to the metal, the happier I am.</p>
       <ul class="hero-stats" aria-label="Quick facts — each one jumps to its branch of the tree">
         <li><button type="button" class="chip chip-gold chip-btn" id="chip-gpa">GPA 3.61 / 4.00</button></li>
         <li><button type="button" class="chip chip-maroon chip-btn" id="chip-products">2 shipped products ★</button></li>
         <li><button type="button" class="chip chip-honey chip-btn" id="chip-now">now: ROS 2 @ KUARTIS</button></li>
+        <li><button type="button" class="chip chip-teal chip-btn" id="chip-class">class of 2027</button></li>
       </ul>
       <div class="hero-actions">
         <a class="btn btn-primary" href="assets/cv/Deniz_Karakoyun_CV.pdf" download>
-          <svg class="ic" aria-hidden="true"><use href="#i-download"/></svg>Download CV</a>
+          <svg class="ic" aria-hidden="true"><use href="#i-download"/></svg>Download CV <span class="btn-meta">PDF · Aug 2026</span></a>
         <a class="btn" href="https://github.com/karakoyundenizz" target="_blank" rel="noopener">
-          <svg class="ic" aria-hidden="true"><use href="#i-github"/></svg>GitHub</a>
+          <svg class="ic" aria-hidden="true"><use href="#i-github"/></svg>GitHub<span class="sr-only"> (opens in a new tab)</span></a>
         <a class="btn" href="https://www.linkedin.com/in/deniz-karakoyun-2235b922a/" target="_blank" rel="noopener">
-          <svg class="ic" aria-hidden="true"><use href="#i-linkedin"/></svg>LinkedIn</a>
+          <svg class="ic" aria-hidden="true"><use href="#i-linkedin"/></svg>LinkedIn<span class="sr-only"> (opens in a new tab)</span></a>
         <a class="btn" href="mailto:karakoyun.deniz@metu.edu.tr">
           <svg class="ic" aria-hidden="true"><use href="#i-mail"/></svg>Email</a>
       </div>
@@ -259,7 +281,7 @@
       </div>
     </noscript>
   </div>
-  <footer class="site-footer">© 2026 Deniz Karakoyun · handcrafted, no frameworks — just a tree 🌳</footer>
+  <footer class="site-footer">© 2026 Deniz Karakoyun · handcrafted, no frameworks — just a tree <svg class="ic-inline" aria-hidden="true"><use href="#i-tree"/></svg> · <button type="button" class="footer-link">how this tree is built</button></footer>
 </main>
 
 <!-- ══════════════════ DETAIL PANEL ══════════════════ -->
