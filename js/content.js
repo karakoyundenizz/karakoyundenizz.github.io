@@ -123,7 +123,7 @@ window.PORTFOLIO.CONTENT = {
           id: "aselsan-ce",
           title: "ASELSAN — Candidate Engineer",
           node: "ASELSAN · '26",
-          subtitle: "until Jul 2026 · candidate-engineer programme · Ankara",
+          subtitle: "Feb – Jul 2026 · candidate-engineer programme · Ankara",
           icon: "chip",
           summary: "High-volume data pipelines for system evaluation.",
           bullets: [

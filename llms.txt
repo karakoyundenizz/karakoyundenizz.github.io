@@ -16,7 +16,7 @@ Contact: karakoyun.deniz@metu.edu.tr
 ## Experience
 
 - KUARTIS — Software Engineering Intern (2026 – present, Ankara): C++17 ROS 2 lifecycle node on NVIDIA Jetson for GNSS signal-health monitoring; test-first; fixed a data race in the multithreaded test harness.
-- ASELSAN — Candidate Engineer (until Jul 2026): multithreaded C++ data pipelines processing millions of data points for system evaluation.
+- ASELSAN — Candidate Engineer (Feb – Jul 2026): multithreaded C++ data pipelines processing millions of data points for system evaluation.
 - ROMER (METU Robotics & AI Center) — Undergraduate Researcher (Jan – Jul 2026): CNN / ResNet models for honey-bee orientation detection.
 - BİTES — Software Engineering Intern (Aug – Sep 2025): C# / WPF desktop app features, xUnit tests.
 - ASELSAN — Intern (Jul – Aug 2025): C++ unit tests (GoogleTest) for embedded systems; Python GUI test automation.
