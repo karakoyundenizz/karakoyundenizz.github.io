@@ -10,7 +10,7 @@ Contact: karakoyun.deniz@metu.edu.tr
 
 ## Who
 
-- Computer Engineering student at METU, CGPA 3.61 / 4.00, expected graduation 2027. Ranked 799th out of ~3,000,000 in Türkiye's national university exam (YKS, 2021).
+- Computer Engineering student at METU, CGPA 3.62 / 4.00, expected graduation 2027. Ranked 799th out of ~3,000,000 in Türkiye's national university exam (YKS, 2021).
 - Aiming at OS, embedded, robotics or infrastructure work — C, C++, Linux, ROS 2.
 
 ## Experience

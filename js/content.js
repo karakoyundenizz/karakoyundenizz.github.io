@@ -71,7 +71,7 @@ window.PORTFOLIO.CONTENT = {
           icon: "gradcap",
           summary: "Operating systems, computer organization, algorithms — and the exam rank that got me in the door.",
           stats: [
-            { value: "3.61 / 4.00", label: "CGPA" },
+            { value: "3.62 / 4.00", label: "CGPA" },
             { value: "799th / ~3M", label: "YKS rank, 2021" },
           ],
           bullets: [],
