@@ -1,14 +1,12 @@
-/* ════════════════════════════════════════════════════════════
-   atmosphere.js — the site's single rAF owner. Three jobs:
-   1. mouse parallax: lerps --par-x/--par-y on .stage; the deco
-      layers shift at different depths (the tree itself stays still)
-   2. wind gusts: every 20–40s eases --gust 0→1→0 for ~2.5s; CSS
-      amplifies the leaf sway and nudges clouds/motes
-   3. falling leaves: a couple per gust + a rare ambient one,
-      WAAPI-animated, hard-capped at 5 alive
-   Runs only on desktop + fine pointer + motion-ok. The loop parks
-   itself whenever nothing is moving, so idle cost is zero.
-   ════════════════════════════════════════════════════════════ */
+/* sitedeki tek rAF döngüsü. üç iş yapıyor
+     - fare paralaksı, .stage üstünde --par-x/--par-y kaydırıyor
+       süs katmanları farklı derinliklerde geziyor, ağaç duruyor
+     - rüzgar, her 20-40 saniyede --gust 0 dan 1 e ve geri gidiyor
+       css bunu alıp bütün tacı sallıyor
+     - düşen yapraklar, rüzgar başına birkaç tane, en fazla 5 tane canlı
+
+   sadece masaüstünde, fine pointer varsa ve motion kapalı değilse çalışıyor
+   hiçbir şey kıpırdamıyorsa döngü kendini park ediyor, boşta maliyeti yok */
 
 window.PORTFOLIO = window.PORTFOLIO || {};
 
@@ -34,7 +32,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     return fineMq.matches && !phoneMq.matches && !reduceMq.matches;
   }
 
-  /* everything rests while the visitor reads a card or the tab hides */
+  // kart açıkken veya sekme arkadayken her şey duruyor
   function resting() {
     return document.hidden || document.body.classList.contains("panel-open");
   }
@@ -49,8 +47,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
   function tick(now) {
     running = false;
     if (!enabled || !stageEl || !document.contains(stageEl)) return;
-    /* park completely while a card is open or the tab is hidden;
-       resume() / the next pointermove re-arms the loop */
+    // tamamen park et. resume() veya bi sonraki pointermove tekrar başlatır
     if (resting()) return;
     var busy = false;
 
@@ -84,7 +81,6 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     }
   }
 
-  /* ── wind ── */
   function scheduleGust() {
     clearTimeout(gustTimer);
     gustTimer = setTimeout(function () {
@@ -99,7 +95,6 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     }, 20000 + Math.random() * 20000);
   }
 
-  /* ── falling leaves ── */
   function spawnLeaf(delay) {
     setTimeout(function () {
       if (!enabled || resting() || !stageEl || !document.contains(stageEl)) return;
@@ -111,7 +106,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
       leaf.className = "leaf-fall";
       leaf.setAttribute("aria-hidden", "true");
       leaf.innerHTML = sprite;
-      var x = 380 + Math.random() * 850; /* the canopy band of the 1600px stage */
+      var x = 380 + Math.random() * 850; // 1600lük sahnede kabaca taç kısmı
       var y = 170 + Math.random() * 240;
       leaf.style.left = x + "px";
       leaf.style.top = y + "px";
@@ -135,7 +130,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
       function done() {
         var i = liveLeaves.indexOf(entry);
         if (i > -1) liveLeaves.splice(i, 1);
-        /* a cancelled leaf never "landed" — no dog snap for it */
+        // iptal edilen yaprak zaten yere düşmedi köpeği tetiklemesin
         if (!entry.cancelled) maybeSnap(entry.endX);
         leaf.remove();
       }
@@ -143,7 +138,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     }, delay || 0);
   }
 
-  /* Ateş snaps at leaves that land next to him (not while asleep) */
+  // Ateş yanına düşen yaprağa atlıyor. gece uyuyor ona karışmıyoruz
   function maybeSnap(x) {
     if (document.documentElement.dataset.theme === "night") return;
     if (!stageEl || !document.contains(stageEl)) return;
@@ -164,7 +159,6 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     }, 14000 + Math.random() * 10000);
   }
 
-  /* ── wiring ── */
   function onPointerMove(e) {
     if (!enabled || resting()) return;
     targetX = (e.clientX / window.innerWidth) * 2 - 1;
@@ -196,8 +190,9 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     scheduleAmbient();
   }
 
-  /* leave the world centered — otherwise a mid-gust stop (e.g. the user
-     enabling reduced motion) freezes the deco layers shifted sideways */
+  // dünyayı ortaya geri al
+  // rüzgarın ortasında durdurulunca (mesela reduced motion açılınca)
+  // katmanlar yamuk kalıyordu, olmadı aaa
   function resetProps() {
     if (stageEl && document.contains(stageEl)) {
       stageEl.style.setProperty("--par-x", "0");
@@ -222,8 +217,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     stageEl = null;
   }
 
-  /* panel.js calls these: the world holds its breath while a card is
-     open (the resting() checks park the loop), then breathes again */
+  // bu ikisini panel.js çağırıyor. kart açıkken dünya nefesini tutuyor
   function pause() {
     clearLeaves();
   }
@@ -231,7 +225,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     if (enabled) ensureLoop();
   }
 
-  /* main.js calls this after every render — the stage DOM is new */
+  // main.js her renderdan sonra çağırıyor, sahne artık yepyeni bi dom
   function onRender() {
     clearLeaves();
     if (ok()) {
@@ -243,11 +237,11 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     }
   }
 
-  /* environment changes (zoom to phone width, OS motion setting) */
+  // telefon genişliğine zoomlama, sistemin motion ayarını değiştirme falan
   function onEnvChange() { onRender(); }
   [reduceMq, phoneMq, fineMq].forEach(function (mq) {
     if (mq.addEventListener) mq.addEventListener("change", onEnvChange);
-    else if (mq.addListener) mq.addListener(onEnvChange); /* older Safari */
+    else if (mq.addListener) mq.addListener(onEnvChange); // eski safari
   });
 
   window.PORTFOLIO.ATMOSPHERE = {

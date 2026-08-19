@@ -1,7 +1,5 @@
-/* ════════════════════════════════════════════════════════════
-   mobile.js — the phone renderer (<768px): the tree becomes a
-   vertical "growing vine" accordion. Same data, second renderer.
-   ════════════════════════════════════════════════════════════ */
+/* telefon renderer'ı (<768px). ağaç dikey bi sarmaşık akordeonuna
+   dönüşüyor. aynı content.js verisi bambaşka bi çizim */
 
 window.PORTFOLIO = window.PORTFOLIO || {};
 
@@ -25,7 +23,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     return svg;
   }
 
-  /* openSectionId: optional — which section starts expanded (defaults to the first) */
+  // openSectionId opsiyonel, sadece deep linkler gönderiyor
   function render(rootEl, openSectionId) {
     var content = window.PORTFOLIO.CONTENT;
     var SPRITES = window.PORTFOLIO.SPRITES || {};
@@ -33,7 +31,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
 
     var vine = el("div", "vine", rootEl);
 
-    /* little sky: the sun (which is also the day/night switch) + a cloud */
+    // tepede minik bi gökyüzü. güneş (aynı zamanda tema düğmesi) ve bi bulut
     var deco = el("div", "vine-deco", vine);
     var sunBtn = el("button", "vine-sun", deco);
     sunBtn.type = "button";
@@ -49,7 +47,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     cloud.innerHTML = window.PORTFOLIO.RAIN_HTML || "";
     if (window.PORTFOLIO.THEME) window.PORTFOLIO.THEME.syncUi();
 
-    /* "me!" root card — same about card as the desktop root node */
+    // "me!" kartı, masaüstündeki kök düğümle aynı paneli açıyor
     var me = el("button", "vine-me", vine);
     me.type = "button";
     me.innerHTML =
@@ -137,7 +135,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
         openSec = isOpen ? null : sec;
       });
 
-      /* sections start closed unless a deep link asks for one */
+      // hepsi kapalı başlıyor deep link istemedikçe
       var startOpen = openSectionId ? section.id === openSectionId : false;
       if (startOpen) {
         sec.classList.add("open");
@@ -152,7 +150,8 @@ window.PORTFOLIO = window.PORTFOLIO || {};
       }
     });
 
-    /* ground scene: the hill with Ateş and the robot, same friends as on desktop */
+    // en altta zemin. tepe, Ateş ve robot
+    // masaüstündekiyle aynı arkadaşlar sadece düz dizilmiş
     var ground = el("div", "vine-ground", rootEl);
     var hill = el("div", "vine-hill", ground);
     hill.setAttribute("aria-hidden", "true");

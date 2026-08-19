@@ -1,39 +1,36 @@
-/* ════════════════════════════════════════════════════════════
-   game.js — "Deniz's Bike Ride", a tiny one-button runner.
-   Tap / click / Space to jump the bike over rocks, logs, dogs and
-   a mustachioed burger — and do NOT jump into the flying cat with
-   the rainbow exhaust. Works with mouse and touch on both layouts.
-   ════════════════════════════════════════════════════════════ */
+/* "Deniz's Bike Ride". tek tuşlu minik koşu oyunu
+   tıkla veya space, taşları kütükleri köpekleri ve bıyıklı hamburgeri atla
+   uçan kediye SAKIN zıplama, kask hizasında geliyor */
 
 window.PORTFOLIO = window.PORTFOLIO || {};
 
 (function () {
-  var GRAVITY = 2800;      // px/s²
-  var JUMP_V = -880;       // px/s
-  var START_SPEED = 280;   // px/s
+  var GRAVITY = 2800; // px/s²
+  var JUMP_V = -880;
+  var START_SPEED = 280; // px/s
   var MAX_SPEED = 580;
-  var SPEED_RAMP = 12;     // px/s per second
-  var GROUND = 46;         // ground strip height inside the scene
-  var RIDER_W = 62;        // collision box
+  var SPEED_RAMP = 12; // her saniye bu kadar hızlanıyor
+  var GROUND = 46;
+  var RIDER_W = 62; // çarpışma kutusu, görselden biraz küçük tutuyorum
   var RIDER_H = 46;
   var PX_PER_M = 42;
 
   var overlay, scene, riderEl, msgEl, scoreEl, closeBtn;
   var opener = null;
   var isOpen = false;
-  var state = "idle";      // idle | running | dead
+  var state = "idle"; // idle | running | dead
   var rafId = 0;
   var lastT = 0;
-  var riderY = 0;          // height above ground (px, >= 0)
+  var riderY = 0; // yerden yükseklik hep >= 0
   var vy = 0;
   var onGround = true;
   var speed = START_SPEED;
   var dist = 0;
   var lastSpawnDist = 0;
   var nextGap = 0;
-  var obstacles = [];      // {el, x, w, h}
+  var obstacles = [];
   var best = 0;
-  try { best = parseInt(window.localStorage.getItem("deniz-bike-best") || "0", 10) || 0; } catch (e) { /* private mode */ }
+  try { best = parseInt(window.localStorage.getItem("deniz-bike-best") || "0", 10) || 0; } catch (e) {}
 
   var OBSTACLE_TYPES = [
     {
@@ -49,7 +46,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
       svg: '<svg viewBox="0 0 30 36"><path d="M15 2 C 24 8, 28 20, 15 34 C 2 20, 6 8, 15 2 Z" fill="#8C5A3C" stroke="#2B2119" stroke-width="2.4" stroke-linejoin="round"/><path d="M8 14 H22 M6.5 21 H23.5 M9 27 H21" stroke="#2B2119" stroke-width="1.7" stroke-linecap="round" opacity="0.55"/></svg>',
     },
     {
-      /* a stray dog trotting the other way — Ateş's cousin, probably */
+      // sokak köpeği ters yöne gidiyor. Ateş'in kuzeni herhalde
       cls: "dog-ob", w: 58, h: 42,
       svg: '<svg viewBox="0 0 58 42">' +
         '<path d="M6 26 C 0 22, 2 14, 8 12" fill="none" stroke="#2B2119" stroke-width="3.4" stroke-linecap="round"/>' +
@@ -63,8 +60,8 @@ window.PORTFOLIO = window.PORTFOLIO || {};
         "</svg>",
     },
     {
-      /* a walking burger with a mustache. any resemblance to a certain
-         burger restaurant owner is a loving coincidence */
+      // bıyıklı yürüyen hamburger
+      // bi hamburgerciyle benzerliği tamamen sevgiden kaynaklı bi tesadüf
       cls: "burger", w: 46, h: 54,
       svg: '<svg viewBox="0 0 46 54">' +
         '<path d="M5 18 C 5 5, 41 5, 41 18 L41 21 H5 Z" fill="#F4B942" stroke="#2B2119" stroke-width="2.6" stroke-linejoin="round"/>' +
@@ -79,8 +76,8 @@ window.PORTFOLIO = window.PORTFOLIO || {};
         "</svg>",
     },
     {
-      /* the flying cat, rainbow issuing from exactly where you think.
-         it flies at helmet height: do NOT jump into it */
+      // uçan kedi, gökkuşağı tam tahmin ettiğiniz yerden çıkıyor
+      // kask hizasında uçuyor sakın zıplamayın
       cls: "nyan", w: 84, h: 34, fly: 78,
       svg: '<svg viewBox="0 0 84 34">' +
         '<g fill="none" stroke-linecap="round" stroke-width="3.6" opacity="0.9">' +
@@ -103,15 +100,15 @@ window.PORTFOLIO = window.PORTFOLIO || {};
 
   var RIDER_SVG =
     '<svg viewBox="0 0 120 92" aria-hidden="true">' +
-    /* wheels (spokes spin via CSS on .running) */
+    // tekerlekler. jantlar css'te .running ile dönüyor
     '<g class="wheel wheel-back"><circle cx="30" cy="70" r="17" fill="#FFFDF8" stroke="#2B2119" stroke-width="4"/><path d="M30 55 V85 M15 70 H45 M20 60 L40 80 M40 60 L20 80" stroke="#2B2119" stroke-width="1.8" opacity="0.6"/></g>' +
     '<g class="wheel wheel-front"><circle cx="92" cy="70" r="17" fill="#FFFDF8" stroke="#2B2119" stroke-width="4"/><path d="M92 55 V85 M77 70 H107 M82 60 L102 80 M102 60 L82 80" stroke="#2B2119" stroke-width="1.8" opacity="0.6"/></g>' +
-    /* frame */
+    // kadro
     '<path d="M30 70 L52 46 L78 46 L92 70 M52 46 L60 68 L78 46 M60 68 L30 70" fill="none" stroke="#12907E" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round"/>' +
     '<circle cx="60" cy="68" r="4.4" fill="#2B2119"/>' +
     '<path d="M86 40 L78 46 M84 34 L90 42" stroke="#2B2119" stroke-width="4" stroke-linecap="round"/>' +
     '<path d="M46 42 L52 46" stroke="#2B2119" stroke-width="4" stroke-linecap="round"/>' +
-    /* rider */
+    // sürücü
     '<path d="M49 42 C 52 28, 64 22, 74 28" fill="none" stroke="#8B1E3F" stroke-width="7" stroke-linecap="round"/>' +
     '<path d="M72 28 L84 37" stroke="#F8C79A" stroke-width="5" stroke-linecap="round"/>' +
     '<path d="M50 43 L56 56 L61 66" fill="none" stroke="#2B4A6B" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>' +
@@ -147,8 +144,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     closeBtn.addEventListener("click", close);
 
     scene = el("div", "game-scene", frame);
-    /* the scene is the keyboard target: focus lands here on open so the
-       first Space jumps instead of closing */
+    // focus buraya düşsün yoksa ilk space kapatma butonuna basıyor
     scene.setAttribute("tabindex", "0");
     scene.setAttribute("aria-label", "Game area — press Space or the up arrow to jump");
     scene.innerHTML =
@@ -160,8 +156,8 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     riderEl = el("div", "game-rider", scene);
     riderEl.innerHTML = RIDER_SVG;
 
-    /* score ticks every frame — never read it aloud per frame; the
-       final distance is announced once via the message on die() */
+    // skor her frame değişiyor, aria-live açık olsa ekran okuyucu delirir
+    // mesafeyi die() içindeki mesajla bi kere söylüyoruz
     scoreEl = el("div", "game-score", scene);
     scoreEl.setAttribute("aria-live", "off");
     msgEl = el("div", "game-msg", scene);
@@ -169,7 +165,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     msgEl.setAttribute("aria-atomic", "true");
 
     scene.addEventListener("pointerdown", function (e) {
-      e.preventDefault(); /* also blocks the default focus move, so do it by hand */
+      e.preventDefault(); // bu focusu da engelliyor o yüzden elle veriyoruz
       scene.focus({ preventScroll: true });
       tap();
     });
@@ -232,14 +228,14 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     var m = Math.floor(dist / PX_PER_M);
     if (m > best) {
       best = m;
-      try { window.localStorage.setItem("deniz-bike-best", String(best)); } catch (e) { /* ok */ }
+      try { window.localStorage.setItem("deniz-bike-best", String(best)); } catch (e) {}
     }
     updateScore(m);
     setMsg("ouch! " + m + " m — tap to ride again");
   }
 
   function spawnObstacle(sceneW) {
-    /* flyers only show up once the player has learned to jump */
+    // uçanlar ilk 900pxde çıkmasın, adam daha zıplamayı öğrenmedi
     var pool = OBSTACLE_TYPES;
     if (dist < 900) {
       pool = OBSTACLE_TYPES.filter(function (t) { return !t.fly; });
@@ -265,7 +261,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     var sceneW = rect.width;
     var riderX = sceneW * 0.16;
 
-    /* rider physics — riderY is height above the ground, vy positive = falling */
+    // fizik. riderY yerden yükseklik, vy pozitifse düşüyor demek
     vy += GRAVITY * dt;
     riderY -= vy * dt;
     if (riderY <= 0) {
@@ -277,7 +273,6 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     }
     riderEl.style.transform = "translateY(" + (-riderY).toFixed(1) + "px)";
 
-    /* world scroll */
     speed = Math.min(MAX_SPEED, speed + SPEED_RAMP * dt);
     var step = speed * dt;
     dist += step;
@@ -298,9 +293,10 @@ window.PORTFOLIO = window.PORTFOLIO || {};
       }
       o.el.style.transform = "translateX(" + o.x.toFixed(1) + "px)";
 
-      /* collision: axis-aligned boxes, forgiving margins.
-         Ground obstacles live at [0, h]; flyers at [fly, fly + h] —
-         you jump the first kind and duck (stay down) for the second. */
+      // düz kutu çarpışması. kenarlardan biraz pay veriyoruz yoksa
+      // haksız ölümler oluyor
+      // yerdekiler [0, h] uçanlar [fly, fly + h] aralığında
+      // birincisini zıplayıp geçiyorsun ikincisinde yerde kalman lazım
       var rl = riderX - RIDER_W / 2 + 8;
       var rr = riderX + RIDER_W / 2 - 8;
       if (o.x < rr && o.x + o.w > rl &&
@@ -321,7 +317,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
       return;
     }
     if (e.key === "Tab") {
-      /* simple focus trap — same shape as panel.js */
+      // panel.js'tekiyle aynı focus trap
       var focusables = overlay.querySelectorAll("button, [tabindex='0']");
       if (!focusables.length) return;
       var first = focusables[0];
@@ -341,8 +337,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
       return;
     }
     if (e.key === " ") {
-      /* Space on the close button must still activate the button
-         natively; anywhere else in the dialog it is a jump */
+      // kapatma butonundayken space butona basmalı, gerisi zıplama
       if (e.target && e.target.tagName === "BUTTON") return;
       e.preventDefault();
       tap();

@@ -1,15 +1,13 @@
-/* ════════════════════════════════════════════════════════════
-   main.js — boot: pick a renderer, keep the stage scaled to fit,
-   switch renderers when the viewport crosses the phone breakpoint.
-   ════════════════════════════════════════════════════════════ */
+/* boot dosyası. renderer'ı seçiyor sahneyi ekrana sığdırıyor
+   telefon breakpointini geçince öbürüne geçiyor */
 
 (function () {
   var P = window.PORTFOLIO;
   var stageWrap = document.getElementById("stage-wrap");
   var stageRoot = document.getElementById("stage-root");
   var hint = document.getElementById("hero-hint");
-  /* phones AND coarse-pointer tablets in portrait get the vine — a hover
-     tree scaled to 0.48 with 7px labels is no use to a thumb */
+  // dikey duran dokunmatik tabletlere de vine gitsin
+  // 0.48 ölçekli hover ağacı 7px yazıyla parmakla kullanılmıyor
   var phoneMq = window.matchMedia("(max-width: 767px), ((pointer: coarse) and (max-width: 1100px) and (orientation: portrait))");
   var reduceMq = window.matchMedia("(prefers-reduced-motion: reduce)");
   var resizeTimer = 0;
@@ -33,10 +31,7 @@
     var w = stageWrap.clientWidth;
     var h = stageWrap.clientHeight;
     var scale = Math.min(w / P.LAYOUT.STAGE_W, h / P.LAYOUT.STAGE_H);
-    /* never scale up past 1.05 — the cartoon strokes get soupy.
-       The whole tree always fits the viewport (no scrolling on desktop);
-       the compact-hero media query in base.css buys the stage room on
-       short laptop screens */
+    // 1.2 denedim çizgiler dağıldı 1.05 iyi
     scale = Math.min(scale, 1.05);
     stage.style.transform = "translateX(-50%) scale(" + scale.toFixed(4) + ")";
     stage.style.top = Math.max(0, (h - P.LAYOUT.STAGE_H * scale) / 2) + "px";
@@ -50,7 +45,6 @@
       : "psst — this portfolio is a <strong>tree</strong>. hover the branches, click the leaves — or Tab to a branch and press ↓";
   }
 
-  /* once the visitor has grown a branch, the hint has done its job */
   var hintRetired = false;
   function retireHint() {
     if (hintRetired || !hint) return;
@@ -58,10 +52,9 @@
     hint.classList.add("retired");
   }
 
-  /* a linear, screen-reader-first mirror of the whole CV, rendered from
-     content.js right after the stage. Visually hidden; visible in print;
-     and it's what crawlers and AI assistants read, since the tree itself
-     is buttons that open dialogs. */
+  // bütün cv düz liste halinde content.js'ten
+  // ekranda görünmüyor ama print'te çıkıyor, crawlerlar da bunu okuyor
+  // ağaç sonuçta bi sürü buton onlara bişey ifade etmiyor
   function buildTextMirror() {
     if (document.getElementById("cv-text")) return;
     var C = P.CONTENT;
@@ -90,9 +83,8 @@
     stageWrap.parentNode.insertBefore(sec, stageWrap.nextSibling);
   }
 
-  /* split the hero name into letter spans so each one can slap down
-     like a sticker (CSS drives the animation). Screen readers keep
-     the whole name via aria-label; the spans are decoration. */
+  // ismi harflere bölüyoruz tek tek düşsünler diye
+  // spanlar süs, aria-label ismi bütün tutuyor
   function splitHeroName() {
     var h1 = document.querySelector(".hero-name");
     if (!h1 || h1.dataset.split) return;
@@ -123,9 +115,8 @@
     h1.appendChild(frag);
   }
 
-  /* deep links: ?open=projects pre-expands a branch,
-     ?open=products&item=guild also opens that card.
-     Applied exactly once, and only for ids that actually exist. */
+  // ?open=projects dalı açıyor &item=guild kartı da açıyor
+  // bir kere çalışıyor ve sadece var olan idler için
   function applyDeepLink(isPhone) {
     if (deepLinkDone) return;
     deepLinkDone = true;
@@ -161,7 +152,7 @@
 
   var gameLinkDone = false;
 
-  /* hero chips jump into the tree: expand a branch, optionally open a card */
+  // yukardaki chipler ağaca atlıyor
   function openTreeSection(sectionId, itemId) {
     var section = findSection(sectionId);
     if (!section) return;
@@ -176,15 +167,14 @@
     }
     stageRoot.scrollIntoView({ behavior: reduceMq.matches ? "auto" : "smooth", block: "nearest" });
   }
-  /* panel.js's evidence chips jump here too */
-  P.NAV = { openTreeSection: openTreeSection };
+  P.NAV = { openTreeSection: openTreeSection }; // panel.js de buradan gidiyor
 
   function onResize() {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(fitStage, 120);
   }
 
-  /* clouds toggle a gentle rain — delegated, so it survives re-renders */
+  // buluta basınca yağmur. delegated yoksa her renderda kayboluyor
   document.addEventListener("click", function (e) {
     var cloud = e.target.closest && e.target.closest("button.cloud");
     if (!cloud) return;
@@ -195,7 +185,7 @@
     }
   });
 
-  /* the hint retires after the first grow */
+  // bi dal açıldıysa ipucunun işi bitti
   stageRoot.addEventListener("click", function (e) {
     if (e.target.closest && e.target.closest(".node.branch, .vine-head")) retireHint();
   });
@@ -227,7 +217,7 @@
     if (phoneMq.addEventListener) {
       phoneMq.addEventListener("change", render);
     } else if (phoneMq.addListener) {
-      phoneMq.addListener(render); /* older Safari */
+      phoneMq.addListener(render); // eski safari
     }
     window.addEventListener("resize", onResize);
   }

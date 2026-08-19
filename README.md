@@ -1,56 +1,51 @@
-# The Deniz Tree 🌳 — portfolio site
+# The Deniz Tree 🌳
 
-A hand-built portfolio: no frameworks, no build step, no dependencies.
-Your CV as an interactive **tree data structure** — hover the branches, click the leaves.
+Portfolyom. Framework yok, build adımı yok, bağımlılık yok. Html, css ve birkaç
+js dosyası. CV bi ağaç: dallara hover, yapraklara tıkla.
 
-## Run it
+## Çalıştırmak
 
-Just open `index.html` in a browser (double-click works), or:
+`index.html`'i tarayıcıda aç, çalışıyor. Düzgün bi sunucu istersen
 
 ```bash
 cd portfolio
-python3 -m http.server 8080   # → http://localhost:8080
+python3 -m http.server 8080
 ```
 
-## Edit the content
+## İçeriği değiştirmek
 
-**Everything the site says lives in one file: [`js/content.js`](js/content.js).**
-Each tree leaf is an item with `title`, `bullets`, `tags`, `links`, etc.
+Sitedeki her şey [`js/content.js`](js/content.js) içinde. Renderer'larda tek
+satır metin yok, o yüzden dokunman gereken tek dosya bu.
 
-- Hide any item without deleting it: set `hidden: true`.
-- Nudge a leaf's position on the tree: set `dx` / `dy` (stage pixels).
-- The "about me" card (root node click) is the `about` object at the top.
-- The hero strip (name, tagline, stat chips, buttons) is plain HTML in `index.html`.
+- `hidden: true` yazınca item siliniyormuş gibi kayboluyor ama duruyor
+- `dx` / `dy` yaprak kötü bi yere düştüyse oynatıyor
+- "about me" kartı en yukardaki `about` objesi
+- hero şeridi (isim, tagline, chipler, butonlar) `index.html`'de düz html
 
-## Deep links
+## Deep linkler
 
-- `?open=products` — opens a branch (`education`, `experience`, `products`, `projects`, `skills`, `beyond`)
-- `?open=products&item=guild` — also opens that item's card
+- `?open=products` bi dalı açıyor. education, experience, products, projects, skills, beyond
+- `?open=products&item=guild` kartı da açıyor
+- `?theme=night`, `?rain=1`, `?game=1` de var
 
-## Photo slots (drop a file in, it appears; missing files are skipped silently)
+## Görseller
 
-| File | Where it shows |
-|---|---|
-| `assets/img/me.jpg` | hero avatar (replaces the cartoon face) |
-| `assets/img/romer-bee.jpg` | ROMER card photo strip |
-| `assets/img/karate.jpg` | Karate card |
-| `assets/img/sports.jpg` | Sports & Outdoors card |
-| `assets/img/cycling.jpg` | Sports & Outdoors card (second photo) |
-| `assets/img/ates.jpg` | Ateş's card |
+Dosyayı `assets/img/` içine at, `content.js`'te item'a `media` girişi ekle.
+Olmayan dosyalar sessizce atlanıyor, fotoğraf gelmeden slotu hazırlayabilirsin.
+Fotoğraflar webp, şeffaflık gerekiyorsa png.
 
-To add more: put the file in `assets/img/` and add a `media` entry to the item in `js/content.js`.
+## Deploy
 
-## Deploy (GitHub Pages / Vercel / Netlify)
+Klasör kendi kendine yetiyor, bütün yollar göreceli, olduğu gibi yükleniyor.
+Şu an GitHub Pages'te: push et, bi iki dakika bekle, bitti.
 
-The folder is fully self-contained with relative paths — upload it as-is.
-For GitHub Pages: push this folder to a repo, enable Pages on the repo root (or `/docs`).
-
-## Files
+## Dosyalar
 
 ```
-index.html    hero + SVG icon sprite + noscript fallback
-css/          base.css (tokens, hero) · tree.css (stage, animations) · panel.css (cards, mobile)
-js/           content.js (ALL copy/data) · layout.js (tree math) · tree.js (desktop)
-              panel.js (detail cards) · mobile.js (accordion) · main.js (boot)
-assets/       fonts (bundled woff2) · img (project shots/logos) · cv (PDF)
+index.html   hero, svg ikon sprite, noscript
+css/         base (token+hero), tree (sahne+animasyon), panel (kart+vine), game
+js/          content (bütün metin), layout (ağaç matematiği), tree (masaüstü),
+             mobile (telefon akordeonu), panel (kartlar), atmosphere (rüzgar),
+             theme (gece gündüz), game (bisiklet), main (boot)
+assets/      fonts, img, cv
 ```

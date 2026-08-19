@@ -1,11 +1,9 @@
-/* ════════════════════════════════════════════════════════════
-   tree.js — desktop renderer. Real <button> nodes positioned on a
-   1600×1000 stage over one SVG that draws the branches.
-   ════════════════════════════════════════════════════════════ */
+/* masaüstü renderer. 1600x880 sahnenin üstüne gerçek <button>lar
+   dizilyor, altta tek bir svg dalları çiziyor */
 
 window.PORTFOLIO = window.PORTFOLIO || {};
 
-/* shared cartoon sprites — used by the desktop stage AND the mobile ground scene */
+// hem masaüstü sahnesi hem telefondaki zemin bunları kullanıyor
 window.PORTFOLIO.SPRITES = {
   dog:
     '<svg viewBox="0 0 90 84" aria-hidden="true">' +
@@ -60,11 +58,11 @@ window.PORTFOLIO.SPRITES = {
   moon:
     '<svg viewBox="0 0 120 120" aria-hidden="true">' +
     '<path d="M72 16 A46 46 0 1 0 104 64 A36 36 0 0 1 72 16 Z" fill="#F6E7B8" stroke="#2B2119" stroke-width="4" stroke-linejoin="round"/>' +
-    /* one closed eye; the mouth is a long, slanted profile smile that
-       sweeps down from the face and flows into the bite's lower tip */
+    // bi tane kapalı göz, sonra aşağı doğru uzayıp ısırığın ucuna
+    // giden bi gülüş. düz gülücük denedim surat gibi durmadı
     '<path d="M52 50 C 56 55, 63 55, 67 50" fill="none" stroke="#2B2119" stroke-width="3" stroke-linecap="round"/>' +
     '<path d="M76 84 C 86 92, 99 85, 104 67" fill="none" stroke="#2B2119" stroke-width="2.8" stroke-linecap="round"/>' +
-    /* craters tucked away from the face */
+    // kraterler, suratın olmadığı yerlere
     '<circle cx="46" cy="30" r="4" fill="#EBD79F" stroke="#2B2119" stroke-width="1.8" opacity="0.85"/>' +
     '<circle cx="36" cy="86" r="3" fill="#EBD79F" stroke="#2B2119" stroke-width="1.6" opacity="0.7"/>' +
     "</svg>",
@@ -90,9 +88,9 @@ window.PORTFOLIO.SPRITES = {
     "</svg>",
 };
 
-/* the shower that hangs under a clicked cloud (html.raining shows it):
-   it rains BITS — 0s and 1s. Inline delays/durations survive the CSS
-   animation shorthand. */
+// tıklanan bulutun altına asılan yağmur (html.raining açıyor)
+// bit yağıyor, 0 ve 1. süreler inline çünkü css animation kısayolu
+// hepsini eziyor
 window.PORTFOLIO.RAIN_HTML =
   '<span class="rain" aria-hidden="true">' +
   '<b class="puddle"></b>' +
@@ -117,7 +115,7 @@ window.PORTFOLIO.RAIN_HTML =
   var pinnedSection = null;
   var expandTimer = 0;
   var collapseTimer = 0;
-  var groups = {};      // sectionId → {branchBtn, leafGroup, edgeGroup, leafBtns}
+  var groups = {}; // sectionId -> {branchBtn, leafGroup, edgeGroup, leafBtns}
 
   function el(tag, cls, parent) {
     var node = document.createElement(tag);
@@ -143,14 +141,13 @@ window.PORTFOLIO.RAIN_HTML =
     return svg;
   }
 
-  /* tiny deterministic pseudo-random from a string — stable tilts per node */
+  // ucuz bi hash, her düğüm renderlar arası aynı açıda kalsın
+  // Math.random() kullanıyordum her resizeda ağaç titriyordu
   function tilt(id, range) {
     var h = 0;
     for (var i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) % 997;
     return ((h / 997) * 2 - 1) * range;
   }
-
-  /* ── decorations ── */
 
   function buildCloud(cls, parent) {
     var c = el("button", cls, parent);
@@ -163,9 +160,9 @@ window.PORTFOLIO.RAIN_HTML =
     return c;
   }
 
-  /* three depth layers so atmosphere.js can parallax the world
-     around the (deliberately still) tree. The sun is a real button:
-     it toggles day/night, so its layer is NOT aria-hidden. */
+  // üç derinlik katmanı, atmosphere.js dünyayı ağacın etrafında
+  // kaydırıyor. ağaç hiç kıpırdamıyor
+  // güneşin katmanı aria-hidden değil, o güneş gerçek bi buton
   function buildDecorations(parent, layout) {
     var S = window.PORTFOLIO.SPRITES;
 
@@ -181,7 +178,7 @@ window.PORTFOLIO.RAIN_HTML =
     stars.setAttribute("aria-hidden", "true");
     stars.innerHTML = S.stars;
 
-    /* clouds are buttons too: tap one and it starts to rain */
+    // bulutlar da buton, birine basınca yağmur başlıyor
     buildCloud("cloud cloud-1", sky);
     buildCloud("cloud cloud-2", sky);
 
@@ -235,12 +232,12 @@ window.PORTFOLIO.RAIN_HTML =
       window.PORTFOLIO.SPRITES.dog;
     dog.addEventListener("click", function () {
       dog.classList.remove("barking");
-      void dog.offsetWidth; /* restart animation */
+      void dog.offsetWidth; // reflow, yoksa animasyon baştan başlamıyor
       dog.classList.add("barking");
     });
   }
 
-  /* a little robot friend peeking from behind a bush — easter egg 🤖 */
+  // küçük robot arkadaş çalının arkasından bakıyor 🤖
   function buildRobot(parent, layout) {
     var robot = el("button", "robot", parent);
     robot.type = "button";
@@ -257,7 +254,7 @@ window.PORTFOLIO.RAIN_HTML =
     });
   }
 
-  /* the little bike sticker that opens the mini game */
+  // mini oyunu açan bisiklet çıkartması
   function buildBikeButton(parent, layout) {
     var btn = el("button", "game-launch", parent);
     btn.type = "button";
@@ -271,8 +268,6 @@ window.PORTFOLIO.RAIN_HTML =
       if (window.PORTFOLIO.GAME) window.PORTFOLIO.GAME.open(btn);
     });
   }
-
-  /* ── nodes ── */
 
   function buildRoot(parent, layout, content) {
     var btn = el("button", "node root", parent);
@@ -333,8 +328,8 @@ window.PORTFOLIO.RAIN_HTML =
       star.textContent = "★";
       star.setAttribute("aria-hidden", "true");
     }
-    /* flagship fruit wears the real product mark; other leaves their drawn icon.
-       If the logo can't load, fall back to the drawn icon. */
+    // flagship meyveler gerçek logoyu takıyor gerisi çizilmiş ikonu
+    // logo dosyası yoksa ikona geri dönüyoruz
     if (it.flagship && it.logo) {
       var mark = el("img", "leaf-mark", btn);
       mark.alt = "";
@@ -347,14 +342,12 @@ window.PORTFOLIO.RAIN_HTML =
     }
     var label = el("span", "node-label", btn);
     label.textContent = it.node || it.title;
-    /* traversal memory: leaves read earlier this session keep their mark */
+    // bu oturumda açılan yapraklar okundu işaretini tutuyor
     if (window.PORTFOLIO.PANEL && window.PORTFOLIO.PANEL.isVisited && window.PORTFOLIO.PANEL.isVisited(it.id)) {
       btn.classList.add("visited");
     }
     return btn;
   }
-
-  /* ── expand / collapse ── */
 
   function setOpen(sectionId) {
     if (openSection === sectionId) return;
@@ -398,8 +391,7 @@ window.PORTFOLIO.RAIN_HTML =
     collapseTimer = setTimeout(function () { collapse(false); }, COLLAPSE_GRACE_MS);
   }
 
-  /* ── keyboard navigation ── */
-
+  // oklar dallarda geziyor, aşağı yapraklara giriyor, escape kapatıyor
   function handleKeydown(e) {
     var t = e.target;
     if (!t.classList || !t.classList.contains("node")) return;
@@ -437,8 +429,6 @@ window.PORTFOLIO.RAIN_HTML =
     }
   }
 
-  /* ── render ── */
-
   function render(rootEl) {
     var content = window.PORTFOLIO.CONTENT;
     layoutResult = window.PORTFOLIO.LAYOUT.compute(content);
@@ -452,8 +442,8 @@ window.PORTFOLIO.RAIN_HTML =
     stage.style.height = layoutResult.stageH + "px";
     stage.dataset.open = "";
 
-    /* SVG underlay (decorations are appended AFTER the nodes so the tree
-       comes first in tab order; z-index keeps them painted underneath) */
+    // svg alt katman. süsler düğümlerden sonra ekleniyor ki tab sırası
+    // önce ağaca gelsin, z-index onları tekrar alta atıyor
     var svg = svgEl("svg", {
       class: "stage-svg",
       viewBox: "0 0 " + layoutResult.stageW + " " + layoutResult.stageH,
@@ -473,8 +463,9 @@ window.PORTFOLIO.RAIN_HTML =
       p.style.setProperty("--bi", i);
     });
 
-    /* leaf edges live OUTSIDE the turbulence filter: filtering a group whose
-       paths animate forces a full filter re-render every frame = jank */
+    // yaprak çizgileri turbulence filtresinin DIŞINDA duruyor
+    // içine koyunca her frame filtreyi baştan hesaplıyor ve resmen
+    // takılıyor. bunu bulmam çok sürdü
     var edgeGroups = {};
     layoutResult.branches.forEach(function (b) {
       edgeGroups[b.section.id] = svgEl("g", { class: "edge-group", "data-section": b.section.id }, svg);
@@ -488,9 +479,8 @@ window.PORTFOLIO.RAIN_HTML =
       leafIndexPerSection[sid] = i + 1;
     });
 
-    /* node layers — each branch button is immediately followed by its
-       leaf group in the DOM, so keyboard tab order matches the
-       disclosure pattern (expand a branch → Tab reaches its leaves) */
+    // her dal butonunun hemen ardından kendi yaprak grubu geliyor
+    // böylece tab sırası mantıklı: dalı aç, tab ile içine gir
     buildRoot(stage, layoutResult, content);
 
     var leavesBySection = {};
@@ -527,7 +517,7 @@ window.PORTFOLIO.RAIN_HTML =
     buildBikeButton(stage, layoutResult);
     buildDecorations(stage, layoutResult);
 
-    /* ── events (delegated) ── */
+    // hepsi delegated, sahne çok sık baştan kuruluyor
     stage.addEventListener("mouseover", function (e) {
       var node = e.target.closest ? e.target.closest(".node") : null;
       if (!node) return;
@@ -563,7 +553,7 @@ window.PORTFOLIO.RAIN_HTML =
     });
     stage.addEventListener("keydown", handleKeydown);
 
-    /* grow-in on first paint */
+    // çift rAF. tek frameyle bazen animasyon atlanıyordu
     requestAnimationFrame(function () {
       requestAnimationFrame(function () { stage.classList.add("grown"); });
     });

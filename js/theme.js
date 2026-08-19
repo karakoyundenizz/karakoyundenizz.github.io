@@ -1,9 +1,6 @@
-/* ════════════════════════════════════════════════════════════
-   theme.js — day/night. The sun in the sky is the switch: click it
-   and it sets while the moon rises. The page world darkens; the
-   stickers stay lit. An inline <head> script applies the saved
-   theme before first paint, so this file only owns the switching.
-   ════════════════════════════════════════════════════════════ */
+/* gece gündüz. gökteki güneş düğme, tıklayınca batıyor ay çıkıyor
+   kayıtlı tema head'deki inline scriptte uygulanıyor
+   burası sadece geçişle uğraşıyor */
 
 window.PORTFOLIO = window.PORTFOLIO || {};
 
@@ -25,15 +22,14 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     return document.documentElement.dataset.theme === "night" ? "night" : "day";
   }
 
-  /* keep the browser chrome color + every sun button honest.
-     Called again after each re-render (both renderers rebuild the sun). */
+  // tarayıcı çubuğunun rengi ve bütün güneş butonları güncel kalsın
+  // her renderdan sonra tekrar çağrılıyor ikisi de güneşi baştan kuruyor
   function syncUi() {
     var theme = current();
     var meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute("content", COLORS[theme]);
-    /* stable accessible name + toggling pressed state (a name that
-       flips together with aria-pressed reads as two different buttons);
-       the whimsy lives in the sighted-user tooltip instead */
+    // önce label da değişiyordu ekran okuyucu iki ayrı buton sanıyormuş
+    // label sabit kaldı şaka title'a gitti
     var toggles = document.querySelectorAll("button.sun-toggle, button.vine-sun");
     for (var i = 0; i < toggles.length; i++) {
       toggles[i].setAttribute("aria-label", "Night mode");
@@ -49,13 +45,13 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     syncUi();
   }
 
-  /* No View Transition here on purpose: the sun/moon/hills/sky already
-     crossfade via their own CSS transitions, and a whole-page snapshot
-     on top of them double-animates (sun → moon → sun echo). */
+  // bilerek view transition yok. güneş ay tepeler zaten kendi css
+  // geçişleriyle kayboluyor, üstüne bi de sayfa snapshotı binince
+  // güneş > ay > yine güneş gibi bişey oluyordu çok kötüydü
   function set(theme, persist) {
     apply(theme);
     if (persist) {
-      try { localStorage.setItem(STORAGE_KEY, theme); } catch (e) { /* private mode */ }
+      try { localStorage.setItem(STORAGE_KEY, theme); } catch (e) {}
     }
   }
 
@@ -63,14 +59,14 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     set(current() === "night" ? "day" : "night", true);
   }
 
-  /* follow the OS until the visitor makes an explicit choice */
+  // kullanıcı bi seçim yapana kadar sistemi takip et
   function onSystemChange(e) {
     if (!stored()) set(e.matches ? "night" : "day", false);
   }
   if (systemMq.addEventListener) systemMq.addEventListener("change", onSystemChange);
-  else if (systemMq.addListener) systemMq.addListener(onSystemChange); /* older Safari */
+  else if (systemMq.addListener) systemMq.addListener(onSystemChange); // eski safari
 
-  /* delegated click — survives full re-renders of either renderer */
+  // delegated. iki renderer da her şeyi baştan kuruyor
   document.addEventListener("click", function (e) {
     var btn = e.target.closest && e.target.closest("button.sun-toggle, button.vine-sun");
     if (btn) toggle();

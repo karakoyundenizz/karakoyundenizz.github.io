@@ -1,15 +1,13 @@
-/* ════════════════════════════════════════════════════════════
-   tree.css — the stage, the tree, and everything that moves on it
-   ════════════════════════════════════════════════════════════ */
+/* sahne, ağaç ve üstünde kıpırdayan ne varsa */
 
-/* ── stage ── */
+/* sahne */
 .stage {
   position: absolute;
   left: 50%;
   top: 0;
-  /* width/height are set from layout.js so they always match the virtual stage */
+  /* width/height layout.js'ten geliyor */
   transform-origin: top center;
-  transform: translateX(-50%) scale(0.6); /* main.js overwrites with the real fit */
+  transform: translateX(-50%) scale(0.6); /* main.js gerçek ölçeği yazıyor */
 }
 
 .stage-svg {
@@ -21,14 +19,15 @@
   pointer-events: none;
 }
 
-/* ── decorations ──
-   appended AFTER the nodes in the DOM (tab order: tree first), so paint
-   order is pinned with z-index: deco under the strokes, strokes under nodes */
+/* süsler domda düğümlerden SONRA duruyor ki tab önce ağaca gelsin
+   z-index onları geri yerine koyuyor
+   süs > çizgi > düğüm */
 .deco { position: absolute; inset: 0; pointer-events: none; transition: opacity 0.45s ease; z-index: var(--z-deco); }
 .stage-svg { z-index: 2; }
 
-/* three depth layers — atmosphere.js writes --par-x/--par-y (−1..1)
-   and --gust (0..1) on .stage; the world shifts, the tree stays still */
+/* üç derinlik katmanı
+   atmosphere.js .stage üstüne --par-x/--par-y ve --gust yazıyor
+   dünya kayıyor ağaç duruyor */
 .deco-sky {
   transform: translate(calc(var(--par-x, 0) * -14px + var(--gust, 0) * -10px), calc(var(--par-y, 0) * -7px));
 }
@@ -38,14 +37,14 @@
 .deco-motes {
   transform: translate(calc(var(--par-x, 0) * 10px + var(--gust, 0) * 14px), calc(var(--par-y, 0) * 5px));
 }
-/* promote the layers only where atmosphere.js actually drives them —
-   mirrors its gate; elsewhere will-change would pin stage-sized GPU
-   textures on exactly the devices with the least memory */
+/* sadece atmosphere.js'in gerçekten çalıştığı yerde promote et, aynı koşul
+   başka yerde will-change en az hafızası olan cihazlarda sahne boyunda
+   gpu texture tutuyor, gereksiz */
 @media (pointer: fine) and (min-width: 768px) and (prefers-reduced-motion: no-preference) {
   .deco-sky, .deco-hills, .deco-motes { will-change: transform; }
 }
 
-/* ── sun/moon toggle: the sun IS the theme switch ── */
+/* güneşin kendisi tema düğmesi */
 .sun-toggle {
   position: absolute;
   top: 30px;
@@ -77,7 +76,7 @@
 [data-theme="night"] .sun-toggle .sun-rays { animation-play-state: paused; }
 @keyframes sun-spin { to { transform: rotate(360deg); } }
 
-/* ── stars: a dot field that only wakes at night ── */
+/* yıldızlar, sadece gece uyanık */
 .stars {
   position: absolute;
   inset: 0 0 45% 0;
@@ -89,17 +88,18 @@
   transform-box: fill-box;
   transform-origin: center;
   animation: star-twinkle 3.6s ease-in-out infinite alternate;
-  animation-play-state: paused; /* only spend the loop when visible */
+  animation-play-state: paused; /* görünmüyorken dönmesin */
 }
 .star-tw2 { animation-duration: 4.4s; animation-delay: 1.2s; }
 [data-theme="night"] .stars { opacity: 1; }
 [data-theme="night"] .star-tw1,
 [data-theme="night"] .star-tw2 { animation-play-state: running; }
-/* opacity only — SVG child transforms fall off the compositor in
-   some engines, and 12 of these run all night */
+/* sadece opacity
+   svg child transformları bazı tarayıcılarda compositordan düşüyor
+   ve bunlardan 12 tane gece boyu dönüyor */
 @keyframes star-twinkle {
   from { opacity: 0.35; }
-  to   { opacity: 1; }
+  to { opacity: 1; }
 }
 
 .cloud {
@@ -121,16 +121,16 @@
   border-radius: 50%;
 }
 .cloud::before { width: 62px; height: 62px; top: -30px; left: 28px; }
-.cloud::after  { width: 46px; height: 46px; top: -20px; left: 84px; }
+.cloud::after { width: 46px; height: 46px; top: -20px; left: 84px; }
 .cloud-1 { top: 130px; left: 140px; animation: cloud-drift 80s ease-in-out infinite alternate; }
 .cloud-2 { top: 60px; left: 62%; transform: scale(0.72); animation: cloud-drift 65s ease-in-out infinite alternate-reverse; }
 @keyframes cloud-drift {
   from { translate: 0 0; }
-  to   { translate: 160px 12px; }
+  to { translate: 160px 12px; }
 }
 
-/* ── rain: tap a cloud and it opens up ──
-   drops live INSIDE the cloud, so the shower drifts along with it */
+/* buluta bas açılsın. damlalar bulutun içinde duruyor
+   böylece yağmur bulutla beraber kayıyor */
 button.cloud { pointer-events: auto; cursor: pointer; }
 button.cloud:hover { filter: brightness(1.04); }
 html.raining .cloud { filter: brightness(0.94) saturate(0.85); }
@@ -144,14 +144,13 @@ html.raining .cloud { filter: brightness(0.94) saturate(0.85); }
   opacity: 0;
   transition: opacity 0.5s ease;
 }
-/* per-cloud fall distance so the bits actually reach the hills
-   (cloud-2 is scaled 0.72, so its shaft needs to be longer) */
+/* her buluta ayrı düşme mesafesi, bitler tepelere ulaşsın */
 .cloud-1 { --fall: 580px; }
-.cloud-2 { --fall: 850px; } /* longer: this cloud is scaled 0.72 and sits higher */
-/* keep the higher cloud's bits from turning into streaks over the
-   longer distance — !important because per-drop durations are inline */
+.cloud-2 { --fall: 850px; } /* bu bulut 0.72 ölçekli ve daha yukarda */
+/* yukardaki bulutun bitleri uzun mesafede çizgiye dönüşüyordu
+   !important çünkü her damlanın süresi inline yazılı */
 html.raining .cloud-2 .drop { animation-duration: 2.3s !important; }
-/* it rains bits: little 0s and 1s tumble out of the cloud */
+/* bit yağıyor, minik 0 ve 1 ler */
 .cloud .drop {
   position: absolute;
   top: -16px;
@@ -165,13 +164,13 @@ html.raining .cloud-2 .drop { animation-duration: 2.3s !important; }
 }
 html.raining .cloud .rain { opacity: 1; }
 html.raining .cloud .drop { animation: drop-fall 1.55s linear infinite; }
-/* binary visibility — fitting, for bits */
+/* görünürlük de binary, bitlere yakışıyor */
 @keyframes drop-fall {
   from { transform: translateY(0); opacity: 1; }
-  to   { transform: translateY(var(--fall, 300px)); opacity: 1; }
+  to { transform: translateY(var(--fall, 300px)); opacity: 1; }
 }
 
-/* the bits pool into a puddle where they land */
+/* düştükleri yerde birikinti oluyor */
 .cloud .puddle {
   position: absolute;
   left: 4%;
@@ -188,10 +187,10 @@ html.raining .cloud .drop { animation: drop-fall 1.55s linear infinite; }
 html.raining .cloud .puddle {
   opacity: 0.75;
   transform: scaleX(1);
-  /* fills up only after the first bits have had time to land */
+  /* ilk bitler düşene kadar bekliyor */
   transition-delay: 1.2s;
 }
-/* the phone vine has no ground under its little sky — no puddle there */
+/* telefondaki minik gökyüzünün altında zemin yok, orda birikinti de yok */
 .vine-cloud .puddle { display: none; }
 .vine-cloud { --fall: 300px; }
 
@@ -228,14 +227,14 @@ html.raining .cloud .puddle {
 .pollen-5 { animation-delay: 9.5s; }
 .pollen-6 { animation-delay: 11s; }
 @keyframes pollen-float {
-  0%   { transform: translateY(0) translateX(0); opacity: 0; }
-  8%   { opacity: 0.85; }
-  60%  { opacity: 0.85; }
+  0% { transform: translateY(0) translateX(0); opacity: 0; }
+  8% { opacity: 0.85; }
+  60% { opacity: 0.85; }
   100% { transform: translateY(-420px) translateX(60px); opacity: 0; }
 }
 
-/* at night the pollen motes become fireflies — same six elements,
-   swapped loop. The glow is light emission, not a sticker shadow. */
+/* gece polenler ateşböceğine dönüyor
+   aynı altı eleman, başka bi döngü. parlama gerçek ışık, gölge değil */
 [data-theme="night"] .pollen {
   background: #FFE9A3;
   border-color: rgba(43, 33, 25, 0.85);
@@ -248,27 +247,27 @@ html.raining .cloud .puddle {
 [data-theme="night"] .pollen-5 { animation-delay: 10.6s; }
 [data-theme="night"] .pollen-6 { animation-delay: 13.4s; }
 @keyframes firefly-wander {
-  0%   { transform: translate(0, 0); opacity: 0; }
-  10%  { opacity: 0.95; }
-  25%  { transform: translate(56px, -48px); opacity: 0.3; }
-  40%  { transform: translate(10px, -86px); opacity: 0.95; }
-  55%  { transform: translate(-34px, -120px); opacity: 0.25; }
-  70%  { transform: translate(24px, -70px); opacity: 0.9; }
-  85%  { transform: translate(52px, -30px); opacity: 0.3; }
+  0% { transform: translate(0, 0); opacity: 0; }
+  10% { opacity: 0.95; }
+  25% { transform: translate(56px, -48px); opacity: 0.3; }
+  40% { transform: translate(10px, -86px); opacity: 0.95; }
+  55% { transform: translate(-34px, -120px); opacity: 0.25; }
+  70% { transform: translate(24px, -70px); opacity: 0.9; }
+  85% { transform: translate(52px, -30px); opacity: 0.3; }
   100% { transform: translate(0, 0); opacity: 0; }
 }
 
-/* falling leaves (spawned sparingly by atmosphere.js, capped) */
+/* düşen yapraklar, atmosphere.js üretiyor ve sayıyı düşük tutuyor */
 .leaf-fall {
   position: absolute;
   width: 26px;
   pointer-events: none;
-  z-index: 4; /* above the strokes, behind every node */
+  z-index: 4; /* çizgilerin üstünde düğümlerin altında */
   will-change: transform, opacity;
 }
 .leaf-fall svg { width: 100%; height: auto; }
 
-/* ── SVG tree strokes ── */
+/* svg çizgileri */
 .trunk-path {
   fill: none;
   stroke: var(--trunk);
@@ -307,14 +306,14 @@ html.raining .cloud .puddle {
   transition-delay: calc(var(--i, 0) * 0.04s);
 }
 
-/* ── nodes (shared) ── */
+/* düğümler, ortak kısımlar */
 .node {
   position: absolute;
   display: inline-flex;
   align-items: center;
   gap: 8px;
   font-family: var(--font-display);
-  color: var(--ink); /* sticker text is always ink, day or night */
+  color: var(--ink); /* sticker yazısı gece gündüz aynı */
   border: var(--outline);
   background: var(--white);
   box-shadow: var(--sticker-shadow);
@@ -325,14 +324,14 @@ html.raining .cloud .puddle {
 .node-icon { width: 24px; height: 24px; flex: none; color: var(--accent, var(--ink)); }
 .node-label { white-space: nowrap; }
 
-/* pop-in on first grow */
+/* ilk büyümede zıplayarak geliyorlar */
 .stage:not(.grown) .node.root,
 .stage:not(.grown) .node.branch { --sc: 0; }
-.node.root  { transition-delay: 0.15s; }
+.node.root { transition-delay: 0.15s; }
 .node.branch { transition-delay: calc(0.7s + var(--bi, 0) * 0.1s); }
 .stage.grown .node.root, .stage.grown .node.branch { transition-delay: 0s; }
 
-/* ── root node ── */
+/* kök düğüm */
 .node.root {
   flex-direction: column;
   gap: 0;
@@ -365,7 +364,7 @@ html.raining .cloud .puddle {
 }
 .node.root:hover { --sc: 1.07; }
 
-/* ── branch nodes ── */
+/* dallar */
 .node.branch {
   flex-direction: column;
   gap: 3px;
@@ -383,7 +382,7 @@ html.raining .cloud .puddle {
   right: -7px;
 }
 .node.branch:hover, .node.branch.open { --sc: 1.1; }
-/* instant press feedback */
+/* basınca anında tepki */
 .node.branch:active, .node.leaf:active, .node.root:active {
   transition-duration: 0.06s;
   --sc: 1.0;
@@ -392,7 +391,7 @@ html.raining .cloud .puddle {
   box-shadow: 6px 6px 0 rgba(43, 33, 25, 0.22);
 }
 .node.branch.dim {
-  opacity: 0.7; /* was .45 — the labels fell under 4.5:1; the open pill still dominates via scale + shadow */
+  opacity: 0.7; /* 0.45'ti, yazılar 4.5:1'in altına düşüyordu */
   --sc: 0.9;
 }
 .node-count {
@@ -408,7 +407,7 @@ html.raining .cloud .puddle {
   padding: 0 4px;
 }
 
-/* ── leaf nodes ── */
+/* yapraklar */
 .node.leaf {
   padding: 9px 14px;
   font-weight: 700;
@@ -440,13 +439,12 @@ html.raining .cloud .puddle {
     box-shadow 0.2s ease;
 }
 .leaf-icon { width: 19px; height: 19px; }
-/* flagship fruit wears the real product mark */
+/* flagship meyveler gerçek logoyu takıyor */
 .leaf-mark { width: 20px; height: 20px; flex: none; border-radius: 6px; border: 1.5px solid var(--ink); object-fit: contain; background: var(--white); }
 
-/* ── traversal memory ── */
-/* the leaf whose card is up stays lit behind the backdrop */
+/* kartı açık olan yaprak perdenin arkasında yanık kalıyor */
 .node.leaf.is-open { border-color: var(--accent, var(--ink)); background: var(--accent-soft, var(--white)); }
-/* leaves already read this session carry a small ink-outlined dot */
+/* bu oturumda okunduysa köşede minik bi nokta */
 .node.leaf.visited::after {
   content: "";
   position: absolute;
@@ -460,18 +458,18 @@ html.raining .cloud .puddle {
 }
 .node.leaf:hover { --sc: 1.1; z-index: var(--z-leaf-hover); }
 
-/* idle sway once opened (starts after the pop settles).
-   --sway grows with --gust so wind gusts shake the whole canopy. */
+/* dal açıldıktan sonra hafif sallanma, zıplama bitince başlıyor
+   --sway --gust ile büyüyor, rüzgar gelince bütün taç sallanıyor */
 @keyframes leaf-sway {
   from { transform: translate(-50%, -50%) rotate(calc(var(--tilt, 0deg) - var(--sway, 2deg))) scale(var(--sc, 1)); }
-  to   { transform: translate(-50%, -50%) rotate(calc(var(--tilt, 0deg) + var(--sway, 2deg) * 1.2)) scale(var(--sc, 1)); }
+  to { transform: translate(-50%, -50%) rotate(calc(var(--tilt, 0deg) + var(--sway, 2deg) * 1.2)) scale(var(--sc, 1)); }
 }
 .leaf-group.open .node.leaf {
   --sway: calc(2deg + var(--gust, 0) * 5deg);
   animation: leaf-sway 3.8s ease-in-out calc(0.7s + var(--i, 0) * 0.35s) infinite alternate;
 }
 
-/* flagship "golden fruit" leaves */
+/* altın meyve yapraklar */
 .node.leaf.flagship {
   --sc: 0;
   font-weight: 800;
@@ -492,11 +490,11 @@ html.raining .cloud .puddle {
   transform: rotate(12deg);
 }
 
-/* leaf-group wrapper is just a positioning shell */
+/* sadece konumlandırma kabuğu */
 .leaf-group { position: absolute; inset: 0; pointer-events: none; }
 .leaf-group .node { pointer-events: auto; }
 
-/* ── bee ── */
+/* arı */
 .bee-orbit {
   position: absolute;
   width: 0; height: 0;
@@ -519,15 +517,15 @@ html.raining .cloud .puddle {
 @keyframes bee-y { from { translate: 0 -46px; } to { translate: 0 40px; } }
 @keyframes bee-flap { from { transform: scaleY(1); } to { transform: scaleY(0.4); } }
 
-/* the colleague lands on the Experience pill when that branch is pinned */
+/* arkadaşımız Experience dalı açılınca oraya konuyor */
 .bee-orbit, .bee { transition: translate 0.9s var(--smooth); }
 .stage[data-open="experience"] .bee-orbit { animation: none; translate: 24px 64px; }
 .stage[data-open="experience"] .bee { animation: none; translate: 0 0; }
 
-/* bees sleep at night; the fireflies take their shift */
+/* arılar gece uyuyor, nöbeti ateşböcekleri devralıyor */
 [data-theme="night"] .bee-orbit { display: none; }
 
-/* ── Ateş the dog ── */
+/* Ateş */
 .dog {
   position: absolute;
   width: 96px;
@@ -556,7 +554,7 @@ html.raining .cloud .puddle {
   93%, 95% { transform: scaleY(0.08); }
 }
 
-/* Ateş sleeps at night */
+/* gece uyuyor */
 [data-theme="night"] .dog-eye { animation: none; transform: scaleY(0.1); }
 [data-theme="night"] .dog-tail { animation: none; }
 [data-theme="night"] .dog::before {
@@ -571,8 +569,8 @@ html.raining .cloud .puddle {
   pointer-events: none;
 }
 @keyframes zzz-float {
-  0%   { opacity: 0; translate: 0 0; }
-  30%  { opacity: 0.9; }
+  0% { opacity: 0; translate: 0 0; }
+  30% { opacity: 0.9; }
   100% { opacity: 0; translate: 9px -20px; }
 }
 [data-theme="night"] .dog .dog-bubble { font-size: 0; }
@@ -606,7 +604,7 @@ html.raining .cloud .puddle {
 .dog:focus-visible .dog-bubble,
 .dog.barking .dog-bubble { opacity: 1; scale: 1; }
 
-/* ── the little robot friend (easter egg) ── */
+/* robot arkadaş */
 .robot {
   position: absolute;
   width: 118px;
@@ -654,16 +652,15 @@ html.raining .cloud .puddle {
 .robot:focus-visible .robot-bubble,
 .robot.cheering .robot-bubble { opacity: 1; scale: 1; }
 
-/* the robot's eyes glow at night (it is a robot, after all) */
+/* gözleri gece parlıyor, sonuçta robot */
 [data-theme="night"] .robot-eye { fill: #7FF7E0; }
 [data-theme="night"] .robot-antenna {
   fill: #FFD166;
   filter: drop-shadow(0 0 4px rgba(255, 209, 102, 0.9));
 }
 
-/* ── focus & calm ──
-   pinned branch: the world steps back so the open canopy reads;
-   open panel: every ambient loop pauses while the visitor reads */
+/* dal sabitlendiyse dünya geri çekiliyor, açık taç okunsun
+   panel açıksa bütün fon animasyonları duruyor */
 .stage:not([data-open=""]) .deco { opacity: 0.55; }
 .stage:not([data-open=""]) .deco * { animation-play-state: paused; }
 body.panel-open .deco *,
@@ -675,7 +672,7 @@ body.panel-open .dog-eye,
 body.panel-open .dog::before,
 body.panel-open .leaf-group.open .node.leaf { animation-play-state: paused; }
 
-/* ── reduced motion ── */
+/* reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .sun-rays, .cloud-1, .cloud-2, .pollen,
   .bee-orbit, .bee, .bee-wing,
@@ -686,7 +683,7 @@ body.panel-open .leaf-group.open .node.leaf { animation-play-state: paused; }
   [data-theme="night"] .dog::before { animation: none; }
   .pollen { opacity: 0.5; }
   [data-theme="night"] .pollen { opacity: 0.6; }
-  /* animated rain would be flattened into static streaks — hide it */
+  /* animasyonsuz yağmur sabit çizgiler oluyor, gizle gitsin */
   html.raining .cloud .rain { opacity: 0; }
   html.raining .cloud .drop { animation: none; }
   .node, .node.leaf, .leaf-group.open .node.leaf,

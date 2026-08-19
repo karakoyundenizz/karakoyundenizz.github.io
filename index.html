@@ -17,14 +17,14 @@
   <link rel="canonical" href="https://karakoyundenizz.github.io/">
   <meta name="theme-color" content="#FBF3E4">
   <script>
-    /* apply the saved/system theme before first paint — no flash of the wrong world */
+    // tema ilk boyamadan önce oturuyor yoksa bi an yanlış tema görünüyor
     (function () {
       var t = null;
       try { t = localStorage.getItem("theme"); } catch (e) {}
       if (t !== "night" && t !== "day") {
         t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "night" : "day";
       }
-      /* ?theme=night / ?rain=1 deep links win for this visit (not persisted) */
+      // ?theme=night / ?rain=1 sadece bu ziyaret için, kaydetmiyoruz
       try {
         var p = new URLSearchParams(window.location.search);
         var q = p.get("theme");
@@ -85,7 +85,7 @@
 <body>
 <a class="skip-link" href="#node-root">Skip to the tree</a>
 
-<!-- ══════════════════ SVG ICON SPRITE ══════════════════ -->
+<!-- ikon sprite, hepsi burda -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <defs>
     <filter id="wobble" x="-10%" y="-10%" width="120%" height="120%">
@@ -220,11 +220,11 @@
   </defs>
 </svg>
 
-<!-- ══════════════════ HERO / TL;DR ══════════════════ -->
+<!-- hero -->
 <header class="hero" id="hero">
   <div class="hero-inner">
     <div class="hero-avatar" aria-hidden="true">
-      <!-- drop a photo at assets/img/me.webp and it replaces the cartoon face automatically -->
+      <!-- assets/img/me.webp varsa çizgi suratın yerine o geçiyor -->
       <img class="avatar-photo" src="assets/img/me.webp" alt="" width="360" height="360" decoding="async" fetchpriority="high" onerror="this.remove()">
       <svg viewBox="0 0 120 120" class="avatar-svg">
         <circle cx="60" cy="62" r="44" fill="#F8C79A" stroke="#2B2119" stroke-width="4"/>
@@ -264,7 +264,7 @@
   <p class="hero-hint" id="hero-hint" hidden>psst — this portfolio is a <strong>tree</strong>. hover the branches, click the leaves</p>
 </header>
 
-<!-- ══════════════════ STAGE ══════════════════ -->
+<!-- sahne. iki renderer da #stage-root içine çiziyor -->
 <main id="stage-wrap">
   <div id="stage-root">
     <noscript>
@@ -285,10 +285,10 @@
   <footer class="site-footer">© 2026 Deniz Karakoyun · handcrafted, no frameworks — just a tree <svg class="ic-inline" aria-hidden="true"><use href="#i-tree"/></svg></footer>
 </main>
 
-<!-- ══════════════════ DETAIL PANEL ══════════════════ -->
+<!-- detay paneli -->
 <div id="backdrop" hidden></div>
 <aside id="panel" role="dialog" aria-modal="true" aria-labelledby="panel-title" hidden>
-  <div id="panel-card"><!-- filled by panel.js --></div>
+  <div id="panel-card"><!-- panel.js dolduruyor --></div>
 </aside>
 
 <script defer src="js/content.js"></script>

@@ -1,7 +1,5 @@
-/* ════════════════════════════════════════════════════════════
-   panel.js — the detail card: slide-in side panel on desktop,
-   bottom sheet on phones (styling switch lives in panel.css).
-   ════════════════════════════════════════════════════════════ */
+/* detay kartı. masaüstünde sağdan kayıyor telefonda alttan çıkıyor
+   o geçiş panel.css'te oluyor burada değil */
 
 window.PORTFOLIO = window.PORTFOLIO || {};
 
@@ -13,7 +11,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
   var openerEl = null;
   var isOpen = false;
   var currentItemId = null;
-  var lightbox = null;   /* the enlarged-screenshot overlay, built lazily */
+  var lightbox = null; // ilk büyütmede kuruluyor
   var lightboxFrom = null;
 
   var LINK_ICONS = {
@@ -49,7 +47,6 @@ window.PORTFOLIO = window.PORTFOLIO || {};
       (section ? " accent-" + section.accent : " accent-teal") +
       (item.theme === "dark" ? " card-dark" : "");
 
-    /* ── header ── */
     var header = el("div", "card-header", card);
     function headerIcon() {
       var iconWrap = el("span", "card-icon");
@@ -58,7 +55,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     }
     if (item.logo) {
       var logo = el("img", "card-logo", header);
-      /* if the logo file is missing, fall back to the drawn icon */
+      // logo dosyası yoksa çizilmiş ikona düş
       logo.onerror = function () { header.replaceChild(headerIcon(), logo); };
       logo.src = item.logo;
       logo.alt = "";
@@ -86,7 +83,6 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     closeBtn.textContent = "×";
     closeBtn.addEventListener("click", close);
 
-    /* ── body ── */
     var body = el("div", "card-body", card);
 
     if (item.summary) {
@@ -101,12 +97,13 @@ window.PORTFOLIO = window.PORTFOLIO || {};
       strip.setAttribute("aria-label", item.title + " screenshots — scroll sideways");
       item.media.forEach(function (m) {
         var frame = el("div", "media-frame" + (m.wide ? " wide" : ""), strip);
-        /* each shot is a button: click to enlarge (the evidence is legible only big) */
+        // her görsel bi buton, küçükken hiçbişey okunmuyor
         var btn = el("button", "media-btn", frame);
         btn.type = "button";
         btn.setAttribute("aria-label", "Enlarge: " + (m.alt || "screenshot"));
         var img = el("img", "media-img", btn);
-        /* photo slots may not be filled yet — vanish instead of showing a broken image */
+        // bazı görsel slotları boş duruyor
+        // kırık resim ikonu göstermektense yok olsun daha iyi
         img.onerror = function () {
           frame.remove();
           if (!strip.childElementCount) strip.remove();
@@ -114,8 +111,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
         img.src = m.src;
         img.alt = m.alt || "";
         img.loading = "lazy";
-        /* intrinsic size = zero layout shift while the photo loads */
-        if (m.w && m.h) { img.width = m.w; img.height = m.h; }
+        if (m.w && m.h) { img.width = m.w; img.height = m.h; } // layout shift olmasın
         btn.addEventListener("click", function () { openLightbox(img, m); });
       });
       if (item.media.length > 1) {
@@ -153,7 +149,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
           li.textContent = t;
           return;
         }
-        /* {label, section, item}: a chip that jumps to the leaf proving it */
+        // {label, section, item} -> kanıtladığı yaprağa giden chip
         li.className = "tag tag-link";
         var b = el("button", "tag-btn", li);
         b.type = "button";
@@ -191,7 +187,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
       note.textContent = item.note;
     }
 
-    /* stagger index for the rise-in of each body block (panel.css) */
+    // sıra numarası, panel.css blokları tek tek yukarı kaldırırken kullanıyor
     for (var ci = 0; ci < body.children.length; ci++) {
       body.children[ci].style.setProperty("--ci", ci);
     }
@@ -199,9 +195,9 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     return closeBtn;
   }
 
-  /* a colored "seed" flies from the clicked leaf to where the card
-     lands — hand-rolled FLIP, ~340ms, WAAPI. Skipped for deep links
-     (no opener), reduced motion, and browsers without .animate(). */
+  // tıklanan yapraktan kartın açılacağı yere doğru renkli bi tohum uçuyor
+  // elle yazılmış FLIP, waapi, 340ms civarı
+  // opener yoksa (deep link), reduced motion varsa veya .animate() yoksa atlıyor
   function flySeed(opener) {
     if (!opener || !opener.getBoundingClientRect) return false;
     if (!("animate" in Element.prototype)) return false;
@@ -209,9 +205,9 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     var from = opener.getBoundingClientRect();
     if (!from.width || !from.height) return false;
 
-    /* the panel's final box, without reading its (transformed) rect.
-       clientWidth/Height, not innerWidth: fixed positioning excludes
-       any classic scrollbar, and the two differ on Windows */
+    // panelin gideceği yeri okumak yerine hesaplıyoruz
+    // çünkü şu an rect'i hala transformlu
+    // clientWidth, innerWidth değil. windowsta scrollbar varken ikisi tutmuyor
     var vw = document.documentElement.clientWidth;
     var vh = document.documentElement.clientHeight;
     var w = panel.offsetWidth;
@@ -243,7 +239,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     return true;
   }
 
-  /* ── traversal memory: which leaves have been read this session ── */
+  // bu oturumda hangi yapraklar okundu
   var VISITED_KEY = "deniz-visited";
   function visitedSet() {
     try { return JSON.parse(sessionStorage.getItem(VISITED_KEY) || "[]"); } catch (e) { return []; }
@@ -253,7 +249,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     var v = visitedSet();
     if (v.indexOf(id) === -1) {
       v.push(id);
-      try { sessionStorage.setItem(VISITED_KEY, JSON.stringify(v)); } catch (e) { /* private mode */ }
+      try { sessionStorage.setItem(VISITED_KEY, JSON.stringify(v)); } catch (e) {} // gizli sekme
     }
   }
   function isVisited(id) { return visitedSet().indexOf(id) !== -1; }
@@ -268,12 +264,11 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     panel.hidden = false;
     document.body.classList.add("panel-open");
     if (window.PORTFOLIO.ATMOSPHERE) window.PORTFOLIO.ATMOSPHERE.pause();
-    /* the leaf whose card is up stays lit behind the backdrop */
+    // kartı açık olan yaprak perdenin arkasında yanık kalıyor
     if (openerEl && openerEl.classList) openerEl.classList.add("is-open");
-    /* the seed leads, the panel follows a beat behind it */
+    // tohum önden gidiyor panel bi tık arkasından geliyor
     var seeded = flySeed(openerEl);
     panel.style.transitionDelay = seeded ? "0.06s" : "";
-    /* let display kick in before transitioning */
     requestAnimationFrame(function () {
       backdrop.classList.add("show");
       panel.classList.add("show");
@@ -299,7 +294,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     document.body.classList.remove("panel-open");
     if (window.PORTFOLIO.ATMOSPHERE) window.PORTFOLIO.ATMOSPHERE.resume();
     document.removeEventListener("keydown", onKeydown, true);
-    /* remember the visit: the leaf keeps a small "read" mark */
+    // ziyareti not al, yaprakta küçük bi işaret kalsın
     if (openerEl && openerEl.classList) {
       openerEl.classList.remove("is-open");
       if (openerEl.classList.contains("leaf") || openerEl.classList.contains("vine-item")) {
@@ -311,8 +306,8 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     window.setTimeout(function () {
       if (!isOpen) { panel.hidden = true; backdrop.hidden = true; }
     }, 320);
-    /* return focus somewhere sensible even when the opener is gone
-       (deep links pass null; renderer switches replace the DOM) */
+    // opener kaybolmuş olsa bile focus mantıklı bi yere gitsin
+    // deep linkler null geçiyor, renderer değişince de bütün dom gidiyor
     if (openerEl && document.contains(openerEl)) {
       openerEl.focus();
     } else {
@@ -324,7 +319,6 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     openerEl = null;
   }
 
-  /* ── lightbox: the evidence screenshots, legible ── */
   function buildLightbox() {
     if (lightbox) return;
     lightbox = el("div", "lightbox", document.body);
@@ -359,7 +353,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     lightbox._cap.textContent = m.alt || "";
     lightbox.hidden = false;
     requestAnimationFrame(function () { lightbox.classList.add("show"); });
-    /* grow out of the thumbnail — same FLIP vocabulary as the seed */
+    // küçük resimden büyüyor, yukardaki tohumla aynı FLIP numarası
     var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (!reduce && "animate" in Element.prototype && thumb && thumb.getBoundingClientRect) {
       var from = thumb.getBoundingClientRect();
@@ -395,7 +389,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
       return;
     }
     if (e.key !== "Tab") return;
-    /* simple focus trap (the lightbox, when up, is its own tiny trap) */
+    // basit focus trap. lightbox açıksa kendi içinde ayrı bi trap oluyor
     var focusables = lbOpen
       ? lightbox.querySelectorAll("button")
       : panel.querySelectorAll("a[href], button, [tabindex='0']");
@@ -411,7 +405,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     }
   }
 
-  /* phone bottom sheet: drag the header down to dismiss */
+  // telefonda başlığı aşağı çekince kapanıyor
   function initDrag() {
     var startY = 0;
     var delta = 0;

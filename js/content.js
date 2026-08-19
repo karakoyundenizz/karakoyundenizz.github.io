@@ -1,37 +1,32 @@
-/* ════════════════════════════════════════════════════════════════════
-   content.js — the ONLY file you need to edit to change what the site says.
-   Every node of the tree lives here. Renderers contain zero copy.
+/* sitedeki yazı değişecekse dokunulacak tek dosya
+   ağacın bütün düğümleri burda, renderer'larda tek satır metin yok
 
-   Item fields:
-     id        unique slug
-     title     card + node heading
-     node      short label shown on the tree leaf (defaults to title)
-     subtitle  org · dates line
-     icon      id of an <symbol> in index.html (without "i-")
-     summary   one-liner under the subtitle
-     bullets   [] of strings (plain text, keep them punchy)
-     tags      [] of tech chips
-     links     [] of {label, href, kind: web|github|appstore|playstore|email|linkedin}
-     media     [] of {src, alt, w, h, wide} — screenshot/photo strip; files that
-               don't exist yet are skipped silently, so you can pre-wire photo
-               slots. w/h = intrinsic pixel size (prevents layout shift);
-               wide: true → landscape frame
-     stats     [] of {value, label} — 2-up hand-drawn number tiles under the
-               summary; the place for the numbers you want skimmed
-     flagship  true → bigger "golden fruit" leaf + richer card
-     theme     "dark" → card header gets the near-black Phera band
-     note      handwritten footnote at the bottom of the card
-     hidden    true → item disappears from the site (easy pruning)
-     dx, dy    optional fine-tune offset of the leaf, in stage pixels
-   Tags may also be objects {label, section, item} — those render as
-   clickable chips that jump to the leaf proving the skill.
-   ════════════════════════════════════════════════════════════════════ */
+   bi item'da neler var
+     id  benzersiz slug
+     title  kartın başlığı
+     node  yaprağın üstündeki kısa etiket, yoksa title kullanılıyor
+     subtitle  kurum · tarih satırı
+     icon  index.html'deki <symbol> id'si, başındaki "i-" olmadan
+     summary  subtitle'ın altındaki tek satır
+     bullets  düz string dizisi, kısa tut
+     tags  teknoloji chipleri. {label, section, item} objesi de olabilir
+       onlar o beceriyi kanıtlayan yaprağa atlayan chipe dönüşüyor
+     links  [{label, href, kind}] kind: web|github|appstore|playstore|email|linkedin
+     media  [{src, alt, w, h, wide}] ekran görüntüsü şeridi
+       olmayan dosyalar sessizce atlanıyor, boş slot bırakabilirsin
+       w/h gerçek piksel boyutu (layout shift), wide: true yatay demek
+     stats  [{value, label}] summary altındaki ikili sayı kutuları
+     flagship  true olursa daha büyük altın meyve yaprak ve daha dolu kart
+     theme  "dark" kart başlığına Phera'nın siyaha yakın bandını veriyor
+     note  kartın en altındaki el yazısı not
+     hidden  true dersen item siteden kayboluyor, budamak kolay olsun diye
+     dx, dy  yaprak kötü bi yere düştüyse şu kadar piksel oynat */
 
 window.PORTFOLIO = window.PORTFOLIO || {};
 
 window.PORTFOLIO.CONTENT = {
 
-  /* card that opens when someone clicks the root node (me!) */
+  // kök düğüme (me!) tıklayınca bu açılıyor
   about: {
     id: "about",
     title: "Deniz Karakoyun",
@@ -56,7 +51,7 @@ window.PORTFOLIO.CONTENT = {
 
   sections: [
 
-    /* ─────────────── EDUCATION ─────────────── */
+    // eğitim
     {
       id: "education",
       label: "Education",
@@ -96,7 +91,7 @@ window.PORTFOLIO.CONTENT = {
       ],
     },
 
-    /* ─────────────── EXPERIENCE ─────────────── */
+    // iş deneyimi
     {
       id: "experience",
       label: "Experience",
@@ -203,7 +198,7 @@ window.PORTFOLIO.CONTENT = {
       ],
     },
 
-    /* ─────────────── PRODUCTS (shipped, in the wild) ─────────────── */
+    // ürünler, gerçekten yayında olanlar
     {
       id: "products",
       label: "Products",
@@ -268,7 +263,7 @@ window.PORTFOLIO.CONTENT = {
       ],
     },
 
-    /* ─────────────── PROJECTS (systems & coursework) ─────────────── */
+    // projeler, sistem işleri ve okul
     {
       id: "projects",
       label: "Projects",
@@ -435,7 +430,7 @@ window.PORTFOLIO.CONTENT = {
       ],
     },
 
-    /* ─────────────── SKILLS ─────────────── */
+    // yetenekler
     {
       id: "skills",
       label: "Skills",
@@ -511,7 +506,7 @@ window.PORTFOLIO.CONTENT = {
       ],
     },
 
-    /* ─────────────── BEYOND CODE ─────────────── */
+    // kod dışı
     {
       id: "beyond",
       label: "Beyond Code",

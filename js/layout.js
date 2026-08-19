@@ -1,7 +1,5 @@
-/* ════════════════════════════════════════════════════════════
-   layout.js — radial tree layout in a fixed 1600×1000 virtual stage.
-   Pure math: content tree in → node positions + SVG path strings out.
-   ════════════════════════════════════════════════════════════ */
+/* 1600x880 sanal sahnede radyal ağaç yerleşimi
+   saf matematik, dom yok. içerik girer koordinat ve svg path çıkar */
 
 window.PORTFOLIO = window.PORTFOLIO || {};
 
@@ -11,21 +9,22 @@ window.PORTFOLIO = window.PORTFOLIO || {};
   var ROOT = { x: 800, y: 806 };
   var TRUNK_TOP = { x: 800, y: 600 };
 
-  var ARC_START = 185;        // degrees, screen coords (y down); 270° = straight up
+  // ekran koordinatı yani y aşağı. 270 tam yukarı
+  var ARC_START = 185;
   var ARC_END = 355;
   var BRANCH_RADIUS = 300;
-  var BRANCH_STAGGER = 60;    // every other branch reaches farther, so pills interleave
+  var BRANCH_STAGGER = 60; // her ikinci dal biraz uzağa yoksa pilller iç içe giriyor
   var LEAF_RADIUS = 265;
-  var LEAF_RADIUS_STAGGER = 112;  // every other leaf sits farther out
+  var LEAF_RADIUS_STAGGER = 112;
   var FLAGSHIP_EXTRA = 30;
-  var PAD = 60;                    // keep nodes inside the stage
+  var PAD = 60; // kenar boşluğu
 
-  /* collision relaxation — minimum centre-to-centre distances (px).
-     Two pills "collide" when they are closer than X horizontally AND Y
-     vertically; they are then pushed apart along x only. */
-  var LEAF_SEP_X = 118;            // leaf vs leaf (same section)
+  // çakışma çözümü, merkezden merkeze minimum mesafeler
+  // iki pill hem yatayda hem dikeyde bunlardan yakınsa çakışmış sayılıyor
+  // ve sadece x'te itiliyorlar
+  var LEAF_SEP_X = 118;
   var LEAF_SEP_Y = 56;
-  var BRANCH_SEP_X = 140;          // leaf vs any branch pill (branch pills are wider)
+  var BRANCH_SEP_X = 140; // dal pilleri yapraklardan geniş
   var BRANCH_SEP_Y = 64;
   var RELAX_ITERATIONS = 30;
 
@@ -40,7 +39,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
 
   function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 
-  /* quadratic Bézier path with a perpendicular bend — the organic curve */
+  // dik yönde bükülmüş quadratic bezier. organik duran şey bu
   function curvePath(a, b, bend) {
     var mx = (a.x + b.x) / 2;
     var my = (a.y + b.y) / 2;
@@ -60,7 +59,6 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     return section.items.filter(function (it) { return !it.hidden; });
   }
 
-  /* content → { root, trunkPath, branches: [...], leaves: [...] } */
   function compute(content) {
     var sections = content.sections;
     var totalWeight = 0;
@@ -73,7 +71,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     var cursor = ARC_START;
     var branches = [];
     var leaves = [];
-    var pending = [];   // { leaf, tip, bend } — twig paths are drawn after relaxation
+    var pending = []; // dalcıklar relaxtan sonra çiziliyor
 
     sections.forEach(function (section, si) {
       var wedge = (arc * s_weight(section)) / totalWeight;
@@ -95,12 +93,12 @@ window.PORTFOLIO = window.PORTFOLIO || {};
 
       var items = visibleItems(section);
       var n = items.length;
-      /* two-leaf sections (the flagship "fruits") get a wider fork */
+      // iki yapraklılar daha açık çatal alıyor
       var gap = n > 1 ? Math.min(n === 2 ? 46 : 32, 190 / (n - 1)) : 0;
       var span = gap * (n - 1);
       var startAngle = centerAngle - span / 2;
 
-      /* 1. raw radial offsets from the branch tip */
+      // dal ucundan ham offsetler
       var offsets = items.map(function (item, i) {
         var angle = startAngle + gap * i;
         var r = LEAF_RADIUS + (i % 2 === 1 ? LEAF_RADIUS_STAGGER : 0);
@@ -109,12 +107,11 @@ window.PORTFOLIO = window.PORTFOLIO || {};
         return { x: p.x, y: p.y, angle: angle };
       });
 
-      /* 2. fit the whole fan inside the padded stage by squashing it
-         (uniformly, per axis) towards the branch tip.  A branch pointing
-         nearly straight up near the top edge — "projects" — would
-         otherwise have half its leaves clamped onto the same y = PAD
-         line (a flat clothesline).  Squashing keeps the fan's shape and
-         every twig still runs straight from tip to pill. */
+      // sonra bütün yelpazeyi uca doğru sıkıştırıp sahneye sığdırıyoruz
+      // ilk halinde her yaprağı tek tek clamplıyordum, projects dalı
+      // (neredeyse dik ve tepeye yakın) yapraklarının yarısını aynı
+      // y = PAD çizgisine diziyordu, çamaşır ipi gibi olmuştu
+      // böyle yelpazenin şekli bozulmuyor dalcıklar da düzgün gidiyor
       var kx = 1, ky = 1;
       offsets.forEach(function (o) {
         if (o.x < 0) kx = Math.min(kx, (bpos.x - PAD) / -o.x);
@@ -130,8 +127,9 @@ window.PORTFOLIO = window.PORTFOLIO || {};
         var leaf = {
           section: section,
           item: item,
-          /* dx/dy are hand nudges from content.js — applied AFTER the
-             fit so they always move the pill (they used to be clamped away) */
+          // dx/dy content.js'ten elle veriliyor
+          // fitten sonra uyguluyoruz ki gerçekten işe yarasın
+          // önceden clamplanıp uçuyordu, olmadı aaa
           x: bpos.x + o.x * kx + (item.dx || 0),
           y: bpos.y + o.y * ky + (item.dy || 0),
           angle: o.angle,
@@ -142,8 +140,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
       });
     });
 
-    /* 3. push colliding pills apart along x, then 4. draw the twigs to
-       wherever the pills finally ended up */
+    // önce çakışanları ayır sonra dalcıkları nereye düştülerse oraya çiz
     relax(leaves, branches);
     pending.forEach(function (p) {
       p.leaf.path = curvePath(p.tip, p.leaf, p.bend);
@@ -166,10 +163,10 @@ window.PORTFOLIO = window.PORTFOLIO || {};
 
   function s_weight(section) { return section._weight; }
 
-  /* Deterministic collision relaxation.  Leaves are pushed apart along x
-     from (a) other leaves of the same section (half the overlap each) and
-     (b) every branch pill (branch pills stay put; the leaf takes the full
-     overlap).  Positions are kept inside the padded stage width. */
+  // deterministik, random yok, aynı içerik hep aynı yere düşüyor
+  // yapraklar hem aynı bölümdeki diğer yapraklardan (yarı yarıya)
+  // hem de dal pillerinden itiliyor (dal sabit, yaprak hepsini yiyor)
+  // 30 iterasyon fazla ama ucuz
   function relax(leaves, branches) {
     var i, j, k, a, b, dx, dy, overlap, dir;
     for (var iter = 0; iter < RELAX_ITERATIONS; iter++) {
@@ -195,7 +192,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
           dx = b.x - a.x;
           overlap = LEAF_SEP_X - Math.abs(dx);
           if (overlap <= 0) continue;
-          dir = dx >= 0 ? 1 : -1;   // tie → later leaf goes right
+          dir = dx >= 0 ? 1 : -1; // eşitse sonraki yaprak sağa gitsin
           a.x = clamp(a.x - dir * overlap / 2, PAD, STAGE_W - PAD);
           b.x = clamp(b.x + dir * overlap / 2, PAD, STAGE_W - PAD);
           moved = true;

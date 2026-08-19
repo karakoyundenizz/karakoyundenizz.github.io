@@ -1,8 +1,6 @@
-/* ════════════════════════════════════════════════════════════
-   game.css — "Deniz's Bike Ride" overlay + the little launch stickers
-   ════════════════════════════════════════════════════════════ */
+/* bisiklet oyunu ve onu açan minik çıkartmalar */
 
-/* ── launch stickers (desktop hill + mobile ground) ── */
+/* açma çıkartmaları. masaüstünde tepede, telefonda zeminde */
 .game-launch {
   position: absolute;
   display: flex;
@@ -44,7 +42,7 @@
   50% { transform: translateY(-5px) rotate(1.5deg); }
 }
 
-/* ── overlay ── */
+/* overlay */
 .game-overlay {
   position: fixed;
   inset: 0;
@@ -60,7 +58,7 @@
 
 .game-frame {
   width: min(680px, 100%);
-  color: var(--ink); /* sticker text is always ink, day or night */
+  color: var(--ink); /* sticker yazısı gece gündüz aynı */
   background: var(--white);
   border: var(--outline);
   border-radius: 22px 26px 24px 28px / 26px 22px 28px 24px;
@@ -82,7 +80,7 @@
 }
 .game-close { position: static; }
 
-/* ── scene ── */
+/* sahne */
 .game-scene {
   position: relative;
   height: 250px;
@@ -93,7 +91,7 @@
   user-select: none;
   -webkit-user-select: none;
 }
-/* the scene is keyboard-focusable; ring sits inside since overflow is hidden */
+/* focus halkası içerde kalsın, overflow hidden çünkü */
 .game-scene:focus-visible {
   outline: 3px solid var(--teal);
   outline-offset: -3px;
@@ -108,11 +106,11 @@
 .game-ground::after {
   content: "";
   position: absolute;
-  top: 8px; left: 0; right: -60px; /* one extra dash period so the scroll never gaps */
+  top: 8px; left: 0; right: -60px; /* bi çizgi fazla, kayarken boşluk kalmasın */
   height: 3px;
   background: repeating-linear-gradient(90deg, rgba(43,33,25,0.25) 0 26px, transparent 26px 60px);
 }
-/* the road runs backwards under the wheels while riding */
+/* yol tekerleklerin altında geriye akıyor */
 .running .game-ground::after { animation: road-dash 0.15s linear infinite; }
 @keyframes road-dash { to { transform: translateX(-60px); } }
 .game-sun { position: absolute; top: 10px; right: 14px; width: 54px; opacity: 0.95; }
@@ -136,8 +134,8 @@
   border: inherit;
   border-radius: 50%;
 }
-/* clouds drift BACKWARDS (we are the ones moving forward) —
-   slowly, like far-away parallax; they hold still between runs */
+/* bulutlar geriye kayıyor çünkü hareket eden biziz
+   yavaş, uzaktalar. oyun durunca onlar da duruyor */
 .gc1 { top: 34px; left: 100%; animation: game-cloud-drift 26s linear infinite; }
 .gc2 { top: 78px; left: 100%; animation: game-cloud-drift 37s linear infinite; animation-delay: -18s; transform: scale(0.7); }
 .game-scene:not(.running) .game-cloud { animation-play-state: paused; }
@@ -146,7 +144,7 @@
   to { translate: -1000px 0; }
 }
 
-/* ── rider ── */
+/* sürücü */
 .game-rider {
   position: absolute;
   left: 16%;
@@ -156,18 +154,18 @@
   will-change: transform;
 }
 .game-rider svg { width: 100%; height: auto; }
-/* a faint pedal judder while riding — the rider is working, not parked */
+/* hafif bi titreme, adam pedal çeviriyor sonuçta */
 .running .game-rider svg { animation: rider-judder 0.4s ease-in-out infinite alternate; }
 @keyframes rider-judder {
   from { transform: translateY(0); }
-  to   { transform: translateY(-1.6px) rotate(0.4deg); }
+  to { transform: translateY(-1.6px) rotate(0.4deg); }
 }
 .wheel { transform-box: fill-box; transform-origin: center; }
 .running .wheel { animation: wheel-spin 0.45s linear infinite; }
 @keyframes wheel-spin { to { transform: rotate(360deg); } }
 .dead .game-rider { filter: grayscale(0.4); rotate: -8deg; }
 
-/* ── obstacles ── */
+/* engeller */
 .game-obstacle {
   position: absolute;
   left: 0;
@@ -175,17 +173,17 @@
   will-change: transform;
 }
 .game-obstacle svg { width: 100%; height: 100%; display: block; }
-/* critters face the rider they're heading toward (mirrored); the cat's
-   rainbow then streams behind its flight direction, as physics demands */
+/* hepsi aynalanıyor ki bisikletçiye baksınlar
+   kedinin gökkuşağı da böylece arkada kalıyor, fizik kuralı */
 .game-obstacle.dog-ob svg { transform: scaleX(-1); }
-.game-obstacle.burger svg { transform: scaleX(-1); } /* toes toward the rider */
+.game-obstacle.burger svg { transform: scaleX(-1); } /* ayakları bize dönük */
 .game-obstacle.nyan svg { transform: scaleX(-1); animation: nyan-bob 0.5s ease-in-out infinite alternate; }
 @keyframes nyan-bob {
   from { transform: scaleX(-1) translateY(-2px); }
-  to   { transform: scaleX(-1) translateY(2px); }
+  to { transform: scaleX(-1) translateY(2px); }
 }
 
-/* ── HUD ── */
+/* hud */
 .game-score {
   position: absolute;
   top: 10px;
