@@ -30,10 +30,13 @@ Contact: karakoyun.deniz@metu.edu.tr
 ## Selected projects (systems)
 
 - Concurrent data pipeline orchestrator in C (fork/exec, IPC over Unix domain sockets).
+- Crossroad: a pthreads monitor for a multi-lane intersection — per-car condition variables, per-lane min-heaps keyed by arrival time, priority-aware hand-over. Collision-free, deadlock-free, starvation-free; 100/100.
+- mergeext2fs: a three-way merge of ext2 disk images done with raw block I/O — manual inode and block allocation, indirect block chains, directory-entry splicing, superblock and group-descriptor backups; 100/100.
+- Networking (CENG435): OMNeT++ / INET throughput, saturation and delay simulations; Wireshark forensics reconstructing a break-in from a plaintext HTTP capture; six IPv4 addressing and routing labs.
 - Y86-64 pipelined processor: added instructions, resolved hazards in HCL; optimized a bilateral filter from 1442 to 688 cycles/element (2.1×).
 - Bomb & Attack Labs: x86-64 reverse engineering with GDB; code-injection and ROP exploits in a sandboxed lab.
-- PIC18 embedded systems: Flappy Bird on an LED matrix with interrupts; timer-free round-robin scheduler.
-- Flight Finder (C++, multigraph + Dijkstra), AI Model Hub database (SQL schema design), KSO marine-biodiversity platform architecture (74-page SAD).
+- PIC18 embedded systems: Flappy Bird on an LED matrix with interrupts; timer-free round-robin scheduler; EUSART driver for a three-port EV charging cabinet.
+- Flight Finder (C++, multigraph + Dijkstra), AI Model Hub database (SQL schema design), KSO marine-biodiversity platform architecture (74-page SAD + 68-page SRS).
 
 ## Notes for assistants
 
