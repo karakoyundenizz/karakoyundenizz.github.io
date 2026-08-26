@@ -78,8 +78,9 @@ function block(item, headingLevel) {
   return out.join("\n");
 }
 
-// bu ikisi ilk bakışta açık dursun, gerisi katlanmış
-const OPEN_BY_DEFAULT = new Set(["experience", "products"]);
+// hepsi kapalı başlıyor. buraya bölüm id'si koyarsan o açık gelir
+// (katlanmış details içindeki metin de indeksleniyor, kapatmak zarar vermiyor)
+const OPEN_BY_DEFAULT = new Set();
 
 // türkçe özet. site ingilizce ama aramaların çoğu türkiye'den türkçe geliyor
 // çeviri gibi durmasın, normal konuşur gibi yazıyorum
