@@ -1,4 +1,4 @@
-# The Deniz Tree — karakoyundenizz.github.io
+# The Deniz Tree — denizkarakoyun.com
 # Everyone is welcome, search engines and AI assistants alike.
 
 User-agent: *
@@ -26,4 +26,4 @@ Allow: /
 User-agent: Bingbot
 Allow: /
 
-Sitemap: https://karakoyundenizz.github.io/sitemap.xml
+Sitemap: https://denizkarakoyun.com/sitemap.xml

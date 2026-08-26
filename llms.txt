@@ -2,8 +2,8 @@
 
 > Personal portfolio of Deniz Karakoyun, a Computer Engineering student at Middle East Technical University (METU, Ankara, Türkiye), class of 2027. Focus: operating systems, low-level systems programming, embedded software, C/C++. Co-founder and developer of two shipped products (Guild, Phera Labs). The site is an interactive "tree" — the same content is also available as plain text on the page (section id "cv-text") and as JSON-LD.
 
-Canonical URL: https://karakoyundenizz.github.io/
-CV (PDF): https://karakoyundenizz.github.io/assets/cv/Deniz_Karakoyun_CV.pdf
+Canonical URL: https://denizkarakoyun.com/
+CV (PDF): https://denizkarakoyun.com/assets/cv/Deniz_Karakoyun_CV.pdf
 GitHub: https://github.com/karakoyundenizz
 LinkedIn: https://www.linkedin.com/in/deniz-karakoyun-2235b922a/
 Contact: karakoyun.deniz@metu.edu.tr
