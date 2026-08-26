@@ -53,16 +53,16 @@
   }
 
   // bütün cv düz liste halinde content.js'ten
-  // ekranda görünmüyor ama print'te çıkıyor, crawlerlar da bunu okuyor
-  // ağaç sonuçta bi sürü buton onlara bişey ifade etmiyor
+  // bu bölüm normalde tools/prerender.js ile index.html'e gömülü geliyor,
+  // o zaman burası hiç çalışmıyor. prerender'ı unutursam sayfa boş
+  // kalmasın diye duruyor. eskiden sr-only'ydi, artık gizlemiyoruz
   function buildTextMirror() {
     if (document.getElementById("cv-text")) return;
     var C = P.CONTENT;
     var sec = document.createElement("section");
     sec.id = "cv-text";
-    sec.className = "sr-only";
     sec.setAttribute("aria-labelledby", "cv-text-h");
-    var html = '<h2 id="cv-text-h">Deniz Karakoyun — CV as a list</h2>';
+    var html = '<div class="cv-inner"><h2 id="cv-text-h">The written version</h2>';
     function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
     function block(item) {
       var out = "<h3>" + esc(item.title) + (item.subtitle ? " <small>— " + esc(item.subtitle) + "</small>" : "") + "</h3>";
@@ -79,8 +79,9 @@
       html += "<h2>" + esc(s.label) + "</h2>";
       s.items.filter(function (i) { return !i.hidden; }).forEach(function (i) { html += block(i); });
     });
-    sec.innerHTML = html;
-    stageWrap.parentNode.insertBefore(sec, stageWrap.nextSibling);
+    sec.innerHTML = html + "</div>";
+    var screen = document.querySelector(".screen") || stageWrap;
+    screen.parentNode.insertBefore(sec, screen.nextSibling);
   }
 
   // ismi harflere bölüyoruz tek tek düşsünler diye
@@ -193,11 +194,25 @@
     if (e.target.closest && e.target.closest(".node.leaf")) retireHint();
   });
 
+  // yazdırırken katlanmış bölümler kapalı kalıyor ve cv yarım çıkıyor
+  // css ile açtıramıyorsun, details'i elle açmak lazım
+  function openSectionsForPrint() {
+    if (!window.matchMedia) return;
+    var open = function () {
+      var d = document.querySelectorAll("#cv-text details");
+      for (var i = 0; i < d.length; i++) d[i].open = true;
+    };
+    window.addEventListener("beforeprint", open);
+    var mq = window.matchMedia("print");
+    if (mq.addEventListener) mq.addEventListener("change", function (e) { if (e.matches) open(); });
+  }
+
   function boot() {
     splitHeroName();
     P.PANEL.init();
     render();
     buildTextMirror();
+    openSectionsForPrint();
     if (!gameLinkDone) {
       gameLinkDone = true;
       applyGameLink();

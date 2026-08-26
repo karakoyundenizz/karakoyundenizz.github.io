@@ -56,7 +56,7 @@
     "url": "https://karakoyundenizz.github.io/",
     "name": "Deniz Karakoyun — The Deniz Tree",
     "dateCreated": "2026-08-14T12:00:00+03:00",
-    "dateModified": "2026-08-17T10:00:00+03:00",
+    "dateModified": "2026-08-26T09:00:00+03:00",
     "mainEntity": {
       "@type": "Person",
       "@id": "https://karakoyundenizz.github.io/#deniz",
@@ -224,6 +224,10 @@
   </defs>
 </svg>
 
+<!-- hero + ağaç birlikte bi tam ekran. yazılı sürüm bunun altına iniyor,
+     böylece fitStage stage-wrap'in yüksekliğini kaybetmiyor -->
+<div class="screen">
+
 <!-- hero -->
 <header class="hero" id="hero">
   <div class="hero-inner">
@@ -288,6 +292,268 @@
   </div>
   <footer class="site-footer">© 2026 Deniz Karakoyun · handcrafted, no frameworks — just a tree <svg class="ic-inline" aria-hidden="true"><use href="#i-tree"/></svg></footer>
 </main>
+</div>
+
+<!-- yazılı sürüm. tools/prerender.js üretiyor, kaynağı js/content.js.
+     buraya elle dokunma, content.js'i düzenle ve prerender'ı tekrar çalıştır -->
+<!-- PRERENDER:START — üretilmiş blok, elle düzenleme yok. kaynak: js/content.js -->
+<section id="cv-text" aria-labelledby="cv-text-h">
+<div class="cv-inner">
+<h2 id="cv-text-h">The written version</h2>
+<p class="cv-lede">The tree above is the fun way round. This is the same thing as plain text — every branch, every leaf, nothing hidden.</p>
+<div class="cv-about">
+<p class="cv-sub">Computer Engineering @ METU · class of 2027 · Ankara, Türkiye</p>
+<p class="cv-sum">Two apps in the stores, one ROS 2 node on a robot, and a lot of hours spent a few layers below the surface.</p>
+<ul><li>Guild — a campus community app I built end to end (iOS, Android, web, backend, admin), live at nine universities and counting.</li><li>KUARTIS: a C++17 ROS 2 node on a Jetson that decides whether a GPS fix can be trusted — written test-first.</li><li>Where I'm headed: OS &amp; low-level systems, with algorithm design a close second. Next up: OS, embedded, robotics or infra work — C, C++, Linux, ROS 2.</li><li>Outside code: time with friends and anything physical. References available on request.</li></ul>
+<p class="cv-links"><a href="assets/cv/Deniz_Karakoyun_CV.pdf">Download CV (PDF · Aug 2026)</a> · <a href="https://github.com/karakoyundenizz" target="_blank" rel="noopener">GitHub</a> · <a href="https://www.linkedin.com/in/deniz-karakoyun-2235b922a/" target="_blank" rel="noopener">LinkedIn</a> · <a href="mailto:karakoyun.deniz@metu.edu.tr">karakoyun.deniz@metu.edu.tr</a></p>
+<p class="cv-tr" lang="tr">Deniz Karakoyun — ODTÜ Bilgisayar Mühendisliği öğrencisiyim, 2027'de mezun oluyorum, Ankara'dayım. İşletim sistemleri, low-level sistem programlama ve gömülü sistemler en sevdiğim alanlar; donanıma ne kadar yakınsam o kadar iyi. Guild ve Phera Labs'in kurucu ortağı ve geliştiricisiyim. Şu an KUARTIS'te C++17 ile ROS 2 tarafında GPS tester ve system health üzerine çalışıyorum. Günlük işim C, C++, x86-64 assembly, Linux ve ROS 2.</p>
+</div>
+<details class="cv-sec">
+<summary><h3>Education<span class="cv-count">2</span></h3></summary>
+<div class="cv-sec-body">
+<article class="cv-item">
+<h4>Middle East Technical University</h4>
+<p class="cv-sub">B.Sc. Computer Engineering · 2021 – 2027 (expected) · Ankara</p>
+<p class="cv-sum">Operating systems, computer organization, algorithms — and the exam rank that got me in the door.</p>
+<p class="cv-stats"><strong>3.62 / 4.00</strong> CGPA · <strong>799th / ~3M</strong> YKS rank, 2021</p>
+<p class="cv-tags"><span>Operating Systems</span><span>Computer Organization</span><span>Algorithms</span><span>Embedded</span></p>
+<p class="cv-note">seed of this tree: 799th out of ~3,000,000 in the national university exam</p>
+</article>
+<article class="cv-item">
+<h4>Süleyman Demirel Anatolian High School</h4>
+<p class="cv-sub">2017 – 2021</p>
+<p class="cv-sum">Graduated with 94.41 / 100.</p>
+</article>
+</div>
+</details>
+<details class="cv-sec" open>
+<summary><h3>Experience<span class="cv-count">6</span></h3></summary>
+<div class="cv-sec-body">
+<article class="cv-item">
+<h4>KUARTIS — Software Engineering Intern</h4>
+<p class="cv-sub">2026 – present · Ankara</p>
+<p class="cv-sum">ROS 2 GNSS signal-health monitoring on an autonomous platform.</p>
+<ul><li>C++17 lifecycle node on NVIDIA Jetson — turns a raw GPS stream into a clear &quot;can we trust this fix?&quot; verdict.</li><li>Caught a case where a silent GPS looked healthy: wrote the failing test first, then the fix.</li><li>Fixed a data race in the multi-threaded test harness.</li></ul>
+<p class="cv-tags"><span>ROS 2</span><span>C++17</span><span>GNSS</span><span>TDD</span><span>GoogleTest</span><span>Jetson</span></p>
+</article>
+<article class="cv-item">
+<h4>ASELSAN — Candidate Engineer</h4>
+<p class="cv-sub">Feb – Jul 2026 · candidate-engineer programme · Ankara</p>
+<p class="cv-sum">High-volume data pipelines for system evaluation.</p>
+<ul><li>Built the C++ pipelines that chew through millions of data points per run for system evaluation and offline experiments.</li><li>Owned the multithreading and synchronization that kept those streams race-free.</li></ul>
+<p class="cv-tags"><span>C++</span><span>Multithreading</span><span>Data Pipelines</span></p>
+</article>
+<article class="cv-item">
+<h4>ROMER — Undergraduate Researcher</h4>
+<p class="cv-sub">Jan – Jul 2026 · METU Robotics &amp; AI Center</p>
+<p class="cv-sum">Teaching computers to tell which way a honey bee is facing.</p>
+<ul><li>Trained CNN and ResNet classifiers that read a honey bee's heading from a top-down frame.</li><li>Owned the loop end to end: built the dataset, trained, tuned, and went back to the failure cases.</li></ul>
+<p class="cv-tags"><span>Python</span><span>CNN</span><span>ResNet</span><span>Computer Vision</span></p>
+<p class="cv-note">yes, the bee flying around this tree is a colleague</p>
+</article>
+<article class="cv-item">
+<h4>BİTES — Software Engineering Intern</h4>
+<p class="cv-sub">Aug – Sep 2025 · Ankara</p>
+<p class="cv-sum">A team &amp; project management desktop app.</p>
+<ul><li>Shipped C# / WPF features for users, teams, projects and tasks — MVVM, data binding, validation.</li><li>Wrote xUnit tests with mocks, and reshaped the task screens after rounds of user feedback.</li></ul>
+<p class="cv-tags"><span>C#</span><span>WPF</span><span>MVVM</span><span>xUnit</span></p>
+</article>
+<article class="cv-item">
+<h4>ASELSAN — Intern</h4>
+<p class="cv-sub">Jul – Aug 2025 · Ankara</p>
+<p class="cv-sum">Testing embedded systems, automating the boring parts.</p>
+<ul><li>Wrote C++ unit tests with GoogleTest for embedded systems.</li><li>Automated GUI test workflows with Python and Pywinauto.</li></ul>
+<p class="cv-tags"><span>C++</span><span>GoogleTest</span><span>Python</span><span>Pywinauto</span></p>
+</article>
+<article class="cv-item">
+<h4>EXA4MIND — Data Mining Intern</h4>
+<p class="cv-sub">Aug – Sep 2024 · EU Horizon research project</p>
+<p class="cv-sum">Low-latency streaming pipelines for scientific data.</p>
+<ul><li>Built streaming pipelines for scientific data with Kafka, Flink and ZeroMQ.</li><li>Benchmarked ZeroMQ against Kafka on latency and throughput and wrote up the trade-offs.</li></ul>
+<p class="cv-tags"><span>Kafka</span><span>Flink</span><span>ZeroMQ</span></p>
+<p class="cv-links"><a href="https://github.com/karakoyundenizz/EXA4MIND/blob/main/zeroMQkafka.pdf" target="_blank" rel="noopener">Benchmark write-up (PDF)</a></p>
+</article>
+</div>
+</details>
+<details class="cv-sec" open>
+<summary><h3>Products<span class="cv-count">2</span></h3></summary>
+<div class="cv-sec-body">
+<article class="cv-item">
+<h4>Guild</h4>
+<p class="cv-sub">Co-founder &amp; sole developer · App Store · Google Play</p>
+<p class="cv-sum">A student community app for Turkey — verify with your university email, get your whole campus in one feed.</p>
+<p class="cv-stats"><strong>9</strong> universities live · <strong>5</strong> surfaces, one dev</p>
+<ul><li>Co-founded with my close friend Emirhan Güler at METU; I built and shipped the code — iOS, Android, web, backend, admin.</li><li>Forum with anonymous posts and polls, events with seat reservations and door check-in, student societies, and a nationwide opportunities board.</li><li>Live at nine universities — METU, Hacettepe, Ankara University and more — and the list keeps growing (the current one is on getguild.app).</li></ul>
+<p class="cv-links"><a href="https://getguild.app" target="_blank" rel="noopener">getguild.app</a> · <a href="https://apps.apple.com/app/id6761904539" target="_blank" rel="noopener">App Store</a> · <a href="https://play.google.com/store/apps/details?id=com.metustars.guild" target="_blank" rel="noopener">Google Play</a></p>
+<p class="cv-note">built between exams. the door check-in scanner was the fun part.</p>
+</article>
+<article class="cv-item">
+<h4>Phera Labs</h4>
+<p class="cv-sub">Co-founder &amp; developer · pheralabs.com</p>
+<p class="cv-sum">An art-tech startup's platform — students exhibit digital art, and the best of it joins an international NFT collection.</p>
+<ul><li>Co-founded and grew it with my high school friend Sabri Ilgaz; I built the platform — design, frontend, backend, database, admin.</li><li>&quot;Phera-Land&quot;: a 360° drag-to-spin gallery you can wander through.</li><li>Also built the commerce side: limited prints, QR-ticketed events, referral rewards.</li></ul>
+<p class="cv-links"><a href="https://pheralabs.com" target="_blank" rel="noopener">pheralabs.com</a></p>
+<p class="cv-note">the 360° gallery started as a weekend experiment. it stayed.</p>
+</article>
+</div>
+</details>
+<details class="cv-sec">
+<summary><h3>Projects<span class="cv-count">10</span></h3></summary>
+<div class="cv-sec-body">
+<article class="cv-item">
+<h4>Concurrent Data Pipeline Orchestrator</h4>
+<p class="cv-sub">C · Unix system programming</p>
+<p class="cv-sum">A process controller running multi-stage CSV pipelines with fork, exec and pipes.</p>
+<ul><li>Like a shell pipeline, but shaped like a tree: every stage runs as its own process, and streams merge upward through sub-merger nodes.</li><li>The tricky part was the plumbing — deadlock-free IPC over Unix domain sockets, so no stage ever blocks another.</li></ul>
+<p class="cv-tags"><span>C</span><span>fork/exec</span><span>IPC</span><span>Unix sockets</span></p>
+<p class="cv-links"><a href="https://github.com/karakoyundenizz/CENG334---Operating-Systems/tree/main/Hw1" target="_blank" rel="noopener">Code on GitHub</a></p>
+<p class="cv-note">this project is also a tree — of processes. trees all the way down.</p>
+</article>
+<article class="cv-item">
+<h4>Crossroad — a monitor for a shared intersection</h4>
+<p class="cv-sub">C++ · pthreads · monitors &amp; condition variables</p>
+<p class="cv-sum">An intersection where every car is a thread — no collisions, no deadlock, and nobody waits forever.</p>
+<p class="cv-stats"><strong>100 / 100</strong> grader score · <strong>0</strong> violations, deadlocks, races</p>
+<ul><li>Cars from perpendicular directions must never be inside at once, cars from the same direction cross in parallel, higher-priority lanes go first — and among equals, whoever arrived first.</li><li>Every car gets its own condition variable instead of one per lane, so a hand-over wakes exactly the threads that can actually move.</li><li>Each lane is a min-heap keyed by a monotone arrival ticket, so &quot;is it my turn?&quot; is a single peek — that's what keeps the ordering starvation-free.</li></ul>
+<p class="cv-tags"><span>C++</span><span>pthreads</span><span>Monitors</span><span>Condition variables</span><span>Deadlock freedom</span></p>
+<p class="cv-links"><a href="https://github.com/karakoyundenizz/CENG334---Operating-Systems/tree/main/Hw2" target="_blank" rel="noopener">Code on GitHub</a></p>
+<p class="cv-note">the whole thing is one Monitor subclass. the lock discipline is impossible to get wrong.</p>
+</article>
+<article class="cv-item">
+<h4>mergeext2fs — merging filesystems by hand</h4>
+<p class="cv-sub">C++ · ext2 on-disk format · raw block I/O</p>
+<p class="cv-sum">git merge, one layer down: three ext2 disk images folded into one with nothing but open, read, write and lseek.</p>
+<p class="cv-stats"><strong>100 / 100</strong> all five cases · <strong>~1.3k</strong> lines of C++</p>
+<ul><li>A base image and two branches that each grew files, directories and appended content. The tool prints what the merge would do, then edits the base image in place to do it.</li><li>No mount, no libext2fs — inodes, bitmaps, directory entries and indirect block chains are all read and rewritten by hand, and every counter the kernel would normally maintain has to stay consistent or e2fsck screams.</li><li>The fiddly parts: walking direct → single → double → triple indirect blocks, splicing a new entry into a directory's packed slack list, and rewriting the superblock and group-descriptor backups.</li></ul>
+<p class="cv-tags"><span>C++</span><span>Filesystems</span><span>ext2</span><span>Systems programming</span><span>Bit manipulation</span></p>
+<p class="cv-links"><a href="https://github.com/karakoyundenizz/CENG334---Operating-Systems/tree/main/Hw3" target="_blank" rel="noopener">Code on GitHub</a></p>
+<p class="cv-note">the most fun I've had with a hex dump.</p>
+</article>
+<article class="cv-item">
+<h4>Simulating and Reading Networks</h4>
+<p class="cv-sub">OMNeT++ / INET · Wireshark · CENG435</p>
+<p class="cv-sum">Three assignments: measure a network, read a network, address a network.</p>
+<ul><li>Built the Ethernet topologies in OMNeT++ and swept them — throughput against offered load, the saturation knee at ~95.4 Mbps, delay and jitter, and chains of switches with and without bit errors. Ten seeds per point, so the curves come with confidence intervals.</li><li>Reconstructed a break-in from a packet capture: which accounts were real, whose password leaked, which IP was brute-forcing the login endpoint, and the file it walked out with — all from plaintext HTTP.</li><li>Six INET configurator labs, from wildcard auto-assignment inside METU's own 144.122.0.0/16 to asymmetric routing across a diamond of routers and hierarchical addressing with optimized tables.</li></ul>
+<p class="cv-tags"><span>OMNeT++</span><span>INET</span><span>Wireshark</span><span>TCP/IP</span><span>Routing</span><span>Network forensics</span></p>
+<p class="cv-links"><a href="https://github.com/karakoyundenizz/CENG435---Data-Communications-and-Networking" target="_blank" rel="noopener">Code on GitHub</a></p>
+<p class="cv-note">the wireshark shot is the actual capture. you can read the break-in off the Info column.</p>
+</article>
+<article class="cv-item">
+<h4>Pipelined Processor Optimization</h4>
+<p class="cv-sub">Assembly · HCL · Y86-64</p>
+<p class="cv-sum">Extended a pipelined processor simulator, then made a bilateral filter run 2.1× faster on it.</p>
+<p class="cv-stats"><strong>2.1×</strong> speedup · <strong>1442 → 688</strong> cycles / element</p>
+<ul><li>Y86-64 is a teaching version of x86-64 — I worked on the processor itself, adding instructions and resolving data and control hazards in its control logic.</li><li>Then tuned programs to run fast on it: loop unrolling, instruction reordering, custom functions — every saved cycle counts.</li></ul>
+<p class="cv-tags"><span>HCL</span><span>Assembly</span><span>Pipelining</span><span>Hazard resolution</span></p>
+<p class="cv-links"><a href="https://github.com/karakoyundenizz/CENG331---COMPUTER-ORGANIZATION/tree/main/ARCHITECTURE" target="_blank" rel="noopener">Processor (HCL)</a> · <a href="https://github.com/karakoyundenizz/CENG331---COMPUTER-ORGANIZATION/tree/main/PERFORMANCE" target="_blank" rel="noopener">Performance lab</a></p>
+<p class="cv-note">the screenshot is the real run, not a slide.</p>
+</article>
+<article class="cv-item">
+<h4>Bomb &amp; Attack Labs</h4>
+<p class="cv-sub">x86-64 · GDB · reverse engineering</p>
+<p class="cv-sum">Defused a multi-stage binary bomb with GDB and a disassembler.</p>
+<p class="cv-stats"><strong>6 / 6</strong> phases defused · <strong>0</strong> explosions</p>
+<ul><li>Each phase hides a password inside a binary — you disassemble it, watch the registers, and read the logic backwards. Every phase ends in a call to explode_bomb; guess wrong and it goes off.</li><li>Then switched sides: crafted code-injection and return-oriented-programming exploits against vulnerable binaries, in a sandboxed course lab.</li></ul>
+<p class="cv-tags"><span>x86-64</span><span>GDB</span><span>Reverse Engineering</span><span>ROP</span></p>
+<p class="cv-links"><a href="https://github.com/karakoyundenizz/CENG331---COMPUTER-ORGANIZATION/tree/main/BOMB" target="_blank" rel="noopener">Bomb Lab</a> · <a href="https://github.com/karakoyundenizz/CENG331---COMPUTER-ORGANIZATION/tree/main/ATTACK" target="_blank" rel="noopener">Attack Lab</a></p>
+<p class="cv-note">all six phases defused. my favourite kind of puzzle.</p>
+</article>
+<article class="cv-item">
+<h4>PIC18 Embedded Systems</h4>
+<p class="cv-sub">Assembly / C (PIC18F8722) · MPLAB X</p>
+<p class="cv-sum">Bare-metal microcontroller work: a Flappy Bird game on an LED matrix, a timer-free round-robin scheduler, and a serial link for an EV charging cabinet.</p>
+<ul><li>Flappy Bird on the board's LED grid: the bird flaps on a button interrupt, gravity pulls it down, pipes scroll in from the right, collisions end the game — and a 7-segment display keeps score. Timer0 is a 50 ms tick and every rhythm in the game is counted off it.</li><li>A separate control task: round-robin scheduling of three state machines with no hardware timers or interrupts at all — every deadline met by counting instructions.</li><li>For a three-port EV charging cabinet, I wrote the serial link to its supervisor: EUSART at 115200, lock-free ring buffers both ways, a frame parser that silently drops malformed input, and silent recovery from overrun and framing errors.</li></ul>
+<p class="cv-tags"><span>PIC18</span><span>Assembly</span><span>C</span><span>Interrupts</span><span>EUSART</span><span>ADC</span><span>Embedded</span></p>
+<p class="cv-links"><a href="https://github.com/karakoyundenizz/CENG336---Embedded-Systems-Development/tree/main/THE2" target="_blank" rel="noopener">Flappy Bird (THE2)</a> · <a href="https://github.com/karakoyundenizz/CENG336---Embedded-Systems-Development/tree/main/THE1" target="_blank" rel="noopener">Round robin (THE1)</a> · <a href="https://github.com/karakoyundenizz/CENG336---Embedded-Systems-Development/tree/main/THE3" target="_blank" rel="noopener">EV cabinet (THE3)</a></p>
+<p class="cv-note">the board photo is my Flappy Bird — bird on the left, pipes scrolling in</p>
+</article>
+<article class="cv-item">
+<h4>Flight Finder</h4>
+<p class="cv-sub">C++ · graph theory</p>
+<p class="cv-sum">A flight search engine on a directional multigraph.</p>
+<ul><li>Airports are nodes, flights are edges — and since two cities can be connected by many flights, it's a multigraph, backed by a hash table for fast lookups.</li><li>Dijkstra with heuristics that blend ticket cost and travel time, plus airline filtering.</li></ul>
+<p class="cv-tags"><span>C++</span><span>Dijkstra</span><span>Hash Table</span></p>
+<p class="cv-links"><a href="https://github.com/karakoyundenizz/CENG-213" target="_blank" rel="noopener">Code on GitHub</a></p>
+</article>
+<article class="cv-item">
+<h4>AI Model Hub Database</h4>
+<p class="cv-sub">Java · SQL · H2</p>
+<p class="cv-sum">A normalized database for models, datasets and training runs.</p>
+<ul><li>Schema design first: normalized tables that track which model trained on which dataset, and how each run went.</li><li>SQL analytics on top — user reputation scores and model performance metrics.</li></ul>
+<p class="cv-tags"><span>Java</span><span>SQL</span><span>Database Design</span></p>
+<p class="cv-links"><a href="https://github.com/karakoyundenizz/CENG351---Data-Management-and-File-Structures/tree/main/PA1" target="_blank" rel="noopener">Code on GitHub</a></p>
+</article>
+<article class="cv-item">
+<h4>KSO — Marine Biodiversity Platform</h4>
+<p class="cv-sub">Team of two · Software Engineering (CENG350)</p>
+<p class="cv-sum">Architecture design for the Koster Seafloor Observatory — spotting marine species in seafloor video with ML and citizen science.</p>
+<p class="cv-stats"><strong>74</strong> pages of SAD · <strong>6</strong> subsystems</p>
+<ul><li>Co-authored a 74-page Software Architecture Description: six subsystems, from a researcher web UI to a YOLO-based detection pipeline trained on HPC.</li><li>The loop that makes it work: volunteers annotate footage on Zooniverse, annotations retrain the models, results flow to global biodiversity databases (GBIF, OBIS) in Darwin Core format.</li><li>Full UML set — component, class, sequence, state and activity diagrams — plus the SRS.</li></ul>
+<p class="cv-tags"><span>Software Architecture</span><span>UML</span><span>Requirements (SRS)</span><span>Architecture (SAD)</span><span>ML System Design</span></p>
+<p class="cv-links"><a href="https://github.com/karakoyundenizz/CENG350---Software-Engineering/blob/main/PROJECT%20DOCUMENT/Project.pdf" target="_blank" rel="noopener">The architecture (74pp PDF)</a> · <a href="https://github.com/karakoyundenizz/CENG350---Software-Engineering/blob/main/PROJECT%20DOCUMENT/SRS.pdf" target="_blank" rel="noopener">The requirements (68pp PDF)</a></p>
+<p class="cv-note">diagrams straight from our SAD — drawn box by box in StarUML</p>
+</article>
+</div>
+</details>
+<details class="cv-sec">
+<summary><h3>Skills<span class="cv-count">5</span></h3></summary>
+<div class="cv-sec-body">
+<article class="cv-item">
+<h4>Languages</h4>
+<p class="cv-sum">The ones I think in.</p>
+<p class="cv-tags"><span>C</span><span>C++</span><span>C#</span><span>x86-64 Assembly</span><span>Java</span><span>Python</span><span>SQL</span><span>Haskell</span><span>TypeScript</span><span>JavaScript</span><span>Verilog</span></p>
+</article>
+<article class="cv-item">
+<h4>Systems &amp; Low-level</h4>
+<p class="cv-sum">Home turf. Every chip below is a link to the leaf that proves it.</p>
+<p class="cv-tags"><span>OS internals</span><span>Multithreading &amp; sync</span><span>Filesystem internals</span><span>Unix system programming</span><span>Computer organization</span><span>Performance tuning</span><span>Reverse engineering</span><span>Networking &amp; protocols</span><span>ROS 2</span><span>Embedded (PIC18, Jetson)</span><span>Memory management</span></p>
+<p class="cv-note">this is the branch I want to grow the most</p>
+</article>
+<article class="cv-item">
+<h4>People &amp; Process</h4>
+<p class="cv-sum">The parts that aren't code — with the receipts.</p>
+<ul><li>Ownership: sole developer on Guild across five surfaces, from the first commit to the store listings.</li><li>Working with feedback: BİTES task screens reshaped after user rounds; Guild features re-cut from campus feedback.</li><li>Teaching: educational volunteering with primary-school kids.</li><li>Writing things down: co-authored a 74-page architecture document (KSO) that a team could actually build from.</li></ul>
+</article>
+<article class="cv-item">
+<h4>Data &amp; ML</h4>
+<p class="cv-sum">Streams and neural nets.</p>
+<p class="cv-tags"><span>CNN / ResNet</span><span>Kafka</span><span>Flink</span><span>ZeroMQ</span><span>MySQL / PostgreSQL</span></p>
+</article>
+<article class="cv-item">
+<h4>Tools &amp; Practice</h4>
+<p class="cv-sum">Sharp tools, tested code.</p>
+<p class="cv-tags"><span>Git</span><span>GDB</span><span>GoogleTest / GMock</span><span>xUnit</span><span>Jest / Maestro</span><span>Valgrind</span><span>clang-tidy</span><span>Docker</span><span>CI (GitHub Actions / GitLab)</span><span>Wireshark</span><span>OMNeT++</span><span>MATLAB</span></p>
+</article>
+</div>
+</details>
+<details class="cv-sec">
+<summary><h3>Beyond Code<span class="cv-count">4</span></h3></summary>
+<div class="cv-sec-body">
+<article class="cv-item">
+<h4>Karate</h4>
+<p class="cv-sum">Competed through middle and high school.</p>
+<ul><li>First place in inter-school and inter-regional competitions.</li></ul>
+</article>
+<article class="cv-item">
+<h4>Volunteering</h4>
+<p class="cv-sum">Showing up when it matters.</p>
+<ul><li>Earthquake relief in Hatay (certified).</li><li>Educational volunteering with primary-school kids.</li></ul>
+</article>
+<article class="cv-item">
+<h4>Sports &amp; Outdoors</h4>
+<p class="cv-sum">If it's physical, I'm in.</p>
+<ul><li>Tennis, volleyball, basketball, camping, cycling, fitness — usually with friends.</li></ul>
+</article>
+<article class="cv-item">
+<h4>Ateş</h4>
+<p class="cv-sum">My dog of 7+ years — walked twice a day, every day.</p>
+<ul><li>Chief Morale Officer. Sits at the base of this tree.</li></ul>
+</article>
+</div>
+</details>
+</div>
+</section>
+<!-- PRERENDER:END -->
 
 <!-- detay paneli -->
 <div id="backdrop" hidden></div>

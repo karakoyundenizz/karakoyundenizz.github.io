@@ -1,7 +1,7 @@
 # The Deniz Tree 🌳
 
-Portfolyom. Framework yok, build adımı yok, bağımlılık yok. Html, css ve birkaç
-js dosyası. CV bi ağaç: dallara hover, yapraklara tıkla.
+Portfolyom. Framework yok, bağımlılık yok. Html, css ve birkaç js dosyası.
+CV bi ağaç: dallara hover, yapraklara tıkla. Tek bi build adımı var, aşağıda.
 
 ## Çalıştırmak
 
@@ -22,6 +22,22 @@ satır metin yok, o yüzden dokunman gereken tek dosya bu.
 - "about me" kartı en yukardaki `about` objesi
 - hero şeridi (isim, tagline, chipler, butonlar) `index.html`'de düz html
 
+**content.js'e dokunduysan bunu çalıştır, yoksa değişiklik sayfanın alt
+yarısına yansımıyor:**
+
+```bash
+node tools/prerender.js
+```
+
+Neden: ağaç JS ile çiziliyor, arama motoru ilk HTML'de sadece hero'yu görüyor.
+`tools/prerender.js` aynı içeriği "The written version" bölümü olarak
+`index.html`'e statik gömüyor — `<!-- PRERENDER:START -->` ile `END` arası
+tamamen üretilmiş, elle düzenleme. Doğru mu diye bakmak için
+
+```bash
+node tools/prerender.js --check    # bayatsa 1 dönüyor
+```
+
 ## Deep linkler
 
 - `?open=products` bi dalı açıyor. education, experience, products, projects, skills, beyond
@@ -37,15 +53,17 @@ Fotoğraflar webp, şeffaflık gerekiyorsa png.
 ## Deploy
 
 Klasör kendi kendine yetiyor, bütün yollar göreceli, olduğu gibi yükleniyor.
-Şu an GitHub Pages'te: push et, bi iki dakika bekle, bitti.
+Şu an GitHub Pages'te: `node tools/prerender.js`, sonra push et, bi iki dakika
+bekle, bitti.
 
 ## Dosyalar
 
 ```
-index.html   hero, svg ikon sprite, noscript
+index.html   hero, svg ikon sprite, noscript, üretilmiş yazılı sürüm
 css/         base (token+hero), tree (sahne+animasyon), panel (kart+vine), game
 js/          content (bütün metin), layout (ağaç matematiği), tree (masaüstü),
              mobile (telefon akordeonu), panel (kartlar), atmosphere (rüzgar),
              theme (gece gündüz), game (bisiklet), main (boot)
+tools/       prerender (content.js -> index.html'deki yazılı sürüm)
 assets/      fonts, img, cv
 ```
