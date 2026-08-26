@@ -25,16 +25,48 @@
     return match;
   }
 
+  var lastFitW = 0, lastFitH = 0;
+
   function fitStage() {
     var stage = P.TREE.getStage();
     if (!stage || !document.contains(stage)) return;
     var w = stageWrap.clientWidth;
     var h = stageWrap.clientHeight;
+    // sahne daha yerleşmediyse ölçme, sonra observer zaten çağırıyor
+    if (!w || !h) return;
+    if (w === lastFitW && h === lastFitH) return;
+    lastFitW = w; lastFitH = h;
     var scale = Math.min(w / P.LAYOUT.STAGE_W, h / P.LAYOUT.STAGE_H);
     // 1.2 denedim çizgiler dağıldı 1.05 iyi
     scale = Math.min(scale, 1.05);
-    stage.style.transform = "translateX(-50%) scale(" + scale.toFixed(4) + ")";
-    stage.style.top = Math.max(0, (h - P.LAYOUT.STAGE_H * scale) / 2) + "px";
+    // yuvarlamayı burda yapıyoruz ki top da aynı ölçekle hesaplansın.
+    // yoksa kayan nokta artığı kalıyor ve top'a 2.8e-14px gibi bi şey
+    // yazılıyor, css bilimsel gösterimi uzunluk olarak kabul etmiyor
+    scale = Math.round(scale * 10000) / 10000;
+    stage.style.transform = "translateX(-50%) scale(" + scale + ")";
+    stage.style.top = Math.max(0, Math.round((h - P.LAYOUT.STAGE_H * scale) / 2)) + "px";
+  }
+
+  // fitStage boot'ta bi kere ölçüyordu ve o ölçüm yanlış çıkabiliyor:
+  // yazı tipleri swap olunca hero büyüyor, avatar yüklenince keza, flex
+  // yerleşimi safaride geç oturuyor. hepsinde stage-wrap'in yüksekliği
+  // sonradan değişiyor ama resize eventi ATMIYOR, çünkü pencere değişmedi.
+  // ölçü yanlışsa ağaç büyük ve aşağıda kalıyordu. artık kutuyu izliyoruz.
+  function watchStage() {
+    if (typeof ResizeObserver === "function") {
+      // fitStage sahnenin kendi boyutunu değiştirmiyor (absolute + overflow
+      // hidden) o yüzden döngü olmuyor, ayrıca son ölçüyle karşılaştırıyoruz
+      new ResizeObserver(function () { fitStage(); }).observe(stageWrap);
+    }
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { fitStage(); });
+    }
+    // observer'a tek başına güvenmiyoruz: eski safaride yok, bazı
+    // ortamlarda bildirim de gelmiyor. yükleme oturana kadar birkaç kez
+    // daha ölçüyoruz. ölçü değişmediyse fitStage zaten hiçbir şey yazmıyor
+    window.addEventListener("load", fitStage);
+    requestAnimationFrame(function () { requestAnimationFrame(fitStage); });
+    [150, 600, 1500, 3000].forEach(function (ms) { setTimeout(fitStage, ms); });
   }
 
   function updateHint(isPhone) {
@@ -144,6 +176,7 @@
       P.MOBILE.render(stageRoot);
     } else {
       P.TREE.render(stageRoot);
+      lastFitW = lastFitH = 0; // sahne yeni, önceki ölçü artık geçerli değil
       fitStage();
     }
     updateHint(isPhone);
@@ -235,6 +268,7 @@
       phoneMq.addListener(render); // eski safari
     }
     window.addEventListener("resize", onResize);
+    watchStage();
   }
 
   if (document.readyState === "loading") {
