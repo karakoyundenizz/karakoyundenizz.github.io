@@ -87,8 +87,9 @@ const OPEN_BY_DEFAULT = new Set();
 const TR_SUMMARY = `Deniz Karakoyun — ODTÜ Bilgisayar Mühendisliği öğrencisiyim, 2027'de mezun oluyorum, Ankara'dayım.
 İşletim sistemleri, low-level sistem programlama ve gömülü sistemler en sevdiğim alanlar;
 donanıma ne kadar yakınsam o kadar iyi. Guild ve Phera Labs'in kurucu ortağı ve
-geliştiricisiyim. Şu an KUARTIS'te C++17 ile ROS 2 tarafında GPS tester ve system health
-üzerine çalışıyorum. Günlük işim C, C++, x86-64 assembly, Linux ve ROS 2.`;
+geliştiricisiyim. KUARTIS stajımı ve C++17 / ROS 2 ile geliştirdiğim StateDecider projesini
+tamamladım. Proje, düğümlerin yaşam döngüsü durumlarını izleyip görev hedeflerine göre yönetiyor.
+Mimari diyagramları GitHub'da; kaynak kodu gizli tutuluyor. Günlük işim C, C++, x86-64 assembly, Linux ve ROS 2.`;
 
 function buildSection(C) {
   const out = [];
