@@ -88,7 +88,8 @@ const TR_SUMMARY = `Deniz Karakoyun — ODTÜ Bilgisayar Mühendisliği öğrenc
 İşletim sistemleri, low-level sistem programlama ve gömülü sistemler en sevdiğim alanlar;
 donanıma ne kadar yakınsam o kadar iyi. Guild ve Phera Labs'in kurucu ortağı ve
 geliştiricisiyim. KUARTIS stajımı ve C++17 / ROS 2 ile geliştirdiğim StateDecider projesini
-tamamladım. Proje, düğümlerin yaşam döngüsü durumlarını izleyip görev hedeflerine göre yönetiyor.
+tamamladım. Projeyi Domain-Driven Design (DDD) ve Test-Driven Development (TDD) ile geliştirdim;
+düğümlerin yaşam döngüsü durumlarını izleyip görev hedeflerine göre yönetiyor.
 Mimari diyagramları GitHub'da; kaynak kodu gizli tutuluyor. Günlük işim C, C++, x86-64 assembly, Linux ve ROS 2.`;
 
 function buildSection(C) {
