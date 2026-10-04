@@ -133,24 +133,6 @@
   white-space: nowrap;
   border: 0;
 }
-/* sadece focus olunca çıkıyor */
-.skip-link {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  z-index: 100;
-  padding: 8px 14px;
-  font-family: var(--font-display);
-  font-weight: 700;
-  color: var(--ink);
-  background: var(--white);
-  border: var(--outline);
-  border-radius: 14px 16px 15px 17px / 17px 14px 18px 13px;
-  box-shadow: var(--sticker-shadow);
-  transform: translateY(-160%);
-  transition: transform 0.2s var(--pop);
-}
-.skip-link:focus { transform: none; }
 html { -webkit-text-size-adjust: 100%; }
 [hidden] { display: none !important; }
 body {
@@ -434,7 +416,7 @@ strong { font-weight: 700; } /* 800 fazladan font dosyası indiriyordu */
 
 /* ağaç yazıcıdan çıkmıyor, düz cv listesi çıkıyor */
 @media print {
-  .hero-actions, .hero-hint, #stage-wrap, #backdrop, #panel, .lightbox, .skip-link { display: none !important; }
+  .hero-actions, .hero-hint, #stage-wrap, #backdrop, #panel, .lightbox { display: none !important; }
   #cv-text { max-width: 720px; margin: 24px auto; font-size: 11pt; line-height: 1.4; }
   #cv-text h2 { margin: 18px 0 6px; font-family: var(--font-display); }
   #cv-text h3 { margin: 12px 0 2px; font-family: var(--font-display); }
