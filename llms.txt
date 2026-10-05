@@ -24,8 +24,8 @@ Contact: karakoyun.deniz@metu.edu.tr
 
 ## Products (shipped)
 
-- Guild — student community app for Turkey (iOS, Android, web); co-founder and sole developer; live at nine universities. https://getguild.app
-- Phera Labs — art-tech platform for student digital art; co-founder and developer; 360° gallery, commerce. https://pheralabs.com
+- Guild — student community app for Turkey (iOS, Android, web); co-founder and sole developer; live at nine universities; reached 200+ users (as of August 2026; may have changed). https://getguild.app
+- Phera Labs — art-tech platform for student digital art; co-founder and developer; 360° gallery, commerce; featured 25 artists (as of August 2026; may have changed). https://pheralabs.com
 
 ## Selected projects (systems)
 
