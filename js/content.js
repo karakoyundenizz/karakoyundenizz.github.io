@@ -290,6 +290,7 @@ window.PORTFOLIO.CONTENT = {
             { src: "assets/img/vestura-pieces.webp", alt: "Vestura clothing silhouette with per-category size and preference controls", w: 390, h: 844 },
           ],
           note: "one outfit, one budget. the shipping bill counts too.",
+          logo: "assets/img/vestura-icon.png",
           flagship: true,
         },
         {
