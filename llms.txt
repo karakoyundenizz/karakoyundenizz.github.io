@@ -1,6 +1,6 @@
 # Deniz Karakoyun — The Deniz Tree
 
-> Personal portfolio of Deniz Karakoyun, a Computer Engineering student at Middle East Technical University (METU, Ankara, Türkiye), class of 2027. Focus: operating systems, low-level systems programming, embedded software, C/C++. Co-founder and developer of two shipped products (Guild, Phera Labs). The site is an interactive "tree" — the same content is also available as plain text on the page (section id "cv-text") and as JSON-LD.
+> Personal portfolio of Deniz Karakoyun, a Computer Engineering student at Middle East Technical University (METU, Ankara, Türkiye), class of 2027. Focus: operating systems, low-level systems programming, embedded software, C/C++. Co-founder and developer of Guild and Phera Labs; creator of Vestura and CENG Daily. The site is an interactive "tree" — the same content is also available as plain text on the page (section id "cv-text") and as JSON-LD.
 
 Canonical URL: https://denizkarakoyun.com/
 CV (PDF): https://denizkarakoyun.com/assets/cv/Deniz_Karakoyun_CV.pdf
@@ -22,10 +22,13 @@ Contact: karakoyun.deniz@metu.edu.tr
 - ASELSAN — Intern (Jul – Aug 2025): C++ unit tests (GoogleTest) for embedded systems; Python GUI test automation.
 - EXA4MIND (EU Horizon project) — Data Mining Intern (Aug – Sep 2024): streaming pipelines with Kafka, Flink, ZeroMQ; ZeroMQ vs Kafka benchmark.
 
-## Products (shipped)
+## Products & tools
 
 - Guild — student community app for Turkey (iOS, Android, web); co-founder and sole developer; live at nine universities; reached 200+ users (as of August 2026; may have changed). https://getguild.app
 - Phera Labs — art-tech platform for student digital art; co-founder and developer; 360° gallery, commerce; featured 25 artists (as of August 2026; may have changed). https://pheralabs.com
+
+- Vestura — outfit and wardrobe planner; creator and developer. Combines clothing compatibility, sizes, season, budget and shipping costs; React Native / Expo, TypeScript and PostgreSQL. Web preview; real retailer feeds are still being connected. https://vestura.denizkarakoyun.com
+- CENG Daily — daily CS study cards grounded in the creator's METU course material; Python, BM25 retrieval and LLM generation. Turkish/English reader, searchable archive and Scriptable iPhone widget with offline reading. The source corpus stays private. https://denizkarakoyun.com/ceng-daily-site/
 
 ## Selected projects (systems)
 

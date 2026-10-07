@@ -87,7 +87,9 @@ const OPEN_BY_DEFAULT = new Set();
 const TR_SUMMARY = `Deniz Karakoyun — ODTÜ Bilgisayar Mühendisliği öğrencisiyim, 2027'de mezun oluyorum, Ankara'dayım.
 İşletim sistemleri, low-level sistem programlama ve gömülü sistemler en sevdiğim alanlar;
 donanıma ne kadar yakınsam o kadar iyi. Guild ve Phera Labs'in kurucu ortağı ve
-geliştiricisiyim. KUARTIS stajımı ve C++17 / ROS 2 ile geliştirdiğim StateDecider projesini
+geliştiricisiyim. Bütçeye göre kombin planlayan Vestura'yı ve kendi ders materyallerimden
+günlük çalışma kartları hazırlayan CENG Daily'yi de geliştirdim.
+KUARTIS stajımı ve C++17 / ROS 2 ile geliştirdiğim StateDecider projesini
 tamamladım. Projeyi Domain-Driven Design (DDD) ve Test-Driven Development (TDD) ile geliştirdim;
 düğümlerin yaşam döngüsü durumlarını izleyip görev hedeflerine göre yönetiyor.
 Mimari diyagramları GitHub'da; kaynak kodu gizli tutuluyor. Günlük işim C, C++, x86-64 assembly, Linux ve ROS 2.`;

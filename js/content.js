@@ -32,9 +32,10 @@ window.PORTFOLIO.CONTENT = {
     title: "Deniz Karakoyun",
     subtitle: "Computer Engineering @ METU · class of 2027 · Ankara, Türkiye",
     icon: "tree",
-    summary: "Two apps in the stores, a completed ROS 2 lifecycle-management project, and a lot of hours spent a few layers below the surface.",
+    summary: "Campus apps, outfit planning, daily CS study cards — and a lot of hours spent a few layers below the surface.",
     bullets: [
       "Guild — a campus community app I built end to end (iOS, Android, web, backend, admin), live at nine universities and counting.",
+      "Also built Vestura, an outfit planner that works around a budget, and CENG Daily, a daily study tool grounded in my own course material.",
       "Completed my KUARTIS internship and StateDecider — a C++17 / ROS 2 lifecycle-management system developed with Domain-Driven Design (DDD) and Test-Driven Development (TDD). Architecture diagrams are public; source code is private.",
       "Where I'm headed: OS & low-level systems, with algorithm design a close second. Next up: OS, embedded, robotics or infra work — C, C++, Linux, ROS 2.",
       "Outside code: time with friends and anything physical. References available on request.",
@@ -203,7 +204,7 @@ window.PORTFOLIO.CONTENT = {
       ],
     },
 
-    // ürünler, gerçekten yayında olanlar
+    // ürünler ve günlük hayatta işe yarayan araçlar
     {
       id: "products",
       label: "Products",
@@ -266,6 +267,60 @@ window.PORTFOLIO.CONTENT = {
           flagship: true,
           live: true,
           theme: "dark",
+        },
+        {
+          id: "vestura",
+          title: "Vestura",
+          node: "Vestura",
+          subtitle: "Creator & developer · outfit & wardrobe planner · web preview",
+          icon: "star",
+          summary: "What can I wear, and what will the whole outfit cost? A planner that brings your wardrobe, style and budget into the same decision.",
+          bullets: [
+            "Built the React Native / Expo app and TypeScript backend, from the outfit rules to the screens that explain each choice.",
+            "The solver considers clothing compatibility, size, season and shipping costs together, with room for pieces you already own.",
+            "Wardrobe tools cover saved outfits, packing lists and occasion planning, with separate style preferences for work, weekends and events.",
+            "Kept the outfit rules independent of the UI and database, with tests around compatibility, budget limits and ranking. Real retailer feeds are the next step.",
+          ],
+          tags: ["TypeScript", "React Native", "Expo", "PostgreSQL", "Constraint Solving"],
+          links: [
+            { label: "Explore the web preview", href: "https://vestura.denizkarakoyun.com", kind: "web" },
+          ],
+          media: [
+            { src: "assets/img/vestura-solve.webp", alt: "Vestura outfit planner with occasion, wardrobe and season choices", w: 390, h: 844 },
+            { src: "assets/img/vestura-pieces.webp", alt: "Vestura clothing silhouette with per-category size and preference controls", w: 390, h: 844 },
+          ],
+          note: "one outfit, one budget. the shipping bill counts too.",
+          flagship: true,
+        },
+        {
+          id: "ceng-daily",
+          title: "CENG Daily",
+          node: "CENG Daily",
+          subtitle: "Creator & developer · daily CS study cards · web & iPhone widget",
+          icon: "gradcap",
+          summary: "One computer science topic a day, built from the lecture slides, past exams and textbooks I actually study.",
+          stats: [
+            { value: "4", label: "CS tracks" },
+            { value: "TR / EN", label: "reading modes" },
+          ],
+          bullets: [
+            "A Python pipeline retrieves relevant passages with BM25, then gives them to an LLM to draft a study card with references back to the course material.",
+            "Each card works through the topic with code, complexity analysis, a solved example and self-check questions with answers.",
+            "Built a bilingual reader with a searchable archive, plus an iPhone widget and offline reader in Scriptable.",
+            "Scheduled generation rotates through algorithms, data structures, computer architecture and operating systems. Only the generated cards and site are published; the source corpus stays private.",
+          ],
+          tags: ["Python", "BM25", "LLM", "JavaScript", "GitHub Actions", "Scriptable"],
+          links: [
+            { label: "Read today's card", href: "https://denizkarakoyun.com/ceng-daily-site/", kind: "web" },
+            { label: "Browse the archive", href: "https://denizkarakoyun.com/ceng-daily-site/?view=archive", kind: "web" },
+          ],
+          media: [
+            { src: "assets/img/ceng-daily-card.webp", alt: "CENG Daily study card on pipeline data hazards, with a topic outline and explanation", w: 1280, h: 720, wide: true },
+            { src: "assets/img/ceng-daily-archive.webp", alt: "CENG Daily archive with search and filters for algorithms, data structures, architecture and operating systems", w: 1280, h: 720, wide: true },
+          ],
+          note: "a little of the syllabus, every day.",
+          flagship: true,
+          live: true,
         },
       ],
     },
