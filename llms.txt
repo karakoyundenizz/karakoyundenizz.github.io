@@ -29,7 +29,7 @@ Contact: karakoyun.deniz@metu.edu.tr
 
 - Vestura — outfit and wardrobe planner; creator and developer. Combines clothing compatibility, sizes, season, budget and shipping costs; React Native / Expo, TypeScript and PostgreSQL. Web preview; real retailer feeds are still being connected. https://vestura.denizkarakoyun.com
 - CENG Daily — daily CS study cards grounded in the creator's METU course material; Python, BM25 retrieval and LLM generation. Turkish/English reader, searchable archive and Scriptable iPhone widget with offline reading. The source corpus stays private. https://denizkarakoyun.com/ceng-daily-site/
-- dolaş — day planner for İstanbul and Ankara; creator and developer. A beam-search planner around opening hours, prayer times at mosques, meal windows and sunset; step-by-step transit (metro, tram, funicular, cable car, ferry and İETT buses from GTFS data); a food atlas; other cities load live from OpenStreetMap. TypeScript, React, Vite. https://denizkarakoyun.com/dolas/
+- dolaş — day planner for İstanbul and Ankara; creator and developer. A beam-search planner around opening hours, prayer times at mosques, meal windows and sunset; step-by-step transit (metro, tram, funicular, cable car, ferry and İETT buses from GTFS data); a food atlas from simit to sushi; a pixel travel companion that plays the day back on the map; other cities load live from OpenStreetMap. TypeScript, React, Vite. https://denizkarakoyun.com/dolas/
 
 ## Selected projects (systems)
 
