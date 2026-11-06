@@ -1,6 +1,6 @@
 # Deniz Karakoyun — The Deniz Tree
 
-> Personal portfolio of Deniz Karakoyun, a Computer Engineering student at Middle East Technical University (METU, Ankara, Türkiye), class of 2027. Focus: operating systems, low-level systems programming, embedded software, C/C++. Co-founder and developer of Guild and Phera Labs; creator of Vestura and CENG Daily. The site is an interactive "tree" — the same content is also available as plain text on the page (section id "cv-text") and as JSON-LD.
+> Personal portfolio of Deniz Karakoyun, a Computer Engineering student at Middle East Technical University (METU, Ankara, Türkiye), class of 2027. Focus: operating systems, low-level systems programming, embedded software, C/C++. Co-founder and developer of Guild and Phera Labs; creator of Vestura, CENG Daily and dolaş. The site is an interactive "tree" — the same content is also available as plain text on the page (section id "cv-text") and as JSON-LD.
 
 Canonical URL: https://denizkarakoyun.com/
 CV (PDF): https://denizkarakoyun.com/assets/cv/Deniz_Karakoyun_CV.pdf
@@ -29,6 +29,7 @@ Contact: karakoyun.deniz@metu.edu.tr
 
 - Vestura — outfit and wardrobe planner; creator and developer. Combines clothing compatibility, sizes, season, budget and shipping costs; React Native / Expo, TypeScript and PostgreSQL. Web preview; real retailer feeds are still being connected. https://vestura.denizkarakoyun.com
 - CENG Daily — daily CS study cards grounded in the creator's METU course material; Python, BM25 retrieval and LLM generation. Turkish/English reader, searchable archive and Scriptable iPhone widget with offline reading. The source corpus stays private. https://denizkarakoyun.com/ceng-daily-site/
+- dolaş — day planner for İstanbul and Ankara; creator and developer. A beam-search planner around opening hours, prayer times at mosques, meal windows and sunset; step-by-step transit (metro, tram, funicular, cable car, ferry and İETT buses from GTFS data); a food atlas; other cities load live from OpenStreetMap. TypeScript, React, Vite. https://denizkarakoyun.com/dolas/
 
 ## Selected projects (systems)
 

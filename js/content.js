@@ -323,6 +323,38 @@ window.PORTFOLIO.CONTENT = {
           flagship: true,
           live: true,
         },
+        {
+          id: "dolas",
+          title: "dolaş",
+          node: "dolaş",
+          subtitle: "Creator & developer · day planner for İstanbul & Ankara · web",
+          icon: "gps",
+          summary: "Pick a city, a day and what you're into — get the day hour by hour: what to see, where to eat, and which line to take in between.",
+          stats: [
+            { value: "172", label: "hand-picked places" },
+            { value: "2", label: "hand-built cities" },
+          ],
+          bullets: [
+            "A beam-search planner that works around opening hours, prayer times at mosques, meal windows and sunset, and lets you pick how many places to see.",
+            "Step-by-step transit — which line, which direction, how many stops — across metro, tram, funicular, cable car and ferry lines, plus İETT buses from public GTFS data.",
+            "A food atlas with hand-drawn dishes: mark one and it becomes a meal in the plan. The whole route opens in Google Maps in one tap.",
+            "Any other city loads live from OpenStreetMap; the weather comes from Open-Meteo.",
+          ],
+          tags: ["TypeScript", "React", "Vite", "Beam Search", "GTFS", "OpenStreetMap"],
+          links: [
+            { label: "Plan a day", href: "https://denizkarakoyun.com/dolas/", kind: "web" },
+            { label: "Food atlas", href: "https://denizkarakoyun.com/dolas/#lezzet", kind: "web" },
+          ],
+          media: [
+            { src: "assets/img/dolas-plan.webp", alt: "dolaş day plan for İstanbul: timed stops, tram directions and the route on an interactive map", w: 1280, h: 720, wide: true },
+            { src: "assets/img/dolas-atlas.webp", alt: "dolaş food atlas with hand-drawn İstanbul dishes and where to eat them", w: 1280, h: 720, wide: true },
+          ],
+          note: "it won't let you skip breakfast.",
+          logo: "assets/img/dolas-icon.png",
+          dx: -12, dy: -30,
+          flagship: true,
+          live: true,
+        },
       ],
     },
 
