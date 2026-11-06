@@ -338,7 +338,7 @@ window.PORTFOLIO.CONTENT = {
             "A beam-search planner that works around opening hours, prayer times at mosques, meal windows and sunset, and lets you pick how many places to see.",
             "Step-by-step transit — which line, which direction, how many stops — across metro, tram, funicular, cable car and ferry lines, plus İETT buses from public GTFS data.",
             "A food atlas with hand-drawn dishes, from simit to sushi: mark one and it becomes a meal in the plan. The whole route opens in Google Maps in one tap.",
-            "A pixel travel companion plays the day back: it walks the route on the map, rides the tram, ferry or taxi, and eats, takes photos or waves at each stop.",
+            "A pixel travel companion plays the day back, or goes step by step as you tap “arrived” or “ate”: it walks the route on the map, rides the tram, ferry or taxi, and eats, takes photos or waves at each stop.",
             "Any other city loads live from OpenStreetMap; the weather comes from Open-Meteo.",
           ],
           tags: ["TypeScript", "React", "Vite", "Beam Search", "GTFS", "OpenStreetMap"],
