@@ -47,6 +47,10 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     cloud.innerHTML = window.PORTFOLIO.RAIN_HTML || "";
     if (window.PORTFOLIO.THEME) window.PORTFOLIO.THEME.syncUi();
 
+    // yuva "me!" kartının üst kenarında, saka hemen yanına konuyor
+    var GUESTS = window.PORTFOLIO.GUESTS;
+    if (GUESTS) GUESTS.build("nest", deco);
+
     // "me!" kartı, masaüstündeki kök düğümle aynı paneli açıyor
     var me = el("button", "vine-me", vine);
     me.type = "button";
@@ -64,6 +68,13 @@ window.PORTFOLIO = window.PORTFOLIO || {};
     me.addEventListener("click", function () {
       if (window.PORTFOLIO.PANEL) window.PORTFOLIO.PANEL.openAbout(me);
     });
+
+    // saka burda başlıkların üstüne konuyor. tünekler başlığın içinde
+    // duruyor, akordeon açılıp başlık kayınca kuş da onunla kayıyor
+    var BIRD = window.PORTFOLIO.BIRD;
+    var homePerch = BIRD ? BIRD.addPerch(me, null, null, "left") : null;
+    if (homePerch) homePerch.classList.add("vine-perch");
+    var startPerch = homePerch;
 
     var openSec = null;
 
@@ -85,6 +96,8 @@ window.PORTFOLIO = window.PORTFOLIO || {};
       var caret = el("span", "vine-caret", head);
       caret.textContent = "▾";
       caret.setAttribute("aria-hidden", "true");
+      var perch = BIRD ? BIRD.addPerch(head, null, null, "left") : null;
+      if (perch) perch.classList.add("vine-perch");
 
       var list = el("ul", "vine-list", sec);
       list.id = listId;
@@ -133,6 +146,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
         sec.classList.toggle("open", !isOpen);
         head.setAttribute("aria-expanded", String(!isOpen));
         openSec = isOpen ? null : sec;
+        if (!isOpen && perch) BIRD.flyTo(perch);
       });
 
       // hepsi kapalı başlıyor deep link istemedikçe
@@ -141,6 +155,7 @@ window.PORTFOLIO = window.PORTFOLIO || {};
         sec.classList.add("open");
         head.setAttribute("aria-expanded", "true");
         openSec = sec;
+        if (perch) startPerch = perch;
         if (openSectionId) {
           requestAnimationFrame(function () {
             var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -150,9 +165,19 @@ window.PORTFOLIO = window.PORTFOLIO || {};
       }
     });
 
+    if (BIRD) BIRD.mount(startPerch);
+
     // en altta zemin. tepe, Ateş ve robot
     // masaüstündekiyle aynı arkadaşlar sadece düz dizilmiş
     var ground = el("div", "vine-ground", rootEl);
+    // misafirler arkadaki tepede duruyor, öndekilerin balonu üstlerine
+    // binmesin diye zemin onlar varken biraz daha yüksek
+    if (GUESTS) {
+      ground.classList.add("has-guests");
+      el("div", "vine-hill vine-hill-back", ground).setAttribute("aria-hidden", "true");
+      GUESTS.build("burger", ground);
+      GUESTS.build("acorns", ground);
+    }
     var hill = el("div", "vine-hill", ground);
     hill.setAttribute("aria-hidden", "true");
 

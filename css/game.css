@@ -14,7 +14,7 @@
   z-index: var(--z-friend);
   animation: bike-bob 3.2s ease-in-out infinite;
 }
-.game-launch svg { width: 74px; height: auto; overflow: visible; }
+.game-launch svg { width: 80px; height: auto; overflow: visible; }
 .game-launch-label {
   font-family: var(--font-hand);
   font-size: 1rem;

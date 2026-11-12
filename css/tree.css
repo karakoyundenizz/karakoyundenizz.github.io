@@ -494,6 +494,66 @@ html.raining .cloud .puddle {
 .leaf-group { position: absolute; inset: 0; pointer-events: none; }
 .leaf-group .node { pointer-events: auto; }
 
+/* saka kuşu. tünekler sıfır boyutlu noktalar, kuş içlerinde duruyor
+   hangi tüneğe gideceğine js/bird.js karar veriyor */
+.perch {
+  position: absolute;
+  width: 0;
+  height: 0;
+  z-index: var(--z-bee);
+  pointer-events: none;
+}
+.bird {
+  position: absolute;
+  left: -38px;
+  bottom: -3px; /* ayaklar tüneğe bassın */
+  width: 76px;
+  pointer-events: none;
+}
+.bird-tilt, .bird-flip { display: block; }
+.bird-tilt { transform-origin: 50% 70%; }
+.bird-flip { transition: transform 0.2s ease; }
+.bird.faces-left .bird-flip { transform: scaleX(-1); }
+.bird svg { display: block; width: 100%; height: auto; overflow: visible; transform-origin: 50% 92%; }
+/* iki kanattan biri: tünerken kapalı olan, uçarken açık olan */
+.bird-wing-fly { display: none; transform-origin: 30px 35px; }
+.bird.flying .bird-wing-fly { display: inline; animation: bird-flap 0.15s ease-in-out infinite alternate; }
+.bird.flying .bird-wing-folded,
+.bird.flying .bird-legs { display: none; }
+@keyframes bird-flap {
+  from { transform: scaleY(1); }
+  to { transform: scaleY(-0.6) rotate(10deg); }
+}
+/* konunca hafif çöküp toparlanıyor */
+.bird.landed .bird-tilt { animation: bird-land 0.38s var(--pop); }
+@keyframes bird-land {
+  from { transform: scale(1.14, 0.8); }
+}
+/* dururken arada kafasını çeviriyor, kuyruğunu oynatıyor, göz kırpıyor */
+.bird:not(.flying) svg { animation: bird-look 7.5s ease-in-out 1.2s infinite; }
+@keyframes bird-look {
+  0%, 58%, 100% { transform: rotate(0deg); }
+  61%, 70% { transform: rotate(-9deg); }
+  74%, 84% { transform: rotate(6deg); }
+  88% { transform: rotate(0deg) translateY(-3px); }
+  92% { transform: rotate(0deg); }
+}
+.bird-tail { transform-origin: 20px 44px; animation: bird-tail 7.5s ease-in-out infinite; }
+@keyframes bird-tail {
+  0%, 30%, 42%, 100% { transform: rotate(0deg); }
+  33% { transform: rotate(-12deg); }
+  36% { transform: rotate(5deg); }
+  39% { transform: rotate(-9deg); }
+}
+.bird-eye { transform-box: fill-box; transform-origin: center; animation: dog-blink 4.7s linear 0.6s infinite; }
+/* gece tünediği yerde uyuyor, dala dokununca uyanıp uçuyor */
+[data-theme="night"] .bird:not(.flying) .bird-eye { animation: none; transform: scaleY(0.12); }
+[data-theme="night"] .bird:not(.flying) svg { animation: bird-doze 4.2s ease-in-out infinite; }
+@keyframes bird-doze {
+  0%, 100% { transform: scale(1, 1); }
+  50% { transform: scale(1.03, 0.96); }
+}
+
 /* arı */
 .bee-orbit {
   position: absolute;
@@ -513,13 +573,13 @@ html.raining .cloud .puddle {
   animation: bee-flap 0.14s linear infinite alternate;
 }
 .bee-wing-r { animation-delay: 0.07s; }
-@keyframes bee-x { from { translate: -110px 0; } to { translate: 110px 0; } }
+@keyframes bee-x { from { translate: -90px 0; } to { translate: 90px 0; } }
 @keyframes bee-y { from { translate: 0 -46px; } to { translate: 0 40px; } }
 @keyframes bee-flap { from { transform: scaleY(1); } to { transform: scaleY(0.4); } }
 
 /* arkadaşımız Experience dalı açılınca oraya konuyor */
 .bee-orbit, .bee { transition: translate 0.9s var(--smooth); }
-.stage[data-open="experience"] .bee-orbit { animation: none; translate: 24px 64px; }
+.stage[data-open="experience"] .bee-orbit { animation: none; translate: 104px 139px; }
 .stage[data-open="experience"] .bee { animation: none; translate: 0 0; }
 
 /* arılar gece uyuyor, nöbeti ateşböcekleri devralıyor */
@@ -528,7 +588,7 @@ html.raining .cloud .puddle {
 /* Ateş */
 .dog {
   position: absolute;
-  width: 96px;
+  width: 116px;
   transform: translate(-50%, -100%);
   z-index: var(--z-friend);
   border: none;
@@ -537,7 +597,7 @@ html.raining .cloud .puddle {
 }
 .dog svg { width: 100%; height: auto; }
 .dog-tail {
-  transform-origin: 12px 50px;
+  transform-origin: 34px 98px;
   animation: dog-wag 6s ease-in-out infinite;
 }
 @keyframes dog-wag {
@@ -548,7 +608,8 @@ html.raining .cloud .puddle {
   90% { transform: rotate(10deg); }
   93% { transform: rotate(0deg); }
 }
-.dog-eye { transform-origin: center; animation: dog-blink 5.5s linear infinite; }
+/* fill-box olmazsa göz kendi ortasından değil svg'nin ortasından kapanıyor */
+.dog-eye { transform-box: fill-box; transform-origin: center; animation: dog-blink 5.5s linear infinite; }
 @keyframes dog-blink {
   0%, 91%, 100% { transform: scaleY(1); }
   93%, 95% { transform: scaleY(0.08); }
@@ -607,7 +668,7 @@ html.raining .cloud .puddle {
 /* robot arkadaş */
 .robot {
   position: absolute;
-  width: 118px;
+  width: 128px;
   transform: translate(-50%, -100%);
   z-index: var(--z-friend);
   border: none;
@@ -615,7 +676,9 @@ html.raining .cloud .puddle {
   padding: 0;
   cursor: pointer;
 }
-.robot svg { width: 100%; height: auto; overflow: visible; }
+/* üstten taşabiliyor (zıplarken anten) ama alttan taşmıyor
+   yoksa çalının altından gövdesi ve kolu görünüyor */
+.robot svg { width: 100%; height: auto; overflow: visible; clip-path: inset(-60px -40px 0 -40px); }
 .robot-figure {
   transform: translateY(30px);
   transition: transform 0.3s var(--pop);
@@ -624,6 +687,20 @@ html.raining .cloud .puddle {
 .robot:focus-visible .robot-figure,
 .robot.cheering .robot-figure { transform: translateY(0); }
 .robot.cheering .robot-figure { animation: robot-hop 0.55s var(--pop); }
+/* kol normalde aşağıda, çalının arkasında. çıkınca el sallıyor */
+.robot-arm {
+  transform-origin: 30px 78px;
+  transform: rotate(-115deg);
+  transition: transform 0.35s var(--pop) 0.05s;
+}
+.robot:hover .robot-arm,
+.robot:focus-visible .robot-arm,
+.robot.cheering .robot-arm { transform: rotate(0deg); animation: robot-wave 0.7s ease-in-out 0.4s infinite alternate; }
+@keyframes robot-wave {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(16deg); }
+}
+.robot-eyes { transform-box: fill-box; transform-origin: center; animation: dog-blink 6.5s linear 1.3s infinite; }
 @keyframes robot-hop {
   0%, 100% { transform: translateY(0); }
   45% { transform: translateY(-16px); }
@@ -654,10 +731,82 @@ html.raining .cloud .puddle {
 
 /* gözleri gece parlıyor, sonuçta robot */
 [data-theme="night"] .robot-eye { fill: #7FF7E0; }
+[data-theme="night"] .robot-smile { stroke: #7FF7E0; }
 [data-theme="night"] .robot-antenna {
   fill: #FFD166;
   filter: drop-shadow(0 0 4px rgba(255, 209, 102, 0.9));
 }
+
+/* misafirler: burger, palamutlar, yuva. js/guests.js kuruyor
+   balon Ateş'inkiyle aynı, sadece lafı js değiştiriyor */
+.guest {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  z-index: var(--z-friend);
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+.guest svg { display: block; width: 100%; height: auto; overflow: visible; }
+.guest-burger { width: 126px; }
+.guest-acorns { width: 168px; }
+.guest-nest { width: 104px; }
+.guest-bubble {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  translate: -50% 0;
+  white-space: nowrap;
+  font-family: var(--font-hand);
+  font-size: 1rem;
+  color: var(--ink);
+  background: var(--white);
+  border: 2.5px solid var(--ink);
+  border-radius: 16px 18px 17px 15px / 15px 17px 16px 18px;
+  padding: 5px 12px;
+  box-shadow: 3px 3px 0 rgba(43, 33, 25, 0.16);
+  opacity: 0;
+  scale: 0.6;
+  transform-origin: bottom center;
+  transition: opacity 0.2s ease, scale 0.25s var(--pop);
+  pointer-events: none;
+}
+.guest:hover .guest-bubble,
+.guest:focus-visible .guest-bubble,
+.guest.talking .guest-bubble { opacity: 1; scale: 1; }
+/* yuvanın balonu sağa açılıyor, solunda saka duruyor */
+.stage .guest-nest .guest-bubble { left: 34%; translate: 0 0; transform-origin: bottom left; }
+.guest.talking svg { animation: dog-hop 0.5s var(--pop); }
+/* yuva dalların arasında, zıplarsa yumurta düşer. o sadece sallanıyor */
+.guest-nest.talking svg { animation: none; }
+.egg { transform-origin: 57px 38px; }
+.guest-nest:hover .egg,
+.guest-nest.talking .egg { animation: egg-wobble 0.7s ease-in-out; }
+@keyframes egg-wobble {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-9deg); }
+  55% { transform: rotate(7deg); }
+  80% { transform: rotate(-3deg); }
+}
+.burger-eye, .acorn-eye, .egg-eye { transform-box: fill-box; transform-origin: center; }
+.burger-eye { animation: dog-blink 5.1s linear 0.9s infinite; }
+.acorn-eye { animation: dog-blink 6.3s linear 2.1s infinite; }
+.egg-eye { animation: dog-blink 7.1s linear 3s infinite; }
+/* burger konuşurken spatulayı sallıyor */
+.burger-arm-r { transform-origin: 118px 76px; }
+.guest-burger:hover .burger-arm-r,
+.guest-burger.talking .burger-arm-r { animation: guest-wave 0.5s ease-in-out infinite alternate; }
+@keyframes guest-wave {
+  from { transform: rotate(-7deg); }
+  to { transform: rotate(9deg); }
+}
+/* gece hepsi uyuyor */
+[data-theme="night"] .burger-eye,
+[data-theme="night"] .acorn-eye,
+[data-theme="night"] .egg-eye { animation: none; transform: scaleY(0.1); }
+[data-theme="night"] .guest-bubble { font-size: 0; }
+[data-theme="night"] .guest-bubble::after { content: "zzz…"; font-size: 1rem; }
 
 /* dal sabitlendiyse dünya geri çekiliyor, açık taç okunsun
    panel açıksa bütün fon animasyonları duruyor */
@@ -669,6 +818,13 @@ body.panel-open .bee,
 body.panel-open .bee-wing,
 body.panel-open .dog-tail,
 body.panel-open .dog-eye,
+body.panel-open .robot-eyes,
+body.panel-open .bird svg,
+body.panel-open .bird-tail,
+body.panel-open .bird-eye,
+body.panel-open .burger-eye,
+body.panel-open .acorn-eye,
+body.panel-open .egg-eye,
 body.panel-open .dog::before,
 body.panel-open .leaf-group.open .node.leaf { animation-play-state: paused; }
 
@@ -677,6 +833,12 @@ body.panel-open .leaf-group.open .node.leaf { animation-play-state: paused; }
   .sun-rays, .cloud-1, .cloud-2, .pollen,
   .bee-orbit, .bee, .bee-wing,
   .dog-tail, .dog-eye, .robot.cheering .robot-figure,
+  .robot-eyes, .robot:hover .robot-arm, .robot.cheering .robot-arm,
+  .bird svg, .bird-tail, .bird-eye, .bird.landed .bird-tilt,
+  [data-theme="night"] .bird:not(.flying) svg,
+  .burger-eye, .acorn-eye, .egg-eye,
+  .guest.talking svg, .guest-nest .egg,
+  .guest-burger .burger-arm-r,
   .leaf-group.open .node.leaf,
   .star-tw1, .star-tw2,
   [data-theme="night"] .pollen,

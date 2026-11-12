@@ -490,9 +490,35 @@
   border-radius: 50%;
   transition: background-color 0.5s ease;
 }
+/* misafirler arkadaki tepede. masaüstündeki iki tepenin düz hali */
+.vine-ground.has-guests { height: 306px; }
+.vine-hill-back {
+  left: -30%;
+  right: -30%;
+  bottom: -40px;
+  height: 214px;
+  background: var(--hill-1);
+}
+.vine-deco .guest,
+.vine-ground .guest { position: absolute; transform: none; }
+.vine-ground .guest-burger { left: 9%; bottom: 162px; width: 92px; }
+.vine-ground .guest-acorns { right: 5%; bottom: 158px; width: 132px; }
+/* telefonda balon tek satıra sığmıyor, kenardakiler de içe doğru açılıyor */
+.vine-deco .guest-bubble,
+.vine-ground .guest-bubble {
+  white-space: normal;
+  width: max-content;
+  max-width: 176px;
+  text-align: center;
+  line-height: 1.15;
+}
+.vine-ground .guest-burger .guest-bubble { left: -8px; translate: 0 0; transform-origin: bottom left; }
+.vine-ground .guest-acorns .guest-bubble { left: auto; right: -4px; translate: 0 0; transform-origin: bottom right; }
+/* yuva gökyüzü şeridinde, "me!" kartının kenarına oturuyor */
+.vine-deco .guest-nest { right: 146px; bottom: -10px; width: 64px; z-index: 2; pointer-events: auto; }
 .vine-ground .dog,
 .vine-ground .robot { position: absolute; transform: none; }
-.vine-ground .dog { bottom: 30px; left: 20%; width: 82px; }
+.vine-ground .dog { bottom: 30px; left: 18%; width: 88px; }
 .vine-ground .robot { bottom: 22px; right: 12%; width: 94px; }
 .vine::before {
   content: "";
@@ -523,6 +549,11 @@
   box-shadow: var(--sticker-shadow);
   z-index: 1;
 }
+/* kuşun tüneği. başlığın üst kenarında, sayacın biraz solunda */
+.vine-perch { top: -2px; right: 104px; z-index: 2; }
+/* me kartında biraz içeride dursun, yoksa güneşin önünü kapatıyor */
+.vine-me .vine-perch { right: 124px; }
+.vine-perch .bird { width: 54px; left: -27px; }
 .vine-icon { width: 24px; height: 24px; flex: none; color: var(--accent, var(--ink)); }
 .vine-label { flex: 1; }
 .vine-count {

@@ -63,7 +63,8 @@ index.html   hero, svg ikon sprite, noscript, üretilmiş yazılı sürüm
 css/         base (token+hero), tree (sahne+animasyon), panel (kart+vine), game
 js/          content (bütün metin), layout (ağaç matematiği), tree (masaüstü),
              mobile (telefon akordeonu), panel (kartlar), atmosphere (rüzgar),
-             theme (gece gündüz), game (bisiklet), main (boot)
+             bird (dallara konan saka), guests (misafirler: burger,
+             palamutlar, yuva), theme (gece gündüz), game (bisiklet), main (boot)
 tools/       prerender (content.js -> index.html'deki yazılı sürüm)
 assets/      fonts, img, cv
 ```
